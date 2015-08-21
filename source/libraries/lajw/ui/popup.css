@@ -1,0 +1,130 @@
+body {
+	font: 9pt Arial;
+	padding:0px;
+	margin:0px;
+	padding-bottom:-20px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+    user-select: none;
+	color: rgb(48, 57, 66);
+}
+
+body.Windows {
+	font: 9pt "Segoe UI";
+}
+
+body.Ubuntu {
+	font: 11pt "Ubuntu";
+}
+
+body:hover {
+	cursor: default;
+}
+
+input {
+	font: Arial 9pt;
+}
+
+body.Windows input {
+	font-size: 9pt;
+	font-family: "Segoe UI";
+}
+
+body.Ubuntu input {
+	font-size: 11pt;
+	font-family: "Ubuntu"
+}
+
+.menuItem {
+	position: relative;
+	height: 23px;
+	line-height: 23px;
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-left: 30px;
+	background-size: auto 16px;
+	background-position: 6px 3px;
+	background-repeat: no-repeat;
+	text-decoration: none;
+}
+
+.menuItem:hover {
+	cursor: default;
+}
+
+body.animate .menuItem {
+	transition: 0.15s;
+}
+
+body.animate .menuItem:hover {
+	transition: 0s;
+}
+
+@keyframes buttonFadeIn {
+	0% {
+		opacity: 0;
+		margin-left: 100%;
+	}
+	100% {
+		opacity: 1;
+		margin-left: 0px;
+	}
+}
+
+@keyframes buttonFadeOut {
+	0% {
+		opacity: 1;
+		margin-left: 0%;
+	} 100% {
+		opacity: 0;
+		margin-left: 100px;
+	}
+}
+
+.animate a.Button.fadeIn, .animate .Separator.fadeIn, .animate .Folder.fadeIn {
+	-webkit-animation: buttonFadeIn 0.15s cubic-bezier(.08,.97,.81,.99) both;
+}
+
+.animate a.Button.fadeOut, .animate .Separator.fadeOut, .animate .Folder.fadeOut {
+	-webkit-animation: buttonFadeOut 0.15s cubic-bezier(.8,.02,1,.22) both;
+}
+.MultiButton {
+	height: 30px;
+	display: table-row;
+	width: 100%;
+}
+
+.MultiButton .Button {
+	display: table-cell;
+	font-size: 0pt;
+	border-top: #ddd solid 1px;
+	border-left: #ddd solid 1px;
+	background-position:center center;
+	vertical-align:top;
+	min-width: 19px;
+	padding:2px 0px 3px 30px;
+}
+
+.MultiButton .Button:first-child {
+	border-left: none;
+	background-position: 6px center;
+	font-size: 9pt;
+}
+
+.Folder span, .Button span {
+	position: absolute;
+	right: 4px;
+	background: #555;
+	border-radius: 2px;
+	color: white;
+	font-weight: bold;
+	font-size: 7pt;
+	padding: 0px 4px;
+	line-height: 13px;
+	top: 4px;
+	letter-spacing: 1px;
+	border: 1px white solid;
+	display: none;
+}

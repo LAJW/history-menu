@@ -1,0 +1,36 @@
+.Input {
+	position: relative;
+	border-top: 1px #ddd solid;
+	background: url('search.png') no-repeat 6px 6px;
+	padding-left: 30px;
+	border: 1px #777 solid;
+}
+
+.Input>input {
+	border:none;
+	background:transparent;
+	outline: none;
+	display: block;
+	height: 29px;
+	line-height: 29px;
+	padding: 0px;
+	margin: 0px;
+	margin-right: 30px;
+}
+
+.Input>.Cancel {
+	background: url('x.png') no-repeat center center;
+	width: 29px;
+	height: 29px;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	transition: 0.3s;
+	opacity: 0;
+}
+
+.Input>.Cancel.visible {
+	opacity: 1;
+}
+
+

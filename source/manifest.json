@@ -1,0 +1,16 @@
+{
+	"name": "Chrome API Wrapper",
+	"manifest_version": 2,
+	"content_security_policy": "script-src 'self'; object-src 'self'",
+	"author": "Łukasz A.J. Wrona (@lajwrona)",
+	"description": "__MSG_description__",
+	"version": "1.2.0",
+	"permissions": [
+		"tabs",
+		"history",
+		"sessions",
+		"chrome://favicon/",
+		"storage"
+	],
+	"options_page": "popup.html"
+}

@@ -1,0 +1,33 @@
+body.animate .Folder {
+	transition: 0.15s;
+}
+.Folder {
+	line-height: 23px;
+	overflow: hidden;
+}
+.Folder>.title {
+	background-image: url('folder-closed.png');
+}
+.Folder.open>.title {
+	background-image: url('folder-open.png');
+}
+.Folder>.title:hover {
+	background-color: #777;
+	color: white;
+}
+body.Windows .Folder>.title:hover {
+	background-color: rgb(64, 129, 244); 
+}
+body.Ubuntu .Folder>.title:hover {
+	background-color: #E36C43;
+}
+.Folder>.empty {
+	color: grey;
+}
+.Folder>.empty.hidden {
+	height: 0px;
+	line-height: 0px;
+}
+.Folder>.children {
+	padding-left: 30px;	
+}

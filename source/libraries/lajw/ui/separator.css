@@ -1,0 +1,35 @@
+.Separator {
+	height: 35px;
+	position: relative;
+}
+
+.Separator span{
+	position: absolute;
+	line-height: 35px;
+	height: 35px;
+	z-index: 1;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	text-background: white;
+}
+
+body.Windows .Separator span{
+	font-weight: 500;
+	font-size: 12pt;
+}
+
+body.Ubuntu .Separator span {
+	font-weight: bold;
+	font-size: 11pt;
+}
+
+.Separator hr {
+	border: none;
+	top: 18px;
+	margin: 0px;
+	height: 1px;
+	width: 100%;
+	background: #ddd;
+	position: absolute;
+}
