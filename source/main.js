@@ -165,16 +165,17 @@ var WindowFolder = new Class({
 	}
 });
 
-function sessionToSID(session) {
-	return (session.tab || session.window).sessionId;
-}
-
 var Chrome = {
 	history: {
 		search: function (query) {
 			return new Promise(function (resolve) {
 				chrome.history.search(query, resolve);
 			});
+		},
+		onStateChange: {
+			addListener: function (callback) {
+								
+			}
 		}
 	},	
 	sessions: {
@@ -193,6 +194,8 @@ var Chrome = {
 				})
 			} else chrome.sessions.restore(sessionId);
 		},
+		_limit: 10,
+		_onLimitChange: new EventHandler,
 		onStateChange: {
 			addListener: function (callback) {
 				function sessionToSID(session) {
@@ -201,7 +204,7 @@ var Chrome = {
 				let oldSIDs = [];
 				let sessionChange = function () {
 					Chrome.sessions.get({}).then(function (sessions) {
-						sessions = sessions.slice(0, 10);
+						sessions = sessions.slice(0, Chrome.sessions.limit);
 						let newSIDs = sessions.map(sessionToSID);
 						let df = diff(oldSIDs, newSIDs);
 						var added = df.added.map(function (c) {
@@ -215,7 +218,17 @@ var Chrome = {
 				}
 				sessionChange();
 				chrome.sessions.onChanged.addListener(sessionChange);
+				Chrome.sessions._onLimitChange.addListener(sessionChange); 
 			}
+		},
+		// global limit on visible session count
+		get limit() {
+			return Chrome.sessions._limit;
+		},
+		set limit(value) {
+			typecheck(arguments, Number);
+			Chrome.sessions._limit = value;	
+			Chrome.sessions._onLimitChange();
 		}
 	}
 }
