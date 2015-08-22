@@ -1,8 +1,19 @@
+"use strict"
+if (!Array.prototype.find) {
+	Object.defineProperty(Array.prototype, "find", {value: function (callback) {
+		typecheck(arguments, Function);
+		for (var c of this)
+			if (callback(c))
+				return c;
+		return undefined;
+	}});
+}
+
 function compose() {
-	var funcs = arguments;
+	let funcs = arguments;
 	return function (value) {
-		for (var i = funcs.length - 1; i >= 0; i--) {
-			var func = funcs[i];
+		for (let i = funcs.length - 1; i >= 0; i--) {
+			let func = funcs[i];
 			if (func instanceof Promise || value instanceof Promise) {
 				value = Promise.all([func, value]).then(function (args) {
 					return args[0](args[1]);	
@@ -15,7 +26,7 @@ function compose() {
 
 function curry(fn) {
 	return function () {
-		for (var arg of arguments)
+		for (let arg of arguments)
 			if (arg instanceof Promise)
 				return Promise.all(arguments).then(function (args) {
 					return fn.bind.apply(fn, 
@@ -31,94 +42,29 @@ function curry(fn) {
 // Universal Event Handler
 var EventHandler = function () {
 	typecheck(arguments, [Function, undefined], typecheck.trail);
-	var listeners = Array.prototype.slice(arguments);
-	var handler = function () {
-		for (var listener of listeners)
+	let listeners = Array.prototype.slice(arguments);
+	let handler = function () {
+		for (let listener of listeners)
 			listener.apply(this, arguments);
 	}
 	handler.addListener = function (listener) {
 		typecheck(arguments, Function);
-		var index = listeners.indexOf(listener);
+		let index = listeners.indexOf(listener);
 		if (index < 0)
 			listeners.push(listener);
 	}
 	handler.removeListener = function () {
-		var index = listeners.indexOf(listener);
+		let index = listeners.indexOf(listener);
 		if (index > 0)
 			listeners.splice(index, 1);
 	}
 	return handler;
 }
 
-Chrome = {
-	history: {
-		search: function (query) {
-			return new Promise(function (resolve) {
-				chrome.history.search(query, resolve);
-			});
-		}
-	},	
-	sessions: {
-		get: function (query) {
-			return new Promise(function (resolve) {
-				chrome.sessions.getRecentlyClosed(query, resolve);
-			});
-		},
-		foregroundRestore: function (sessionId) {
-			typecheck(arguments, String);
-			chrome.sessions.restore(sessionId);
-		},
-		backgroundRestore: function (sessionId) {
-			typecheck(arguments, String);
-			chrome.tabs.getCurrent(function (tab) {
-				chrome.sessions.restore(sessionId, function () {
-					setTimeout(function () {
-						chrome.tabs.update(tab.id, {active: true});
-					}, 1000);
-				});
-			})
-
-		},
-		onChange: new EventHandler
-	}
-}
-
-chrome.sessions.onChanged.addListener(Chrome.sessions.onChange);
-
 // detect which cells were added and which were removed during array transition
 var diff = function (before, after) {
 	typecheck(arguments, Array, Array);
-	var arr1 = before,
-		arr2 = after,
-		i1 = 0,
-		i2 = 0, 
-		l1 = arr1.length, 
-		l2 = arr2.length,
-		out = [];
-	while (i1 < l1 || i2 < l2) {
-		if (arr1[i1] == arr2[i2]) {
-			out.push({value: arr1[i1]});
-			i1++;
-			i2++;
-		} else if (i1 == l1) 
-			for (; i2 < l2; i2++) 
-				out.push({value: arr2[i2], added: true});
-		else {
-			var f2 = arr2.indexOf(arr1[i1], i2 + 1);
-			if (f2 < 0) {
-				out.push({value: arr1[i1], removed: true});
-				i1++;
-			} else for (; i2 < f2; l2++) 
-				out.push({value: arr2[i2], added: true});
-		}
-	}
-	return out;
-}
-
-// detect which cells were added and which were removed during array transition
-var diff = function (before, after) {
-	typecheck(arguments, Array, Array);
-	var arr1 = before,
+	let arr1 = before,
 		arr2 = after,
 		i1 = 0,
 		i2 = 0, 
@@ -133,7 +79,7 @@ var diff = function (before, after) {
 			for (; i2 < l2; i2++) 
 				out.added.push({value: arr2[i2]});
 		else {
-			var f2 = arr2.indexOf(arr1[i1], i2 + 1);
+			let f2 = arr2.indexOf(arr1[i1], i2 + 1);
 			if (f2 < 0) 
 				out.removed.push(arr1[i1]);
 			else {
@@ -159,15 +105,15 @@ var back = function (array) {
 
 var method = function (name) {
 	return curry(function () {
-		var args = Array.prototype.slice.call(arguments);
-		var o = args.pop();
+		let args = Array.prototype.slice.call(arguments);
+		let o = args.pop();
 		return o[name].apply(o, args);
 	});
 }
 
 Object.defineProperty(Function.prototype, "create", {
 	get: function () {
-		var self = this;
+		let self = this;
 		return function (a, b, c, d, e, f, g) {
 			return new self(a, b, c, d, e, f, g);
 		}
@@ -175,13 +121,8 @@ Object.defineProperty(Function.prototype, "create", {
 });
 
 var map = method("map");
-var each = method("forEach");
 
-// Mixed => Mixed: Logs Mixed type value
-var log = function (value) {
-	console.log(value);
-	return value;	
-}
+var each = method("forEach");
 
 var sessionToNode = function (session) {
 	typecheck(arguments, [
@@ -189,25 +130,15 @@ var sessionToNode = function (session) {
 		{window: Object, lastModified: Number}
 	]);
 	if (session.window) {
-		var window = session.window;
+		let window = session.window;
 		window.lastModified = session.lastModified;
 		return WindowFolder.create(window);
 	} else {
-		var tab = session.tab;
+		let tab = session.tab;
 		tab.lastModified = session.lastModified;
 		return TabButton.create(tab);
 	}
 }
-
-// Parent, Node | null => Node => Node: Inserts node before node
-var insertInto = curry(function (parent, before, child) {
-	return parent.insert(child, before);
-});
-
-// Parent => Node => Node: Inserts node at the end of child list
-var appendInto = curry(function (parent, child) {
-	return parent.insert(child);
-});
 
 var TabButton = new Class({
 	prototype: Button,
@@ -220,12 +151,8 @@ var TabButton = new Class({
 		this.sessionId = tab.sessionId;
 	},
 	click: function (e) {
-		if (e.which == 1) {
-			chrome.sessions.restore(this.sessionId);
-			window.close();
-		} else if (e.which == 2) {
-			chrome.sessions.restore(this.sessionId);
-		}
+		e.preventDefault();
+		Chrome.sessions.restore(this.sessionId, e.which == 2);
 	}
 });
 
@@ -238,75 +165,76 @@ var WindowFolder = new Class({
 	}
 });
 
-// find node with specified sid
-var getBySID = function (array, sid) {
-	for (var node of array) {
-		if (node.sessionId == sid)
-			return node;
-	}
-	return undefined;
-}
-
 function sessionToSID(session) {
 	return (session.tab || session.window).sessionId;
 }
 
-function SIDToSession(sessions, SID) {
-	typecheck(arguments, Array, String);
-	for (var session of sessions) {
-		if (sessionToSID(session) == SID)
-			return session;
+var Chrome = {
+	history: {
+		search: function (query) {
+			return new Promise(function (resolve) {
+				chrome.history.search(query, resolve);
+			});
+		}
+	},	
+	sessions: {
+		get: function (query) {
+			return new Promise(function (resolve) {
+				chrome.sessions.getRecentlyClosed(query, resolve);
+			});
+		},
+		restore: function (sessionId, inBackground) {
+			typecheck(arguments, String, [Boolean, undefined]);	
+			if (inBackground) {
+				chrome.tabs.getCurrent(function (tab) {
+					chrome.sessions.restore(sessionId, function () {
+						chrome.tabs.update(tab.id, {active: true});
+					});
+				})
+			} else chrome.sessions.restore(sessionId);
+		},
+		onStateChange: {
+			addListener: function (callback) {
+				function sessionToSID(session) {
+					return (session.window || session.tab).sessionId;
+				}
+				let oldSIDs = [];
+				let sessionChange = function () {
+					Chrome.sessions.get({}).then(function (sessions) {
+						sessions = sessions.slice(0, 10);
+						let newSIDs = sessions.map(sessionToSID);
+						let df = diff(oldSIDs, newSIDs);
+						var added = df.added.map(function (c) {
+							return {value: sessions.find(function (session) {
+								return sessionToSID(session) == c.value;
+							}), before: c.before};
+						});
+						callback(added, df.removed);
+						oldSIDs = newSIDs;
+					});
+				}
+				sessionChange();
+				chrome.sessions.onChanged.addListener(sessionChange);
+			}
+		}
 	}
-	return undefined;
-}
-
-function createNodeFromSID(sessions, SID) {
-	typecheck(arguments, Array, String);
-	return sessionToNode(SIDToSession(sessions, SID));
-}
-
-function getNodeBySID(collection, SID) {
-	typecheck(arguments, Array, String);
-	for (var node of collection) {
-		if (node.sessionId == SID)
-			return node;
-	}
-	return undefined;
 }
 
 Root.ready().then(function (root) {
 	root.setTheme("Ubuntu", true);
-	var oldSIDs = [];
-	var sessionChange = function () {
-		Chrome.sessions.get({}).then(function (sessions) {
-			var newSIDs = sessions.map(sessionToSID);
-			var d = diff(oldSIDs, newSIDs);
-			var children = root.children;
-			// insert the new ones
-			console.log(d);
-			d.added.forEach(function (c) {
-				var child = createNodeFromSID(sessions, c.value);
-				if (c.before) {
-					var before = getNodeBySID(children, c.before);
-					root.insert(child, before);
-				} else {
-					root.insert(child);
-				}
-			});
-			// remove the old ones
-			d.removed.forEach(function (c) {
-				var child = getNodeBySID(children, c);	
-				console.log(child);
-				root.remove(child);
-			});
-			// limit to 25 entries
-			root.children.slice(10).forEach(function (child) {
-				root.remove(child);
-			});
-			oldSIDs = newSIDs.slice(0, 10);
+	var sessionButtonCache = {};
+	Chrome.sessions.onStateChange.addListener(function (added, removed) {
+		added.forEach(function (item) {
+			let before = sessionButtonCache[item.before]
+			let child = sessionToNode(item.value);
+			let parent = sessionButtonCache[item.parent] || root;
+			sessionButtonCache[child.sessionId] = child;
+			parent.insert(child, before);
 		});
-	}
-	sessionChange();
-	Chrome.sessions.onChange.addListener(sessionChange);
+		removed.forEach(function (SID) {
+			var removed = sessionButtonCache[SID];
+			removed.parent.remove(removed);
+		});
+	});
 });
 
