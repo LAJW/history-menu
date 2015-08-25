@@ -1,4 +1,5 @@
 "use strict"
+
 if (!Array.prototype.find) {
 	Object.defineProperty(Array.prototype, "find", {value: function (callback) {
 		typecheck(arguments, Function);
@@ -61,36 +62,82 @@ var EventHandler = function () {
 	return handler;
 }
 
-// detect which cells were added and which were removed during array transition
-var diff = function (before, after) {
-	typecheck(arguments, Array, Array);
-	let arr1 = before,
-		arr2 = after,
+var Session = new Class({
+	constructor: function (chromeSession) {
+		this.id = chromeSession.sessionId;			
+		this.visited = chromeSession.lastVisited;
+		if (chromeSession.tab) {
+			let tab = chromeSession.tab;	
+			this.title = tab.title;
+			this.url = tab.url;
+		} else {
+			let window = chromeSession.window;
+			this.children = chromeSession.map(Session.create);
+		}
+	},
+	compare: function (that) {
+		return this.sessionId == that.sessionId;	
+	}
+});
+
+var diff = function (params) {
+	typecheck(arguments, {
+		before: Array,
+		after: Array,
+		equals: Function,
+		getChildren: Function,
+		parent: [Object, undefined]
+	});
+	let equals = params.equals,
+		getChildren = params.getChildren,
+		parent = params.parent,
+		arr1 = params.before,
+		arr2 = params.after,
 		i1 = 0,
 		i2 = 0, 
-		l1 = arr1.length, 
-		l2 = arr2.length,
-		out = { removed: [], added: [] };
-	while (i1 < l1 || i2 < l2) {
-		if (arr1[i1] == arr2[i2]) {
+		il1 = arr1.length, 
+		il2 = arr2.length,
+		result = { remove: [], insert: [] },
+		f2 = 0,
+		children;
+	while (i1 < il1 || i2 < il2) {
+		if (i1 >= il1) 
+			for (; i2 < il2; i2++) 
+				result.insert.push({
+					value: arr2[i2],
+					parent: parent
+				});
+		else if (equals(arr1[i1], arr2[i2])) {
+			children = getChildren(arr1[i1]);
+			if (children)
+				result = result.concat(diff({
+					before: children ,
+					after: getChildren(arr2[i2]),
+					equals: equals,
+					getChildren: getChildren,
+					parent: arr2[i2],
+				}));
 			i1++;
 			i2++;
-		} else if (i1 == l1) 
-			for (; i2 < l2; i2++) 
-				out.added.push({value: arr2[i2]});
-		else {
-			let f2 = arr2.indexOf(arr1[i1], i2 + 1);
-			if (f2 < 0) 
-				out.removed.push(arr1[i1]);
-			else {
+		} else {
+			f2 = i2 + 1;
+			for (; f2 < il2; f2++)
+				if (equals(arr1[i1], arr2[i2]))
+					break;
+			if (f2 < 0) {
+				result.remove.push(arr1[i1]);
+				i1++;
+			} else {
 				for (; i2 < f2; i2++) 
-					out.added.push({value: arr2[i2], before: arr2[f2]});
-				i2++;
+					result.insert.push({
+						value: arr2[i2], 
+						before: arr2[f2],
+						parent: parent
+					});
 			}
-			i1++;
 		}
 	}
-	return out;
+	return result;
 }
 
 var param = curry(function (name, object) {
@@ -124,20 +171,15 @@ var map = method("map");
 
 var each = method("forEach");
 
+var ifElse = curry(function (ifValue, elseValue, condition) {
+	return condition ? ifValue : elseValue;
+});
+
 var sessionToNode = function (session) {
-	typecheck(arguments, [
-		{tab: Object, lastModified: Number},
-		{window: Object, lastModified: Number}
-	]);
-	if (session.window) {
-		let window = session.window;
-		window.lastModified = session.lastModified;
-		return WindowFolder.create(window);
-	} else {
-		let tab = session.tab;
-		tab.lastModified = session.lastModified;
-		return TabButton.create(tab);
-	}
+	typecheck(arguments, Object);
+	return session.tabs
+		? WindowFolder.create(session)
+		: TabButton.create(session);
 }
 
 var TabButton = new Class({
@@ -161,7 +203,10 @@ var WindowFolder = new Class({
 	constructor: function (window) {
 		Folder.call(this, window);
 		this.title = "Window (Number of tabs: " + window.tabs.length + ")";
-		each(compose(appendInto(this), TabButton.create))(window.tabs);
+		let self = this;
+		window.tabs.forEach(function (tab) {
+			self.insert(TabButton.create(tab));
+		});
 	}
 });
 
@@ -201,19 +246,26 @@ var Chrome = {
 				function sessionToSID(session) {
 					return (session.window || session.tab).sessionId;
 				}
-				let oldSIDs = [];
+				let oldSessions = [];
 				let sessionChange = function () {
 					Chrome.sessions.get({}).then(function (sessions) {
-						sessions = sessions.slice(0, Chrome.sessions.limit);
-						let newSIDs = sessions.map(sessionToSID);
-						let df = diff(oldSIDs, newSIDs);
-						var added = df.added.map(function (c) {
-							return {value: sessions.find(function (session) {
-								return sessionToSID(session) == c.value;
-							}), before: c.before};
+						sessions = sessions
+							.slice(0, Chrome.sessions.limit)
+							.map(function (session) {
+								let result = session.tab || session.window;
+								result.lastVisited = session.lastVisited;
+								return result;
+							});
+						let df = diff({
+							before: oldSessions,
+							after: sessions,
+							equals: function (a, b) {
+								return a.sessionId == b.sessionId;	
+							},
+							getChildren: param("tabs")
 						});
-						callback(added, df.removed);
-						oldSIDs = newSIDs;
+						oldSessions = sessions;
+						callback(df);
 					});
 				}
 				sessionChange();
@@ -236,16 +288,16 @@ var Chrome = {
 Root.ready().then(function (root) {
 	root.setTheme("Ubuntu", true);
 	var sessionButtonCache = {};
-	Chrome.sessions.onStateChange.addListener(function (added, removed) {
-		added.forEach(function (item) {
+	Chrome.sessions.onStateChange.addListener(function (diff) {
+		diff.insert.forEach(function (item) {
 			let before = sessionButtonCache[item.before]
 			let child = sessionToNode(item.value);
-			let parent = sessionButtonCache[item.parent] || root;
+			let parent = item.parent ? sessionButtonCache[item.parent.sessionId] : root;
 			sessionButtonCache[child.sessionId] = child;
 			parent.insert(child, before);
 		});
-		removed.forEach(function (SID) {
-			var removed = sessionButtonCache[SID];
+		diff.remove.forEach(function (session) {
+			var removed = sessionButtonCache[session.sessionId];
 			removed.parent.remove(removed);
 		});
 	});
