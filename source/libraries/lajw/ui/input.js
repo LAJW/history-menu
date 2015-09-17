@@ -1,11 +1,13 @@
 "use strict"
 var Input = (function () {
-	var lockon; // globally locked on input
+	// locked on Input - when you type sometihng, automatically focus this
+	// input node
+	let lockon;
 	window.addEventListener("keydown", function (e) {
 		if (lockon)
 			lockon._input.focus();
 	});
-	var template = $({
+	const template = $({
 		nodeName: "div",
 		className: "Input",
 		childNodes: [
@@ -18,79 +20,73 @@ var Input = (function () {
 			})
 		]
 	});
-	return new Class({
-		prototype: Node,
-		/* contructor({
-			String value = "",
-			String placeholder = "",
-			Boolean lockon = false,
-			Function change = function () { }
-		}) */
-		constructor: function (e) {
+	class Input extends Node {
+		constructor(e) {
 			typecheck(arguments, [{
 				value: [String, undefined],
 				placeholder: [String, undefined],
 				lockon: [Boolean, undefined],
 				change: [Function, undefined]
-			}]);
+			}, undefined]);
 			e = e || {};
 			e.DOM = template.cloneNode(true);
-			Node.call(this, e);
+			super(e);
 			this._input = this.DOM.firstChild;
 			this._cancel = this.DOM.lastChild;
 			this._input.onkeyup = this._input.onchange = function () {
 				this.change(this.value);
-				this._change();
+				this._toggleClearButton();
 			}.bind(this);
-			this.change = e.change || function () {};
+			this.change = function () {};
 			this.value = e.value || "";
+			this.change = e.change || function () {};
 			this.placeholder = e.placeholder || "";
 			this.lockon = e.lockon || false;
-		},
-		// void click(DOMEvent)
-		click: function (e) {
+		}
+		click(e) { // override
 			if (e.target == this._cancel)
 				this.value = "";
 			this._input.focus();
-		},
-		// String placeholder
-		placeholder: {
-			get: function () {
-				return this._input.placeholder;
-			},
-			set: function (value) {
-				typecheck(arguments, String);
-				this._input.placeholder = value;
-			}
-		},
+		}
+		// String placeholder - text displayed in the empty input
+		get placeholder() {
+			return this._input.placeholder;
+		}
+		set placeholder(value) {
+			typecheck(arguments, String);
+			this._input.placeholder = value;
+		}
 		// String value - text inside the input element
-		value: {
-			get: function () {
-				return this._input.value;
-			}, 
-			set: function (value) {
-				typecheck(arguments, String);
-				this._input.value = value;
-				this._change();
-				this.change();
-			}
-		},
-		// Boolean lockon - relocks globally on current element
-		lockon: {
-			get: function () {
-				return this === lockon;
-			},
-			set: function (value) {
-				if (value)
-					lockon = this;
-				else if (this.lockon)
-					lockon = undefined;
-			}
-		},
-		// void _change() private
-		_change: function () {
+		get value() {
+			return this._input.value;
+		} 
+		set value(value) {
+			typecheck(arguments, String);
+			this._input.value = value;
+			this._toggleClearButton();
+			this.change();
+		}
+		// select Input to be locked on 
+		static lockon(input) {
+			typecheck(arguments, Input);
+			lockon = input;
+		}
+		// Boolean lockon - autofocus this element when you type something
+		get lockon() {
+			return this === lockon;
+		}
+		set lockon(value) {
+			typecheck(arguments, Boolean);
+			if (value)
+				lockon = this;
+			else if (this.lockon)
+				lockon = undefined;
+		}
+		// private void _toggleClearButton(void) - toggle "X" button
+		_toggleClearButton() {
 			typecheck(arguments);
 			this._cancel.classList.toggle("visible", !!this.value);
 		}
-	});
+	}
+	return Input;
 })();

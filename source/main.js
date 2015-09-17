@@ -62,8 +62,8 @@ var EventHandler = function () {
 	return handler;
 }
 
-var Session = new Class({
-	constructor: function (chromeSession) {
+class Session {
+	constructor(chromeSession) {
 		this.id = chromeSession.sessionId;			
 		this.visited = chromeSession.lastVisited;
 		if (chromeSession.tab) {
@@ -74,11 +74,11 @@ var Session = new Class({
 			let window = chromeSession.window;
 			this.children = chromeSession.map(Session.create);
 		}
-	},
-	compare: function (that) {
+	}
+	compare(that) {
 		return this.sessionId == that.sessionId;	
 	}
-});
+}
 
 var diff = function (params) {
 	typecheck(arguments, {
@@ -182,25 +182,23 @@ var sessionToNode = function (session) {
 		: TabButton.create(session);
 }
 
-var TabButton = new Class({
-	prototype: Button,
-	constructor: function (tab) {
-		Button.call(this, {
+class TabButton extends Button {
+   constructor(tab) {
+		super({
 			icon: "chrome://favicon/" + tab.url,
 			title: tab.title,
 			tooltip: tab.url
 		});
 		this.sessionId = tab.sessionId;
-	},
-	click: function (e) {
+	}
+	click(e) {
 		e.preventDefault();
 		Chrome.sessions.restore(this.sessionId, e.which == 2);
 	}
-});
+};
 
-var WindowFolder = new Class({
-	prototype: Folder,
-	constructor: function (window) {
+class WindowFolder extends Folder {
+	constructor(window) {
 		Folder.call(this, window);
 		this.title = "Window (Number of tabs: " + window.tabs.length + ")";
 		let self = this;
@@ -208,7 +206,7 @@ var WindowFolder = new Class({
 			self.insert(TabButton.create(tab));
 		});
 	}
-});
+}
 
 var Chrome = {
 	history: {

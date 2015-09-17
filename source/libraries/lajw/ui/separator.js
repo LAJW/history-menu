@@ -1,5 +1,6 @@
+"use strict"
 var Separator = (function () {
-	var template = $({
+	const template = $({
 		nodeName: "DIV",
 		className: "Separator",
 		childNodes: [
@@ -7,38 +8,32 @@ var Separator = (function () {
 				nodeName: "SPAN",
 				className: "menuItem",
 				childNodes: [$("")]
-			}),
-			$({
+			}), $({
 				nodeName: "HR"
 			})
 		]
 	});
-	return new Class({
+	class Separator extends Node {
 		// PRIVATE: _title
-		prototype: Node,
-		/* constructor({
-			String title = "",
-		}) */
-		constructor: function (e) {
+		constructor(e) {
 			e = e || {};
 			e.DOM = template.cloneNode(true);
-			Node.call(this, e);
+			super(e);
 			this._title = this.DOM.firstChild.firstChild;
 			this.title = e.title || "";
-		},
-		title: {
-			get: function () {
-				return this._title.nodeValue;
-			},
-			set: function (value) {
-				this._title.nodeValue = value;
-			}
-		},
-		// 1. void fadeIn(delay) - fadein animation
-		fadeIn: function (delay) {
+		}
+		get title() {
+			return this._title.nodeValue;
+		}
+		set title(value) {
+			typecheck(arguments, String);
+			this._title.nodeValue = value;
+		}
+		fadeIn(delay) { // override
 			typecheck(arguments, Number);
 			this.DOM.style.WebkitAnimationDelay = delay + "ms";
 			this.DOM.classList.add("fadeIn");
 		}
-	})
+	}
+	return Separator;
 })();

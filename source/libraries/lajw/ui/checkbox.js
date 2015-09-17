@@ -1,5 +1,7 @@
+"use strict"
+
 var Checkbox = (function () {
-	var template = $({
+	let template = $({
 		nodeName: "label",
 		className: "checkbox",
 		childNodes: [
@@ -8,22 +10,11 @@ var Checkbox = (function () {
 				type: "checkbox",
 			}),
 			$("")
-		],
-		onchange: function (e) {
-			var self = Node.fromDOM(e.target);
-			self.change(self.checked);
-		}
+		]
 	});
-	return new Class({
-		// Function checked
+	class Checkbox extends Node {
 		// PRIVATE: _title, _checkbox
-		prototype: Node,
-		/* constructor({
-			String title = "",
-			Boolean checked = false,
-			Function change = function () { }
-		}) */
-		constructor: function (e) {
+		constructor(e) {
 			typecheck(arguments, [{
 				title: [String, undefined],
 				checked: [Boolean, undefined],
@@ -31,32 +22,31 @@ var Checkbox = (function () {
 				}, undefined]);
 			e = e || {};
 			e.DOM = template.cloneNode(true);
-			Node.call(this, e);
+			e.DOM.onchange = function () {
+				self.change(self.checked);
+			}
+			super(e);
 			this._checkbox = this.DOM.firstChild;
 			this._title = this.DOM.lastChild;
 			this.change = e.change || function () {}
 			this.checked = e.checked || false;
 			this.title = e.title || "";
-		},
-		// String title
-		title: {
-			get: function () {
-				return this._title.nodeValue;
-			},
-			set: function (value) {
-				typecheck(arguments, String);
-				this._title.nodeValue = value;
-			}
-		},
-		// String checked
-		checked: {
-			get: function () { 
-				return this._checkbox.checked;
-			},
-			set: function (value) {
-				typecheck(arguments, Boolean);
-				this._checkbox.checked = value;
-			}
 		}
-	})
+		get title() {
+			return this._title.nodeValue;
+		}
+		set title(value) {
+			typecheck(arguments, String);
+			this._title.nodeValue = value;
+		}
+		get checked() { 
+			return this._checkbox.checked;
+		}
+		set checked(value) {
+			typecheck(arguments, Boolean);
+			this._checkbox.checked = value;
+			this.change(value);
+		}
+	}
+	return Checkbox;
 })();

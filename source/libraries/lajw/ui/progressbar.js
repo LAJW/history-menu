@@ -1,20 +1,20 @@
+"use strict"
 var Progressbar = (function () {
-	var template = $({
+	const template = $({
 		nodeName: "CANVAS",
 		className: "Progressbar",
 		width: 400,
 		height: 400
 	});
-	return new Class({
-		prototype: Node,
-		constructor: function (e) {
+	class Progressbar extends Node {
+		constructor(e) {
 			e = e || {};
 			e.DOM = template.cloneNode(false);
-			Node.call(this, e);
+			super(e);
 			this.DOM.width = 400;
 			this.DOM.height = 8;
-		},
-		fadeIn: function () {
+		}
+		fadeIn() { // override
 			var ctx = this.DOM.getContext("2d");
 			ctx.fillStyle = "rgb(64, 129, 244)";
 			var c = [-0.1, -0.2, -0.3];
@@ -37,5 +37,6 @@ var Progressbar = (function () {
 				}
 			}.bind(this), 1);
 		}
-	});
+	}
+	return Progressbar;
 })();

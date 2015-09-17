@@ -1,43 +1,38 @@
+"use strict"
+
 var Image = (function () {
-	var template = $({
+	const template = $({
 		nodeName: "IMG"
 	});
-	return new Class({
-		prototype: Node,
-		/* constructor ({
-			src = "",
-			alt = "",
-		}) */
-		constructor: function (e) {
+	class Image extends Node {
+		constructor(e) {
 			typecheck(arguments, [{
 				src: [String, undefined],
 				alt: [String, undefined]
 			}, undefined]);
 			e = e || {};
 			e.DOM = template.cloneNode(false);
-			Node.call(this, e);
+			super(e);
 			this.src = e.src || "";
 			this.alt = e.alt || "";
-		},
-		// String src
-		src: {
-			get: function () {
-				return this.DOM.src;
-			}, 
-			set: function (value) {
-				typecheck(arguments, String);
-				this.DOM.src = value;
-			}
-		},
-		// String alt
-		alt: {
-			get: function () {
-				return this.DOM.alt;
-			},
-			set: function (value) {
-				typecheck(arguments, String);
-				this.DOM.alt = value;
-			}
 		}
-	});
+		// String src - path to the image file 
+		get src() {
+			return this._src;
+		} 
+		set src(value) {
+			typecheck(arguments, String);
+			this._src = value;
+			this.DOM.src = value;
+		}
+		// String alt - alternative text of the image
+		get alt() {
+			return this.DOM.alt;
+		}
+		set alt(value) {
+			typecheck(arguments, String);
+			this.DOM.alt = value;
+		}
+	}
+	return Image;
 })();

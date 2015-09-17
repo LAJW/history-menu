@@ -73,23 +73,10 @@ body.animate .menuItem:hover {
 	}
 }
 
-@keyframes buttonFadeOut {
-	0% {
-		opacity: 1;
-		margin-left: 0%;
-	} 100% {
-		opacity: 0;
-		margin-left: 100px;
-	}
-}
-
 .animate a.Button.fadeIn, .animate .Separator.fadeIn, .animate .Folder.fadeIn {
 	-webkit-animation: buttonFadeIn 0.15s cubic-bezier(.08,.97,.81,.99) both;
 }
 
-.animate a.Button.fadeOut, .animate .Separator.fadeOut, .animate .Folder.fadeOut {
-	-webkit-animation: buttonFadeOut 0.15s cubic-bezier(.8,.02,1,.22) both;
-}
 .MultiButton {
 	height: 30px;
 	display: table-row;

@@ -1,5 +1,7 @@
+"use strict"
+
 var Select = (function () {
-	var template = $({
+	const template = $({
 		nodeName: "LABEL",
 		className: "Select",
 		childNodes: [
@@ -9,17 +11,9 @@ var Select = (function () {
 			$("")
 		]
 	});
-	return new Class({
+	class Select extends Node {
 		// PRIVATE: _selected, _values, _select
-		prototype: Node,
-		/* constructor({
-			Object values,
-			String title = "",
-			String selected, optional
-			Function change = function () { }
-		}) */
-		// values - map ofoptionkey/values, selected - selected key
-		constructor: function (e) {
+		constructor(e) {
 			typecheck(arguments, {
 				title: [String, undefined],
 				values: Object,
@@ -27,7 +21,7 @@ var Select = (function () {
 				change: [Function, undefined]
 			});
 			e.DOM = template.cloneNode(true);
-			Node.call(this, e);
+			super(e);
 			this._select = this.DOM.firstChild;
 			this._title = this.DOM.lastChild;
 			this._select.onchange = function () {
@@ -35,53 +29,53 @@ var Select = (function () {
 			}.bind(this);
 			this.change = e.change || function () { };
 			this.values = e.values;
-			this.selected = e.selected || e.values[Object.keys(e.values)[0]];
+			this.selected = e.selected || Object.keys(e.values)[0];
 			this.title = e.title || "";
-		},
+		}
 		// Object values - String=>String map to be assigned to the element
-		values: {
-			get: function () {
-				return this._values;
-			},
-			set: function (values) {
-				typecheck(arguments, Object);
-				this._values = values;
-				this._select.innerHTML = "";
-				for (var i in values) {
-					var value = values[i];
-					var option = document.createElement("option");
-					option.value = i;
-					option.appendChild(document.createTextNode(value));
-					this._select.appendChild(option);
-				}
-			}
-		},
-		// String selected - key of selected value
-		selected: {
-			get: function () {
-				return this._select.options[this._select.selectedIndex].value;
-			},
-			set: function (key) {
-				typecheck(key, String);
-				if (this._values[key]) {
-					var options = this._select.options;
-					for (var i = 0, il = options.length; i < il; i++) {
-						if (options[i].value == key) {
-							this._select.selectedIndex = i;
-						}
-					}
-				} else throw new Error("Key not found");
-			}
-		},
-		// String title - label of the select box
-		title: {
-			get: function () {
-				this._title.nodeValue;
-			},
-			set: function (value) {
-				typecheck(arguments, String);
-				this._title.nodeValue = value;
+		get values() {
+			return this._values;
+		}
+		set values(values) {
+			typecheck(arguments, Object);
+			this._values = values;
+			this._select.innerHTML = "";
+			for (let i in values) {
+				let value = values[i];
+				let option = document.createElement("option");
+				option.value = i;
+				option.appendChild(document.createTextNode(value));
+				this._select.appendChild(option);
 			}
 		}
-	});
+		// String selected - key of selected value
+		get selected() {
+			return this._select.options[this._select.selectedIndex].value;
+		}
+		set selected(key) {
+			typecheck(arguments, String);
+			if (this._values[key]) {
+				let options = this._select.options;
+				for (let i = 0, il = options.length; i < il; i++) {
+					if (options[i].value == key) {
+						this._select.selectedIndex = i;
+					}
+				}
+			} else throw new Error("Key not found");
+		}
+		// String title - text label of the Select node
+		get title() {
+			this._title.nodeValue;
+		}
+		set title(value) {
+			typecheck(arguments, String);
+			this._title.nodeValue = value;
+		}
+		// value - currently selected value
+		get value() {
+			return this.values[this.selected];
+		}
+	}
+	return Select;
 })();
+

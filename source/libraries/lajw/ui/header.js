@@ -1,32 +1,28 @@
+"use strict"
 var Header = (function () {
-	var template = $({
+	const template = $({
 		nodeName: "H1",
 		className: "Header",
 		childNodes: [$("")]
 	});
-	return new Class({
-		prototype: Node,
-		/* constructor({
-			String title = ""
-		}) */
-		constructor: function (e) {
+	class Header extends Node {
+		constructor(e) {
 			typecheck(arguments, [{
 				title: [String, undefined]
 			}, undefined]);
 			e = e || {};
 			e.DOM = template.cloneNode(true);
-			Node.call(this, e);
+			super(e);
 			this.title = e.title || "";
-		},
-		// String title
-		title: {
-			get: function () {
-				return this.DOM.firstChild.value;
-			},
-			set: function (value) {
-				typecheck(arguments, String);
-				this.DOM.firstChild.nodeValue = value;
-			}
 		}
-	});
+		// String title - header's text
+		get title() {
+			return this.DOM.firstChild.nodeValue;
+		}
+		set title(value) {
+			typecheck(arguments, String);
+			this.DOM.firstChild.nodeValue = value;
+		}
+	}
+	return Header;
 })();
