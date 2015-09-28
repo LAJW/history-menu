@@ -1,7 +1,19 @@
 "use strict"
 
+// remove ftp|http|https://(www). from url
+function trimURL(url) {
+	typecheck(arguments, String);	
+	url = url.substr(url.indexOf("://") + 3);
+	if (url.substr(0,4) == "www.")
+		url = url.substr(4);
+	return url;
+}
+
 class TabButton extends Button {
    constructor(tab) {
+   		typecheck.loose(arguments, {
+			sessionId: String,
+		});
 		super({
 			icon: "chrome://favicon/" + tab.url,
 			title: tab.title,
@@ -9,7 +21,7 @@ class TabButton extends Button {
 		});
 		this.sessionId = tab.sessionId;
 	}
-	click(e) {
+	click(e) { /*override*/
 		e.preventDefault();
 		Chrome.sessions.restore(this.sessionId, e.which == 2);
 	}
@@ -17,6 +29,9 @@ class TabButton extends Button {
 
 class WindowFolder extends Folder {
 	constructor(window) {
+   		typecheck(arguments, {
+			sessionId: String,
+		});
 		Folder.call(this, window);
 		this.title = "Window (Number of tabs: " + window.tabs.length + ")";
 		let self = this;
@@ -24,15 +39,29 @@ class WindowFolder extends Folder {
 			self.insert(TabButton.create(tab));
 		});
 	}
+	click(e) { /*override*/
+		e.preventDefault();
+		Folder.click(this, e);
+		Chrome.sessions.restore(this.sessionId, e.which == 2);
+	}
 }
 
 class HistoryButton extends Button {
 	constructor(item) {
+		if (!item.title) {
+			item.tooltip = item.url;
+			item.url = trim(item.url);
+			item.tooltip = item.url;
+		} else {
+			item.tooltip = item.title + "\n" + item.url;
+		}
 		super(item);
 		this.url = item.url;
+		this.icon = "chrome://favicon/" + item.url;
 	}
 	click(e) { /*override*/
-		
+		e.preventDefault();
+		Chrome.tabs.openOrSelect(this.url, true);
 	}
 	get url() {
 		return this.DOM.href;	
@@ -58,23 +87,31 @@ Promise.all([
 ]).then(function (arr) {
 	(function (root, sessions, history, storage, local) {
 		root.setTheme("Ubuntu", true);
-		root.insert(new Separator({title: "Recently Closed"}));
+		let mainLayer = root.insert(new Layer);
+		mainLayer.insert(new Separator({title: "Recently Closed"}));
 		for (let session of sessions) {
 			let bit = session.tab || session.window;
-			bit.sessionId = session.sessionId;
+			bit.lastModified = session.lastModified;
 			if (session.tab)
-				root.insert(new TabButton(bit));
+				mainLayer.insert(new TabButton(bit));
 			if (session.window)
-				root.insert(new TabButton(bit));
+				mainLayer.insert(new TabButton(bit));
 		}
-		root.insert(new Separator({title: "Separator"}));
+		mainLayer.insert(new Separator({title: "Recently Visited"}));
 		for (let item of history) {
-			root.insert(new HistoryButton(item));		
+			mainLayer.insert(new HistoryButton(item));		
 		}
+		let mainButtons = mainLayer.insert(new MultiButton);
+		let searchBox = mainButtons.insert(new Input)
+		mainButtons.insert(new Button({
+			icon: "chrome://favicon/chrome://history"
+		}));
+		mainButtons.insert(new Button({
+			icon: "chrome://favicon/chrome://bookmarks"
+		}));
+		mainLayer.open = false;
+		let searchLayer = root.insert(new Layer);
+		searchLayer.insert(new Separator({title: "Search Results"}));
+
 	}).apply(this, arr);
 });
-
-Root.ready().then(function (root) {
-	root.setTheme("Ubuntu", true);
-});
-

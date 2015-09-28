@@ -51,11 +51,13 @@ var Chrome;
 				let pattern = "*" + url.substr(colon);
 				return Chrome.tabs.query({url: pattern})
 					.then(function (tabs) {
+					console.log(tabs);
 					if (tabs.length) {
 						if (inBackground)
-							return Chrome.tabs.highlight(
-								tabs.map(function (tab) { return tab.id; })
-							);		
+							return Chrome.tabs.highlight({
+								tabs:
+									tabs.map(function (tab) { return tab.index; })
+							});		
 						else return Chrome.tabs.update(
 							tabs[0].id, 
 							{ active: true }
