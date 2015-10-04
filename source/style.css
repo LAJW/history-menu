@@ -1,0 +1,21 @@
+.Layer {
+	position: fixed;
+	background: white;
+	top: 0px;
+	left: 100%;
+	bottom: 30px;
+	transition: 0.3s;
+	width: 100%;
+	box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.5);
+}
+
+.Layer.visible {
+	left: 0%;	
+}
+
+.MultiButton {
+	position: fixed;
+	bottom: 0px;
+	background: white;
+	box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.5);
+}

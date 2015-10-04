@@ -101,17 +101,34 @@ Promise.all([
 		for (let item of history) {
 			mainLayer.insert(new HistoryButton(item));		
 		}
-		let mainButtons = mainLayer.insert(new MultiButton);
-		let searchBox = mainButtons.insert(new Input)
-		mainButtons.insert(new Button({
-			icon: "chrome://favicon/chrome://history"
+		let searchLayer = root.insert(new Layer({
+			visible: false,
+			children: [
+				new Separator({title: "Search Results"})
+			]
 		}));
-		mainButtons.insert(new Button({
-			icon: "chrome://favicon/chrome://bookmarks"
+		root.insert(new MultiButton({
+			children: [
+				new Input({
+					placeholder: "Search History...",
+					lockon: true,
+					change: function (input) {
+						searchLayer.visible = !!this.value;
+					}
+				}),
+				new Button({
+					title: "Other Devices",
+					icon: "icons/next.png"
+				}),
+				new Button({
+					title: "All History",
+					icon: "icons/history-19.png"
+				}),
+				new Button({
+					title: "Settings",
+					icon: "icons/options.png"
+				})
+			]
 		}));
-		mainLayer.open = false;
-		let searchLayer = root.insert(new Layer);
-		searchLayer.insert(new Separator({title: "Search Results"}));
-
 	}).apply(this, arr);
 });

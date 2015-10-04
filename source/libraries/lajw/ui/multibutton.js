@@ -12,10 +12,6 @@ var MultiButton = (function () {
 			e = e || {};
 			e.DOM = template.cloneNode(false);
 			super(e);
-			e.children = e.children || [];
-			e.children.forEach(function (button) {
-				this.insert(button);
-			}.bind(this));
 		}
 	}
 	return MultiButton;

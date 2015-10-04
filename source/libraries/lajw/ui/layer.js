@@ -1,7 +1,7 @@
 "use strict"
 class Layer extends Parent {
 	constructor(e) {
-		typecheck(arguments, [{
+		typecheck.loose(arguments, [{
 			visible: [Boolean, undefined]
 			}, undefined]);
 		e = e || {};
