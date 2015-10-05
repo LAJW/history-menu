@@ -4,7 +4,7 @@ class HistoryButton extends Button {
 	constructor(item) {
 		if (!item.title) {
 			item.tooltip = item.url;
-			item.url = trimURL(item.url);
+			item.title = trimURL(item.url);
 			item.tooltip = item.url;
 		} else {
 			item.tooltip = item.title + "\n" + item.url;
