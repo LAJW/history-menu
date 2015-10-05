@@ -53,27 +53,34 @@ var Chrome;
 					[Boolean, undefined]
 				);
 				let colon = url.indexOf(":");
-				let pattern = "*" + url.substr(colon);
-				return Chrome.tabs.query({url: pattern})
-					.then(function (tabs) {
-					console.log(tabs);
-					if (tabs.length) {
-						if (inBackground)
-							return Chrome.tabs.highlight({
-								tabs:
-									tabs.map(function (tab) { return tab.index; })
-							});		
-						else return Chrome.tabs.update(
-							tabs[0].id, 
-							{ active: true }
-						);
-					} else {
-						return Chrome.tabs.create({
-							url: url,
-							active: !inBackground
-						});
-					}
-				});
+				if (colon >= 0) {
+					let pattern = "*" + url.substr(colon);
+					return Chrome.tabs.query({url: pattern})
+						.then(function (tabs) {
+						console.log(tabs);
+						if (tabs.length) {
+							if (inBackground)
+								return Chrome.tabs.highlight({
+									tabs:
+										tabs.map(function (tab) { return tab.index; })
+								});		
+							else return Chrome.tabs.update(
+								tabs[0].id, 
+								{ active: true }
+							);
+						} else {
+							return Chrome.tabs.create({
+								url: url,
+								active: !inBackground
+							});
+						}
+					});
+				} else {
+					return Chrome.tabs.create({
+						url: url,
+						active: !inBackground
+					});
+				}
 			}
 		}
 	}
