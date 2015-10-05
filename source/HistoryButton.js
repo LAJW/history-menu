@@ -15,7 +15,7 @@ class HistoryButton extends Button {
 	}
 	click(e) { /*override*/
 		e.preventDefault();
-		Chrome.tabs.openOrSelect(this.url, e.which == 2);
+		Chrome.tabs.openOrSelect(this.url, e.which == 2 || e.ctrlKey);
 	}
 	get url() {
 		return this.DOM.href;	

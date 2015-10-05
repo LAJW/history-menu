@@ -14,7 +14,7 @@ class WindowFolder extends Folder {
 	click(e) { /*override*/
 		e.preventDefault();
 		Folder.prototype.click.call(this, e);
-		if (e.which == 2) {
+		if (e.which == 2 || e.ctrlKey) {
 			Chrome.sessions.restore(this.sessionId, true);
 		}
 	}

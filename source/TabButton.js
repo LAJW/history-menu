@@ -14,7 +14,7 @@ class TabButton extends Button {
 	}
 	click(e) { /*override*/
 		e.preventDefault();
-		Chrome.sessions.restore(this.sessionId, e.which == 2);
+		Chrome.sessions.restore(this.sessionId, e.which == 2 || e.ctrlKey);
 	}
 };
 

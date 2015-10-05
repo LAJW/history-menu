@@ -1,15 +1,13 @@
 "use strict"
 
-Object.defineProperty(Function.prototype, "create",
-	{
-		get: function () {
-			let self = this;
-			return function (a, b, c, d, e, f, g, h) {
-				return new self(a, b, c, d, e, f, g, h)
-			}
+Object.defineProperty(Function.prototype, "create", {
+	get: function () {
+		let self = this;
+		return function (a, b, c, d, e, f, g, h) {
+			return new self(a, b, c, d, e, f, g, h)
 		}
 	}
-)
+})
 
 // remove ftp|http|https://(www). from url
 function trimURL(url) {
