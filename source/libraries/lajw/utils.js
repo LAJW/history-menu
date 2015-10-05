@@ -41,15 +41,16 @@ function trimURL(text) {
 // relativeTime(Number timeInMilliseconds)
 
 function relativeTime(value) {
+	typecheck(arguments, Number);
 	var diff = ( Date.now() - value ) / 1000;
 	if (diff < 60) {
 		return "<1m";
 	} else if (diff < 3600) {
-		return round(diff / 60) + "m";
+		return Math.round(diff / 60) + "m";
 	} else if (diff < 3600 * 24) {
-		return round(diff / 3600) + "h";
+		return Math.round(diff / 3600) + "h";
 	} else if (diff < 3600 * 24 * 365) {
-		return round(diff / 3600 / 24) + "d";
+		return Math.round(diff / 3600 / 24) + "d";
 	} else {
 		return round(diff / 3600 / 24 / 365) + "y";	
 	}
