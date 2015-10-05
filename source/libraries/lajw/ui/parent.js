@@ -20,19 +20,28 @@ class Parent extends Node {
 	}
 	// insert child, before other child or at the end, return it
 	insert(child, before) {
-		typecheck(arguments, Node, [Node, undefined]);
-		if (child.parent)
-			throw new TypeError("child already has a parent");
-		try {
-			this.container.insertBefore(child.DOM, before ? before.DOM : null);
-		} catch (e) {
-			throw new TypeError("before does not belong to parent") 
+		typecheck(arguments, 
+			[Node, Array],
+			[Node, undefined]
+		);
+		if (child instanceof Array) {
+			for (let c of child) {
+				this.insert(c, before);
+			}
+		} else {
+			if (child.parent)
+				throw new TypeError("child already has a parent");
+			try {
+				this.container.insertBefore(child.DOM, before ? before.DOM : null);
+			} catch (e) {
+				throw new TypeError("before does not belong to parent") 
+			}
+			if (before)
+				this._children.splice(this._children.indexOf(before), 0, child);
+			else this._children.push(child);
+			child.fadeIn(0);
+			child._parent = this;
 		}
-		if (before)
-			this._children.splice(this._children.indexOf(before), 0, child);
-		else this._children.push(child);
-		child.fadeIn(0);
-		child._parent = this;
 		return child;
 	}
 	// remove child from child list, return it

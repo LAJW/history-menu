@@ -16,6 +16,7 @@ var Chrome;
 		},
 		sessions: {
 			getRecent: wrap(chrome.sessions, "getRecentlyClosed"),
+			getDevices: wrap(chrome.sessions, "getDevices"),
 			restore: function (sessionId, inBackground) {
 				typecheck(arguments, String, [Boolean, undefined]);	
 				return new Promise(function (resolve) {
@@ -47,6 +48,10 @@ var Chrome;
 			highlight: wrap(chrome.tabs, "highlight"),
 			// open url or if tab with URL already exists, select it instead
 			openOrSelect: function (url, inBackground) {
+				typecheck(arguments,
+					String,
+					[Boolean, undefined]
+				);
 				let colon = url.indexOf(":");
 				let pattern = "*" + url.substr(colon);
 				return Chrome.tabs.query({url: pattern})

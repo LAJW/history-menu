@@ -9,73 +9,10 @@ function trimURL(url) {
 	return url;
 }
 
-class TabButton extends Button {
-   constructor(tab) {
-   		typecheck.loose(arguments, {
-			sessionId: String,
-		});
-		super({
-			icon: "chrome://favicon/" + tab.url,
-			title: tab.title,
-			tooltip: tab.url
-		});
-		this.sessionId = tab.sessionId;
-	}
-	click(e) { /*override*/
-		e.preventDefault();
-		Chrome.sessions.restore(this.sessionId, e.which == 2);
-	}
-};
-
-class WindowFolder extends Folder {
-	constructor(window) {
-   		typecheck(arguments, {
-			sessionId: String,
-		});
-		Folder.call(this, window);
-		this.title = "Window (Number of tabs: " + window.tabs.length + ")";
-		let self = this;
-		window.tabs.forEach(function (tab) {
-			self.insert(TabButton.create(tab));
-		});
-	}
-	click(e) { /*override*/
-		e.preventDefault();
-		Folder.click(this, e);
-		Chrome.sessions.restore(this.sessionId, e.which == 2);
-	}
-}
-
-class HistoryButton extends Button {
-	constructor(item) {
-		if (!item.title) {
-			item.tooltip = item.url;
-			item.url = trim(item.url);
-			item.tooltip = item.url;
-		} else {
-			item.tooltip = item.title + "\n" + item.url;
-		}
-		super(item);
-		this.url = item.url;
-		this.icon = "chrome://favicon/" + item.url;
-	}
-	click(e) { /*override*/
-		e.preventDefault();
-		Chrome.tabs.openOrSelect(this.url, true);
-	}
-	get url() {
-		return this.DOM.href;	
-	}
-	set url(value) {
-		this.DOM.href = value;
-	}
-}
-
 Promise.all([
 	Root.ready(),
-	Chrome.sessions.getRecent({
-		maxResults: 10
-	}),
+	Chrome.sessions.getRecent(),
+	Chrome.sessions.getDevices(),
 	Chrome.history.search({
 		text: "", 
 		startTime: Date.now() - 1000 * 3600 * 24 * 30, 
@@ -83,9 +20,9 @@ Promise.all([
 		maxResults: 10
 	}),
 	Chrome.storage.local.get(),
-	Chrome.storage.sync.get()
+	Chrome.storage.sync.get(),
 ]).then(function (arr) {
-	(function (root, sessions, history, storage, local) {
+	(function (root, sessions, devices, history, storage, local) {
 		root.setTheme("Ubuntu", true);
 		let mainLayer = root.insert(new Layer);
 		mainLayer.insert(new Separator({title: "Recently Closed"}));
@@ -101,6 +38,13 @@ Promise.all([
 		for (let item of history) {
 			mainLayer.insert(new HistoryButton(item));		
 		}
+		
+		let deviceLayer = root.insert(new Layer({
+			visible: false
+		}));
+		for (let device of devices) {
+			deviceLayer.insert(new DeviceFolder(device));
+		}
 		let searchLayer = root.insert(new Layer({
 			visible: false,
 			children: [
@@ -114,19 +58,32 @@ Promise.all([
 					lockon: true,
 					change: function (input) {
 						searchLayer.visible = !!this.value;
+						deviceLayer.visible = false;
 					}
 				}),
-				new Button({
-					title: "Other Devices",
-					icon: "icons/next.png"
+				new ActionButton({
+					tooltip: "Other Devices",
+					icon: "icons/next.png",
+					click: function (e) {
+						e.preventDefault();
+						deviceLayer.visible = !deviceLayer.visible;
+					}
 				}),
-				new Button({
-					title: "All History",
-					icon: "icons/history-19.png"
+				new ActionButton({
+					tooltip: "All History",
+					icon: "icons/history-19.png",
+					click: function (e) {
+						e.preventDefault();
+						Chrome.tabs.openOrSelect("chrome://history/", false);
+					}
 				}),
-				new Button({
-					title: "Settings",
-					icon: "icons/options.png"
+				new ActionButton({
+					tooltip: "Settings",
+					icon: "icons/options.png",
+					click: function (e) {
+						e.preventDefault();	
+						Chrome.tabs.openOrSelect("./options.html", false);
+					}
 				})
 			]
 		}));

@@ -27,11 +27,18 @@ var Folder = (function () {
 			e = e || {};
 			e.DOM = template.cloneNode(true);
 			e.container = e.DOM.lastChild;
+			let children = e.children;
+			e.children = undefined;
 			super(e);
 			this._title = this.DOM.firstChild;
 			this._empty = this.DOM.childNodes[1];
 			this.title = e.title || "";
 			this.open = e.open === undefined ? true : e.open;
+			if (children) {
+				for (let child of children) {
+					this.insert(child);
+				}
+			}
 		}
 		insert(child, before) { // override
 			Parent.prototype.insert.apply(this, arguments);
@@ -40,8 +47,8 @@ var Folder = (function () {
 		}
 		remove(child) { // override
 			Parent.prototype.remove.apply(this, arguments);
-			if (!empty)
-				this._empty.classList.add("hidden");
+			if (!this.children.length)
+				this._empty.classList.remove("hidden");
 			this._updateStyle();
 		}
 		fadeIn(delay) { // override
