@@ -1,5 +1,16 @@
 "use strict"
 
+Object.defineProperty(Function.prototype, "create",
+	{
+		get: function () {
+			let self = this;
+			return function (a, b, c, d, e, f, g, h) {
+				return new self(a, b, c, d, e, f, g, h)
+			}
+		}
+	}
+)
+
 // remove ftp|http|https://(www). from url
 function trimURL(url) {
 	typecheck(arguments, String);	
@@ -11,13 +22,27 @@ function trimURL(url) {
 
 Promise.all([
 	Root.ready(),
-	Chrome.sessions.getRecent(),
-	Chrome.sessions.getDevices(),
+	Chrome.sessions.getRecent()
+		.then(function (sessions) {
+			return sessions.map(function (session) {
+				let bit = session.tab || session.window;
+				bit.lastModified = session.lastModified;
+				if (session.tab)
+					return new TabButton(bit);
+				else return new WindowFolder(bit);
+			});
+		}),
+	Chrome.sessions.getDevices()
+		.then(function (devices) {
+			return devices.map(DeviceFolder.create);
+		}),
 	Chrome.history.search({
 		text: "", 
 		startTime: Date.now() - 1000 * 3600 * 24 * 30, 
 		endTime: Date.now(),
 		maxResults: 10
+	}).then(function (results) {
+		return results.map(HistoryButton.create);
 	}),
 	Chrome.storage.local.get(),
 	Chrome.storage.sync.get(),
@@ -26,26 +51,14 @@ Promise.all([
 		root.setTheme("Ubuntu", true);
 		let mainLayer = root.insert(new Layer);
 		mainLayer.insert(new Separator({title: "Recently Closed"}));
-		for (let session of sessions) {
-			let bit = session.tab || session.window;
-			bit.lastModified = session.lastModified;
-			if (session.tab)
-				mainLayer.insert(new TabButton(bit));
-			if (session.window)
-				mainLayer.insert(new TabButton(bit));
-		}
+		mainLayer.insert(sessions);
 		mainLayer.insert(new Separator({title: "Recently Visited"}));
-
-		for (let item of history) {
-			mainLayer.insert(new HistoryButton(item));		
-		}
+		mainLayer.insert(history);
 		
 		let deviceLayer = root.insert(new Layer({
-			visible: false
+			visible: false,
+			children: devices
 		}));
-		for (let device of devices) {
-			deviceLayer.insert(new DeviceFolder(device));
-		}
 		let searchLayer = root.insert(new Layer({
 			visible: false,
 			children: [
