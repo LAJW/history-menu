@@ -35,6 +35,7 @@ Promise.all([
 				mainLayer.insert(new TabButton(bit));
 		}
 		mainLayer.insert(new Separator({title: "Recently Visited"}));
+
 		for (let item of history) {
 			mainLayer.insert(new HistoryButton(item));		
 		}
@@ -65,7 +66,6 @@ Promise.all([
 					tooltip: "Other Devices",
 					icon: "icons/next.png",
 					click: function (e) {
-						e.preventDefault();
 						deviceLayer.visible = !deviceLayer.visible;
 					}
 				}),
@@ -73,7 +73,6 @@ Promise.all([
 					tooltip: "All History",
 					icon: "icons/history-19.png",
 					click: function (e) {
-						e.preventDefault();
 						Chrome.tabs.openOrSelect("chrome://history/", false);
 					}
 				}),
@@ -81,7 +80,6 @@ Promise.all([
 					tooltip: "Settings",
 					icon: "icons/options.png",
 					click: function (e) {
-						e.preventDefault();	
 						Chrome.tabs.openOrSelect("./options.html", false);
 					}
 				})
