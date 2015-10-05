@@ -12,7 +12,8 @@ var Chrome;
 	}
 	Chrome = {
 		history: {
-			search: wrap(chrome.history, "search")
+			search: wrap(chrome.history, "search"),
+			deleteUrl: wrap(chrome.history, "deleteUrl")
 		},
 		sessions: {
 			getRecent: wrap(chrome.sessions, "getRecentlyClosed"),

@@ -6,6 +6,10 @@ var HistoryButton = (function () {
 		className: "Timer hidden",
 		childNodes: [$("")]
 	});
+	const removeButton = $({
+		nodeName: "DIV",
+		className: "Remove"
+	});
 	class HistoryButton extends Button {
 		constructor(item) {
 			if (!item.title) {
@@ -16,15 +20,20 @@ var HistoryButton = (function () {
 				item.tooltip = item.title + "\n" + item.url;
 			}
 			super(item);
+			this.DOM.classList.add("History");
 			this.url = item.url;
 			this.icon = "chrome://favicon/" + item.url;
 			this._timer = this.DOM.appendChild(template.cloneNode(true)).firstChild;
 			if (item.lastVisitTime)
 				this.timer = relativeTime(item.lastVisitTime);
+			this._remove = this.DOM.appendChild(removeButton.cloneNode(true));
 		}
 		click(e) { /*override*/
 			e.preventDefault();
-			Chrome.tabs.openOrSelect(this.url, e.which == 2 || e.ctrlKey);
+			if (e.target == this._remove) {
+				Chrome.history.deleteUrl({url: this.url});
+				this.parent.remove(this);
+			} else Chrome.tabs.openOrSelect(this.url, e.which == 2 || e.ctrlKey);
 		}
 		get url() {
 			return this.DOM.href;	

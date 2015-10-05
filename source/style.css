@@ -50,3 +50,20 @@
 .hidden {
 	display: none;
 }
+
+.Remove {
+	background: url('icons/x-white.png') #E36C43 no-repeat center center;
+	width: 23px;
+	height: 19px;
+	position: absolute;
+	left: 2px;
+	top: 2px;
+	display: block;
+	opacity: 0;
+	transition: 0.15s;
+}
+
+.Remove:hover {
+	transition: 0s;
+	opacity: 1;
+}
