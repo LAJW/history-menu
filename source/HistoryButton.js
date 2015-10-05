@@ -1,26 +1,45 @@
 "use strict"
 
-class HistoryButton extends Button {
-	constructor(item) {
-		if (!item.title) {
-			item.tooltip = item.url;
-			item.title = trimURL(item.url);
-			item.tooltip = item.url;
-		} else {
-			item.tooltip = item.title + "\n" + item.url;
+var HistoryButton = (function () {
+	const template = $({
+		nodeName: "DIV",
+		className: "Timer hidden",
+		childNodes: [$("")]
+	});
+	class HistoryButton extends Button {
+		constructor(item) {
+			if (!item.title) {
+				item.tooltip = item.url;
+				item.title = trimURL(item.url);
+				item.tooltip = item.url;
+			} else {
+				item.tooltip = item.title + "\n" + item.url;
+			}
+			super(item);
+			this.url = item.url;
+			this.icon = "chrome://favicon/" + item.url;
+			this._timer = this.DOM.appendChild(template.cloneNode(true)).firstChild;
+			if (item.lastVisitTime)
+				this.timer = relativeTime(item.lastVisitTime);
 		}
-		super(item);
-		this.url = item.url;
-		this.icon = "chrome://favicon/" + item.url;
+		click(e) { /*override*/
+			e.preventDefault();
+			Chrome.tabs.openOrSelect(this.url, e.which == 2 || e.ctrlKey);
+		}
+		get url() {
+			return this.DOM.href;	
+		}
+		set url(value) {
+			this.DOM.href = value;
+		}
+		get timer() {
+			return this._timer.nodeValue;
+		}
+		set timer(value) {
+			typecheck(arguments, String);
+			this._timer.nodeValue = value;
+			this._timer.parentNode.classList.toggle("hidden", !value);
+		}
 	}
-	click(e) { /*override*/
-		e.preventDefault();
-		Chrome.tabs.openOrSelect(this.url, e.which == 2 || e.ctrlKey);
-	}
-	get url() {
-		return this.DOM.href;	
-	}
-	set url(value) {
-		this.DOM.href = value;
-	}
-}
+	return HistoryButton;
+})();
