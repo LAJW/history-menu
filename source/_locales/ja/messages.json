@@ -1,0 +1,101 @@
+{
+	"description": {
+		"message": "閉じたカードとウィンドウやヒストリーなどを探し出して、戻して。"
+	},
+	"popup_history_manager": {
+		"message": "すべての履歴を表示"
+	},
+	"popup_recently_closed_tabs": {
+		"message": "最近閉じたカード"
+	},
+	"popup_recent_history": {
+		"message": "最近見たカード"
+	},
+	"popup_search_history": {
+		"message": "ヒストリーの中で検索して"
+	},
+	"popup_other_devices": {
+		"message": "I他のデバイス"
+	},
+	"popup_options": {
+		"message": "オプション"
+	},
+	"popup_back": {
+		"message": "戻り"
+	},
+	"popup_ok": {
+		"message": "OK"
+	},
+	"popup_window": {
+		"message": "ウィンドウ"
+	},
+	"popup_number_of_tabs": {
+		"message": "カードの枚数"
+	},
+	"results_recently": {
+		"message": "最後"
+	},
+	"results_today": {
+		"message": "今日"
+	},
+	"results_yesterday": {
+		"message": "昨日"
+	},
+	"results_this_week": {
+		"message": "今週"
+	},
+	"results_last_week": {
+		"message": "先週"
+	},
+	"results_this_month": {
+		"message": "今月"
+	},
+	"results_nothing_found": {
+		"message": "何も見つかれなかった"
+	},
+	"results_end": {
+		"message": "結果の終わり"
+	},
+	"options_display": {
+		"message": "外観"
+	},
+	"icon_color": {
+		"message": "アイコンの色"
+	},
+	"granite": {
+		"message": "花崗岩の"
+	},
+	"white": {
+		"message": "ホワイト"	
+	},
+	"red": {
+		"message": "赤"
+	},
+	"green": {
+		"message": "緑色"
+	},
+	"blue": {
+		"message": "青"
+	}, 
+	"options_timer": {
+		"message": "カードの閉鎖の時間を見せて"
+	},
+	"options_tab_count": {
+		"message": "タブの最大数"
+	},
+	"options_history_count": {
+		"message": "履歴エントリの最大数"
+	},
+	"options_expand_folders": {
+		"message": "閉じたウィンドウを拡大"
+	},
+	"options_animate": {
+		"message": "アニメーションをオンにして"
+	},
+	"options_about": {
+		"message": "情報"
+	},
+	"options_about_message": {
+		"message": "License: <a href='http://opensource.org/licenses/MIT'>The MIT License</a><br>Copyright © 2015 Łukasz A.J. Wrona<br><a href='https://twitter.com/lajwrona'>Twitter @lajwrona</a>"
+	}
+}

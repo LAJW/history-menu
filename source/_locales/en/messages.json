@@ -1,0 +1,101 @@
+{
+	"description": {
+		"message": "Find and restore recently closed tabs, windows and history."
+	},
+	"popup_history_manager": {
+		"message": "Show All History"
+	},
+	"popup_recently_closed_tabs": {
+		"message": "Recently Closed Tabs"
+	},
+	"popup_recent_history": {
+		"message": "Recent history"
+	},
+	"popup_search_history": {
+		"message": "Search history"
+	},
+	"popup_other_devices": {
+		"message": "Other devices"
+	},
+	"popup_options": {
+		"message": "Options"
+	},
+	"popup_back": {
+		"message": "Back"
+	},
+	"popup_ok": {
+		"message": "OK"
+	},
+	"popup_window": {
+		"message": "Window"
+	},
+	"popup_number_of_tabs": {
+		"message": "Number of tabs"
+	},
+	"results_recently": {
+		"message": "Recently"
+	},
+	"results_today": {
+		"message": "Eariler today"
+	},
+	"results_yesterday": {
+		"message": "Yesterday"
+	},
+	"results_this_week": {
+		"message": "Earlier this week"
+	},
+	"results_last_week": {
+		"message": "Last week"
+	},
+	"results_this_month": {
+		"message": "Earlier this month"
+	},
+	"results_nothing_found": {
+		"message": "Nothing found"
+	},
+	"results_end": {
+		"message": "End of results"
+	},
+	"options_display": {
+		"message": "Display"
+	},
+	"icon_color": {
+		"message": "Icon color"
+	},
+	"granite": {
+		"message": "Granite"
+	},
+	"white": {
+		"message": "White"	
+	},
+	"red": {
+		"message": "Red"
+	},
+	"green": {
+		"message": "Green"
+	},
+	"blue": {
+		"message": "Blue"
+	}, 
+	"options_timer": {
+		"message": "Show visit time"
+	},
+	"options_tab_count": {
+		"message": "Maximum number of closed tabs"
+	},
+	"options_history_count": {
+		"message": "Maximum number of history entries"
+	},
+	"options_expand_folders": {
+		"message": "Expand closed windows"
+	},
+	"options_animate": {
+		"message": "Enable animations"
+	},
+	"options_about": {
+		"message": "About"
+	},
+	"options_about_message": {
+		"message": "License: <a href='http://opensource.org/licenses/MIT'>The MIT License</a><br>Copyright © 2015 Łukasz A.J. Wrona<br><a href='https://twitter.com/lajwrona'>Twitter @lajwrona</a>"
+	}
+}

@@ -1,5 +1,21 @@
 "use strict"
 
+// fetch for chrome protocol
+function chromeFetch(url) {
+	return new Promise(function (resolve, reject) {
+		let xhr = new XMLHttpRequest();
+		xhr.open("GET", url);
+		xhr.onload = function () {
+			if (this.status >= 200 && this.status < 300)
+				resolve(xhr.response);
+			else reject(xhr.statusText);
+		}
+		xhr.onerror = function () {
+			reject(xhr.statusText);
+		}
+		xhr.send();
+	});
+}
 Object.defineProperty(Function.prototype, "create", {
 	get: function () {
 		let self = this;
@@ -44,13 +60,18 @@ Promise.all([
 	}),
 	Chrome.storage.local.get(),
 	Chrome.storage.sync.get(),
+	chromeFetch("_locales/en/messages.json")
 ]).then(function (arr) {
-	(function (root, sessions, devices, history, storage, local) {
+	(function (root, sessions, devices, history, storage, local, i18nData) {
+		i18nData = JSON.parse(i18nData);
+		let i18n = function (key) {
+			return i18nData[key] ? i18nData[key].message : "";		
+		}
 		root.setTheme("Ubuntu", true);
 		let mainLayer = root.insert(new Layer({children: [].concat(
-			[new Separator({title: "Recently Closed"})],
+			[new Separator({title: i18n("popup_recently_closed_tabs")})],
 			sessions,
-			[new Separator({title: "Recently Visited"})],
+			[new Separator({title: i18n("popup_recent_history")})],
 			history
 		)}));
 		
@@ -58,39 +79,40 @@ Promise.all([
 			visible: false,
 			children: devices
 		}));
+		let devicesButton;
 		let searchLayer = root.insert(new Layer({
 			visible: false,
 			children: [
-				new Separator({title: "Search Results"})
+				new Separator({title: i18n("popup_search_history")})
 			]
 		}));
 		root.insert(new MultiButton({
 			children: [
 				new Input({
-					placeholder: "Search History...",
+					placeholder: i18n("popup_search_history"),
 					lockon: true,
 					change: function (input) {
 						searchLayer.visible = !!this.value;
 						deviceLayer.visible = false;
+						devicesButton.on = false;
 					}
 				}),
-				new ActionButton({
-					tooltip: "Other Devices",
-					icon: "icons/next.png",
+				devicesButton = new DevicesButton({
+					tooltip: i18n("popup_other_devices"),
 					click: function (e) {
-						deviceLayer.visible = !deviceLayer.visible;
+						this.on = deviceLayer.visible = !deviceLayer.visible;
 						searchLayer.visible = false;
 					}
 				}),
 				new ActionButton({
-					tooltip: "All History",
+					tooltip: i18n("popup_history_manager"),
 					icon: "icons/history-19.png",
 					click: function (e) {
 						Chrome.tabs.openOrSelect("chrome://history/", false);
 					}
 				}),
 				new ActionButton({
-					tooltip: "Settings",
+					tooltip: i18n("popup_options"),
 					icon: "icons/options.png",
 					click: function (e) {
 						Chrome.tabs.openOrSelect("./options.html", false);
