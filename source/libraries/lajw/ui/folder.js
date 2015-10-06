@@ -34,11 +34,8 @@ var Folder = (function () {
 			this._empty = this.DOM.childNodes[1];
 			this.title = e.title || "";
 			this.open = e.open === undefined ? true : e.open;
-			if (children) {
-				for (let child of children) {
-					this.insert(child);
-				}
-			}
+			if (children) 
+				this.insert(children);
 		}
 		insert(child, before) { // override
 			Parent.prototype.insert.apply(this, arguments);

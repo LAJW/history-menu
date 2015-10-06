@@ -83,3 +83,7 @@
 .on .Arrow {
 	transform: rotate(-180deg);
 }
+
+.Folder a {
+	position: relative;
+}

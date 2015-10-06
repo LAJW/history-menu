@@ -19,6 +19,9 @@ var Button = (function () {
 			this.icon = e.icon || "";
 			this.tooltip = e.tooltip || "";
 		}
+		get height() {
+			return 23; // HACK
+		}
 		fadeIn(delay) { /* override */
 			typecheck(arguments, Number);
 			this.DOM.style.WebkitAnimationDelay = delay + "ms";

@@ -16,7 +16,7 @@ var WindowFolder = (function () {
 			for (let tab of window.tabs) {
 				this.insert(new TabButton(tab));
 			}
-			this._timer = this.DOM.appendChild(template.cloneNode(true)).firstChild;
+			this._timer = this.DOM.firstChild.appendChild(template.cloneNode(true)).firstChild;
 			if (window.lastModified)
 				this.timer = relativeTime(window.lastModified * 1000);
 		}
