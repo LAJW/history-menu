@@ -19,6 +19,11 @@ var Button = (function () {
 			this.icon = e.icon || "";
 			this.tooltip = e.tooltip || "";
 		}
+		fadeIn(delay) { /* override */
+			typecheck(arguments, Number);
+			this.DOM.style.WebkitAnimationDelay = delay + "ms";
+			this.DOM.classList.add("fadeIn");
+		}
 		get title() { return this.DOM.firstChild.nodeValue; }
 		set title(value) { 
 			typecheck(arguments, String);

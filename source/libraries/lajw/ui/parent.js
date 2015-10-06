@@ -14,8 +14,7 @@ class Parent extends Node {
 			);
 			this._children = [];
 			if (e.children)
-				for (let child of e.children) 
-					this.insert(child);
+				this.insert(e.children);
 		}
 	}
 	// insert child, before other child or at the end, return it
@@ -24,20 +23,34 @@ class Parent extends Node {
 			[Node, Array],
 			[Node, undefined]
 		);
+		let beforeIndex;
+		if (before) {
+			beforeIndex = this._children.indexOf(before);
+			if (before.parent !== this || beforeIndex < 0) 
+				throw new TypeError("before does not belong to this parent");
+		}
+		// insert many
 		if (child instanceof Array) {
-			for (let c of child) {
-				this.insert(c, before);
+			for (let c of child) 
+				if (child.parent)
+					throw new TypeError("one of the children already has a parent");
+
+			for (let i = 0, n = child.length; i < n; i++) {
+				let c = child[i];
+				c._parent = this;
+				this.DOM.insertBefore(c.DOM, before ? before.DOM : null);
+				c.fadeIn(Math.max(Math.min(n, 20) - i, 0) * 10);
 			}
+			let beforeChildren = this._children.slice(0, beforeIndex);
+			let afterChildren = this._children.slice(beforeIndex);
+			this._children = beforeChildren.concat(child, afterChildren);
+		// insert one
 		} else {
 			if (child.parent)
 				throw new TypeError("child already has a parent");
-			try {
-				this.container.insertBefore(child.DOM, before ? before.DOM : null);
-			} catch (e) {
-				throw new TypeError("before does not belong to parent") 
-			}
+			this.container.insertBefore(child.DOM, before ? before.DOM : null);
 			if (before)
-				this._children.splice(this._children.indexOf(before), 0, child);
+				this._children.splice(beforeIndex, 0, child);
 			else this._children.push(child);
 			child.fadeIn(0);
 			child._parent = this;
