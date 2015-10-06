@@ -47,11 +47,12 @@ Promise.all([
 ]).then(function (arr) {
 	(function (root, sessions, devices, history, storage, local) {
 		root.setTheme("Ubuntu", true);
-		let mainLayer = root.insert(new Layer);
-		mainLayer.insert(new Separator({title: "Recently Closed"}));
-		mainLayer.insert(sessions);
-		mainLayer.insert(new Separator({title: "Recently Visited"}));
-		mainLayer.insert(history);
+		let mainLayer = root.insert(new Layer({children: [].concat(
+			[new Separator({title: "Recently Closed"})],
+			sessions,
+			[new Separator({title: "Recently Visited"})],
+			history
+		)}));
 		
 		let deviceLayer = root.insert(new Layer({
 			visible: false,
@@ -78,6 +79,7 @@ Promise.all([
 					icon: "icons/next.png",
 					click: function (e) {
 						deviceLayer.visible = !deviceLayer.visible;
+						searchLayer.visible = false;
 					}
 				}),
 				new ActionButton({
