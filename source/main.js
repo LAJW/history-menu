@@ -16,6 +16,7 @@ function chromeFetch(url) {
 		xhr.send();
 	});
 }
+
 Object.defineProperty(Function.prototype, "create", {
 	get: function () {
 		let self = this;
@@ -34,13 +35,22 @@ function trimURL(url) {
 	return url;
 }
 
+let settings = {
+	locale: "en",
+	expandWindows: false,
+	timer: false,
+	recentlyClosedCount: 10,
+	recentlyViewedCount: 10
+}
+
 Promise.all([
 	Root.ready(),
-	Chrome.sessions.getRecent()
+	Chrome.sessions.getRecent({maxResults: settings.recentlyClosedCount})
 		.then(function (sessions) {
 			return sessions.map(function (session) {
 				let bit = session.tab || session.window;
-				bit.lastModified = session.lastModified;
+				if (settings.timer)
+					bit.lastModified = session.lastModified;
 				if (session.tab)
 					return new TabButton(bit);
 				else return new WindowFolder(bit);
@@ -48,19 +58,29 @@ Promise.all([
 		}),
 	Chrome.sessions.getDevices()
 		.then(function (devices) {
-			return devices.map(DeviceFolder.create);
+			return devices.map(function (device) {
+				if (!timer)
+					device.windows.forEach(function (window) {
+						window.lastModified = undefined;
+					});
+				return DeviceFolder.create
+			});
 		}),
 	Chrome.history.search({
 		text: "", 
 		startTime: Date.now() - 1000 * 3600 * 24 * 30, 
 		endTime: Date.now(),
-		maxResults: 10
+		maxResults: settings.recentlyViewedCount
 	}).then(function (results) {
-		return results.map(HistoryButton.create);
+		return results.map(function (result) {
+			if (!settings.timer)
+				result.lastVisitTime = undefined;
+			return HistoryButton.create(result);
+		});
 	}),
 	Chrome.storage.local.get(),
 	Chrome.storage.sync.get(),
-	chromeFetch("_locales/en/messages.json")
+	chromeFetch("_locales/" + settings.locale + "/messages.json")
 ]).then(function (arr) {
 	(function (root, sessions, devices, history, storage, local, i18nData) {
 		i18nData = JSON.parse(i18nData);
@@ -101,7 +121,6 @@ Promise.all([
 					tooltip: i18n("popup_other_devices"),
 					click: function (e) {
 						this.on = deviceLayer.visible = !deviceLayer.visible;
-						searchLayer.visible = false;
 					}
 				}),
 				new ActionButton({
