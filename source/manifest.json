@@ -12,5 +12,6 @@
 		"chrome://favicon/",
 		"storage"
 	],
+	"default_locale": "en",
 	"options_page": "popup.html"
 }
