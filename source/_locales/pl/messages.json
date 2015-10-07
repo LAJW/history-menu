@@ -6,10 +6,10 @@
 		"message": "Wyświetl całą historię"
 	},
 	"popup_recently_closed_tabs": {
-		"message": "Ostatnio zamknięte karty"
+		"message": "Ostatnio Zamknięte Karty"
 	},
 	"popup_recent_history": {
-		"message": "Ostatnio przeglądane"
+		"message": "Ostatnio Przeglądane"
 	},
 	"popup_search_history": {
 		"message": "Szukaj w historii"
@@ -49,6 +49,9 @@
 	},
 	"results_this_month": {
 		"message": "Wcześniej w tym miesiącu"
+	},
+	"results_this_month": {
+		"message": "W ubiegłym miesiącu"
 	},
 	"results_nothing_found": {
 		"message": "Niczego nie znaleziono"

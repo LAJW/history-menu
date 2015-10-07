@@ -9,13 +9,13 @@
 		"message": "Recently Closed Tabs"
 	},
 	"popup_recent_history": {
-		"message": "Recent history"
+		"message": "Revently Visited"
 	},
 	"popup_search_history": {
-		"message": "Search history"
+		"message": "Search History"
 	},
 	"popup_other_devices": {
-		"message": "Other devices"
+		"message": "Other Devices"
 	},
 	"popup_options": {
 		"message": "Options"
@@ -49,6 +49,9 @@
 	},
 	"results_this_month": {
 		"message": "Earlier this month"
+	},
+	"results_last_month": {	
+		"message": "Last month"
 	},
 	"results_nothing_found": {
 		"message": "Nothing found"

@@ -50,6 +50,9 @@
 	"results_this_month": {
 		"message": "今月"
 	},
+	"results_last_month": {	
+		"message": "先月"
+	},
 	"results_nothing_found": {
 		"message": "何も見つかれなかった"
 	},

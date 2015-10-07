@@ -11,13 +11,13 @@ function timeSectors() {
 	let lastMonth = now - hour * 24 * 30;
 	let prevMonth = now - hour * 24 * 60;
 	return [
-		{ start: lastHour, end: now, i18n: "time_last_hour" },
-		{ start: lastDay, end: lastHour, i18n: "time_last_day" },
-		{ start: yesterday, end: lastDay, i18n: "time_yesterday" },
-		{ start: lastWeek, end: yesterday, i18n: "time_last_week" },
-		{ start: prevWeek, end: lastWeek, i18n: "time_prev_week" },
-		{ start: lastMonth, end: prevWeek, i18n: "time_last_month" },
-		{ start: prevMonth, end: lastMonth, i18n: "time_prev_month" }
+		{ start: lastHour, end: now, i18n: "results_recently" },
+		{ start: lastDay, end: lastHour, i18n: "results_today" },
+		{ start: yesterday, end: lastDay, i18n: "results_yesterday" },
+		{ start: lastWeek, end: yesterday, i18n: "results_this_week" },
+		{ start: prevWeek, end: lastWeek, i18n: "results_last_week" },
+		{ start: lastMonth, end: prevWeek, i18n: "results_this_month" },
+		{ start: prevMonth, end: lastMonth, i18n: "results_last_month" }
 	];						
 }
 
@@ -152,7 +152,9 @@ Promise.all([
 								if (!results.length)
 									return [];
 								let nodes = results.map(HistoryButton.create);
-								nodes.unshift(new Separator({title: time.i18n}));
+								nodes.unshift(new Separator({
+									title: i18n(time.i18n)
+								}));
 								return nodes;
 							});
 						})).then(function (lists) {
@@ -160,8 +162,13 @@ Promise.all([
 								searchLayer.clear();
 								let nodes = Array.prototype.concat.apply([], lists);
 								if (nodes.length == 0)
-									searchLayer.insert(new Separator({title: "No results"}));
+									searchLayer.insert(new Separator({
+										title: i18n("results_nothing_found")
+									}));
 								else searchLayer.insert(nodes);
+								searchLayer.insert(new Separator({
+									title: i18n("results_end")
+								}));
 							}
 						}.bind(this));
 					}
