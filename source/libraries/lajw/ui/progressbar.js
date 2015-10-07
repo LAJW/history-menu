@@ -24,7 +24,7 @@ var Progressbar = (function () {
 				if (dt > 4 / 1000) {
 					then = Date.now();
 					if (!this.parent)
-						Clock.clear(clk);
+						clearInterval(this._interval);
 					ctx.clearRect(0, 0, 400, 10);
 					for (var i = 0; i < 3; i++) {
 						ctx.beginPath();

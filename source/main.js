@@ -127,17 +127,22 @@ Promise.all([
 				new Separator({title: i18n("popup_search_history")})
 			]
 		}));
+		let searchInstance = 0;
 		root.insert(new MultiButton({
 			children: [
 				new Input({
 					placeholder: i18n("popup_search_history"),
 					lockon: true,
 					change: function (value) {
+						let currentSearchInstance = ++searchInstance;
 						// layout update
 						searchLayer.visible = !!this.value;
 						deviceLayer.visible = false;
 						devicesButton.on = false;
-						
+						if (value) {
+							searchLayer.clear();
+							searchLayer.insert(new Progressbar);
+						}
 						Promise.all(timeSectors().map(function (time) {
 							return Chrome.history.search({
 								text: value,
@@ -151,7 +156,7 @@ Promise.all([
 								return nodes;
 							});
 						})).then(function (lists) {
-							if (this.value == value) {
+							if (searchInstance == currentSearchInstance) {
 								searchLayer.clear();
 								let nodes = Array.prototype.concat.apply([], lists);
 								if (nodes.length == 0)
