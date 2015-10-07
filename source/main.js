@@ -1,5 +1,26 @@
 "use strict"
 
+function timeSectors() {
+	let now = Date.now();
+	let hour = 1000 * 3600;
+	let lastHour = now - hour;
+	let lastDay = now - hour * 24;
+	let yesterday = now - hour * 48;
+	let lastWeek = now - hour * 24 * 7;
+	let prevWeek = now - hour * 24 * 14;
+	let lastMonth = now - hour * 24 * 30;
+	let prevMonth = now - hour * 24 * 60;
+	return [
+		{ start: lastHour, end: now, i18n: "time_last_hour" },
+		{ start: lastDay, end: lastHour, i18n: "time_last_day" },
+		{ start: yesterday, end: lastDay, i18n: "time_yesterday" },
+		{ start: lastWeek, end: yesterday, i18n: "time_last_week" },
+		{ start: prevWeek, end: lastWeek, i18n: "time_prev_week" },
+		{ start: lastMonth, end: prevWeek, i18n: "time_last_month" },
+		{ start: prevMonth, end: lastMonth, i18n: "time_prev_month" }
+	];						
+}
+
 // fetch for chrome protocol
 function chromeFetch(url) {
 	return new Promise(function (resolve, reject) {
@@ -111,10 +132,33 @@ Promise.all([
 				new Input({
 					placeholder: i18n("popup_search_history"),
 					lockon: true,
-					change: function (input) {
+					change: function (value) {
+						// layout update
 						searchLayer.visible = !!this.value;
 						deviceLayer.visible = false;
 						devicesButton.on = false;
+						
+						Promise.all(timeSectors().map(function (time) {
+							return Chrome.history.search({
+								text: value,
+								startTime: time.start,
+								endTime: time.end,
+							}).then(function (results) {
+								if (!results.length)
+									return [];
+								let nodes = results.map(HistoryButton.create);
+								nodes.unshift(new Separator({title: time.i18n}));
+								return nodes;
+							});
+						})).then(function (lists) {
+							if (this.value == value) {
+								searchLayer.clear();
+								let nodes = Array.prototype.concat.apply([], lists);
+								if (nodes.length == 0)
+									searchLayer.insert(new Separator({title: "No results"}));
+								else searchLayer.insert(nodes);
+							}
+						}.bind(this));
 					}
 				}),
 				devicesButton = new DevicesButton({
