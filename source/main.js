@@ -80,11 +80,11 @@ Promise.all([
 	Chrome.sessions.getDevices()
 		.then(function (devices) {
 			return devices.map(function (device) {
-				if (!timer)
-					device.windows.forEach(function (window) {
-						window.lastModified = undefined;
+				if (!settings.timer)
+					device.sessions.forEach(function (session) {
+						session.lastModified = undefined;
 					});
-				return DeviceFolder.create
+				return DeviceFolder.create(device)
 			});
 		}),
 	Chrome.history.search({
@@ -108,7 +108,7 @@ Promise.all([
 		let i18n = function (key) {
 			return i18nData[key] ? i18nData[key].message : "";		
 		}
-		root.setTheme("Ubuntu", true);
+		root.setTheme("Windows", true);
 		let mainLayer = root.insert(new Layer({children: [].concat(
 			[new Separator({title: i18n("popup_recently_closed_tabs")})],
 			sessions,
