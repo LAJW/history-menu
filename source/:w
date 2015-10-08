@@ -101,7 +101,6 @@
 	display: inline-block;
 	height: 20px;
 	vertical-align: middle;
-	border: 1px #333 solid;
 }
 
 .Slider button {

@@ -1,5 +1,75 @@
 "use strict"
 
+class Slider extends Node {
+	constructor(e) {
+		e = e || {};
+		e.DOM = $({
+			nodeName: "LABEL",
+			className: "Slider",
+			childNodes: [
+				$({
+					nodeName: "SPAN",
+					childNodes: [
+						$({
+							nodeName: "BUTTON",
+						})
+					]
+				}),
+				$("")
+			]
+		});
+		super(e);
+		this._knob = this.DOM.firstChild.firstChild;
+		this._title = this.DOM.lastChild;
+		this.title = e.title || "";
+		this.value = e.value || 50;
+		this.stageCount = e.stageCount || 0;
+	}
+	fadeIn() { /* override */
+		this._moveHandler = document.body.addEventListener("mousemove", function (e) {
+			this.mousemove(e);
+		}.bind(this));
+	}
+	fadeOut() {
+		document.body.removeEventListener(this.moveHandler);	
+	}
+	set title(value) {
+		typecheck(arguments, String);
+		this._title.nodeValue = value;
+	}
+	get title() {
+		return this._title.nodeValue;
+	}
+	// value in percent <0, 100>
+	set value(value) {
+		typecheck(arguments, Number);
+		if (value < 0)
+			value = 0;
+		if (value > 100)
+			value = 100;
+		// stageAliasing
+		if (this._stageCount) {
+			value = Math.round(value * (this._stageCount - 1) / 100) * 100 / (this._stageCount - 1);
+		}
+		this._value = value;
+		this._knob.style.left = value / 100 * 280+ "px";
+	}
+	get value() {
+		return this._value;
+	}
+	mousemove(e) {
+		this.value = Math.min((e.clientX - 10) / 280 * 100, 100);
+	}
+	// stageCount - how many possible values can the slider take (0 - infinite)
+	set stageCount(value) {
+		typecheck(arguments, Number);
+		this._stageCount = value;	
+	}
+	get stageCount() {
+		return this._stageCount;
+	}
+}
+
 // fetch for chrome protocol
 function chromeFetch(url) {
 	return new Promise(function (resolve, reject) {
@@ -101,6 +171,14 @@ getSettings().then(function (settings) {
 						"3": "Blue",
 						"4": "Green"
 					}
+				}),
+				new Slider({
+					stageCount: 25,
+					title: "Maximum Number Of Closed Tabs"
+				}),
+				new Slider({
+					stageCount: 40,
+					title: "Maximum Number Of History Entries"
 				}),
 				new Header({title: "Behavior"})
 			]);
