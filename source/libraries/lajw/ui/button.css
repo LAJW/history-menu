@@ -1,3 +1,7 @@
+a.Button:link, a.Button:visited {
+	color: rgb(48, 57, 66);
+}
+
 a.Button:hover, a.Button.highlighted {
 	cursor: default;
 	color: white;
