@@ -13,5 +13,5 @@
 		"storage"
 	],
 	"default_locale": "en",
-	"options_page": "popup.html"
+	"options_page": "options.html"
 }
