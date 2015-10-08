@@ -56,14 +56,6 @@ function trimURL(url) {
 	return url;
 }
 
-let settings = {
-	locale: "en",
-	expandWindows: false,
-	timer: false,
-	recentlyClosedCount: 10,
-	recentlyViewedCount: 10
-}
-
 // get i18n engine in promise
 function getI18n(locale) {
 	// default locale - use default chrome locale engine
