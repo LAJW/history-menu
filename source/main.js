@@ -1,5 +1,6 @@
 "use strict"
 
+// get time sectors for search
 function timeSectors() {
 	let now = Date.now();
 	let hour = 1000 * 3600;
@@ -38,6 +39,7 @@ function chromeFetch(url) {
 	});
 }
 
+// Function.prototype.create - "new" abstraction, for use in functional code
 Object.defineProperty(Function.prototype, "create", {
 	get: function () {
 		let self = this;
@@ -58,6 +60,7 @@ function trimURL(url) {
 
 // get i18n engine in promise
 function getI18n(locale) {
+	typecheck(arguments, [String, undefined]);
 	// default locale - use default chrome locale engine
 	if (!locale)
 		return Promise.resolve(chrome.i18n.getMessage.bind(chrome.i18n));
@@ -66,6 +69,7 @@ function getI18n(locale) {
 		return chromeFetch("_locales/en/messages.json")
 			.then(JSON.parse)
 			.then(function (locale) {
+				typecheck(arguments, String);
 				return function (messageKey) {
 					let data = locale[messageKey];
 					return data ? data.message : "";
