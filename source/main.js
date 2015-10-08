@@ -64,136 +64,182 @@ let settings = {
 	recentlyViewedCount: 10
 }
 
-Promise.all([
-	Root.ready(),
-	Chrome.sessions.getRecent({maxResults: settings.recentlyClosedCount})
-		.then(function (sessions) {
-			return sessions.map(function (session) {
-				let bit = session.tab || session.window;
-				if (settings.timer)
-					bit.lastModified = session.lastModified;
-				if (session.tab)
-					return new TabButton(bit);
-				else return new WindowFolder(bit);
+// get i18n engine in promise
+function getI18n(locale) {
+	// default locale - use default chrome locale engine
+	if (!locale)
+		return Promise.resolve(chrome.i18n.getMessage.bind(chrome.i18n));
+	// custom set to english - load only english
+	if (locale == "en")
+		return chromeFetch("_locales/en/messages.json")
+			.then(JSON.parse)
+			.then(function (locale) {
+				return function (messageKey) {
+					let data = locale[messageKey];
+					return data ? data.message : "";
+				}
 			});
-		}),
-	Chrome.sessions.getDevices()
-		.then(function (devices) {
-			return devices.map(function (device) {
-				if (!settings.timer)
-					device.sessions.forEach(function (session) {
-						session.lastModified = undefined;
-					});
-				return DeviceFolder.create(device)
-			});
-		}),
-	Chrome.history.search({
-		text: "", 
-		startTime: Date.now() - 1000 * 3600 * 24 * 30, 
-		endTime: Date.now(),
-		maxResults: settings.recentlyViewedCount
-	}).then(function (results) {
-		return results.map(function (result) {
-			if (!settings.timer)
-				result.lastVisitTime = undefined;
-			return HistoryButton.create(result);
-		});
-	}),
-	Chrome.storage.local.get(),
-	Chrome.storage.sync.get(),
-	chromeFetch("_locales/" + settings.locale + "/messages.json")
-]).then(function (arr) {
-	(function (root, sessions, devices, history, storage, local, i18nData) {
-		i18nData = JSON.parse(i18nData);
-		let i18n = function (key) {
-			return i18nData[key] ? i18nData[key].message : "";		
+	// custom set to non-english, english fallback
+	return Promise.all(
+			chromeFetch("_locales/" + locale + "/messages.json")
+				.then(JSON.parse),
+			chromeFetch("_locales/en/messages.json")
+				.then(JSON.parse)
+	).then(function (locales) {
+		let locale = locales[0];
+		let enLocale = locales[1];
+		return function (messageKey) {
+			let data = locale[messageKey] || enLocale[messageKey];
+			return data ? data.message : "";		
 		}
-		root.setTheme("Windows", true);
-		let mainLayer = root.insert(new Layer({children: [].concat(
-			[new Separator({title: i18n("popup_recently_closed_tabs")})],
-			sessions,
-			[new Separator({title: i18n("popup_recent_history")})],
-			history
-		)}));
-		
-		let deviceLayer = root.insert(new Layer({
-			visible: false,
-			children: devices
-		}));
-		let devicesButton;
-		let searchLayer = root.insert(new Layer({
-			visible: false,
-			children: [
-				new Separator({title: i18n("popup_search_history")})
-			]
-		}));
-		let searchInstance = 0;
-		root.insert(new MultiButton({
-			children: [
-				new Input({
-					placeholder: i18n("popup_search_history"),
-					lockon: true,
-					change: function (value) {
-						let currentSearchInstance = ++searchInstance;
-						// layout update
-						searchLayer.visible = !!this.value;
-						deviceLayer.visible = false;
-						devicesButton.on = false;
-						if (value) {
-							searchLayer.clear();
-							searchLayer.insert(new Progressbar);
-						}
-						Promise.all(timeSectors().map(function (time) {
-							return Chrome.history.search({
-								text: value,
-								startTime: time.start,
-								endTime: time.end,
-							}).then(function (results) {
-								if (!results.length)
-									return [];
-								let nodes = results.map(HistoryButton.create);
-								nodes.unshift(new Separator({
-									title: i18n(time.i18n)
-								}));
-								return nodes;
-							});
-						})).then(function (lists) {
-							if (searchInstance == currentSearchInstance) {
+	});
+}
+
+// Read-only settings server 
+function getSettings() {
+	return Promise.all([
+		Chrome.storage.local.get(),
+		Chrome.storage.sync.get()
+	]).then(function (storages) {
+		let local = storages[0];
+		let sync = storages[1];
+		if (local.local)
+			return local;
+		else return sync;
+	});
+}
+
+getSettings().then(function (settings) {
+	Promise.all([
+		Root.ready(),
+		Chrome.sessions.getRecent({maxResults: settings.recentlyClosedCount})
+			.then(function (sessions) {
+				return sessions.map(function (session) {
+					let bit = session.tab || session.window;
+					if (settings.timer)
+						bit.lastModified = session.lastModified;
+					if (session.tab)
+						return new TabButton(bit);
+					else return new WindowFolder(bit);
+				});
+			}),
+		Chrome.sessions.getDevices()
+			.then(function (devices) {
+				return devices.map(function (device) {
+					if (!settings.timer)
+						device.sessions.forEach(function (session) {
+							session.lastModified = undefined;
+						});
+					return DeviceFolder.create(device)
+				});
+			}),
+		Chrome.history.search({
+			text: "", 
+			startTime: Date.now() - 1000 * 3600 * 24 * 30, 
+			endTime: Date.now(),
+			maxResults: settings.recentlyViewedCount
+		}).then(function (results) {
+			return results.map(function (result) {
+				if (!settings.timer)
+					result.lastVisitTime = undefined;
+				return HistoryButton.create(result);
+			});
+		}),
+		getI18n(settings.locale)
+	]).then(function (arr) {
+		(function (root, sessions, devices, history, i18n) {
+			root.setTheme("Ubuntu", true);
+			let mainLayer = root.insert(new Layer({children: [].concat(
+				[new Separator({title: i18n("popup_recently_closed_tabs")})],
+				sessions,
+				[new Separator({title: i18n("popup_recent_history")})],
+				history
+			)}));
+			
+			let deviceLayer = root.insert(new Layer({
+				visible: false,
+				children: devices
+			}));
+			let devicesButton;
+			let searchLayer = root.insert(new Layer({
+				visible: false,
+				children: [
+					new Separator({title: i18n("popup_search_history")})
+				]
+			}));
+			let searchInstance = 0;
+			root.insert(new MultiButton({
+				children: [
+					new Input({
+						placeholder: i18n("popup_search_history"),
+						lockon: true,
+						change: function (value) {
+							let currentSearchInstance = ++searchInstance;
+							// layout update
+							searchLayer.visible = !!this.value;
+							deviceLayer.visible = false;
+							devicesButton.on = false;
+							if (value) {
 								searchLayer.clear();
-								let nodes = Array.prototype.concat.apply([], lists);
-								if (nodes.length == 0)
-									searchLayer.insert(new Separator({
-										title: i18n("results_nothing_found")
-									}));
-								else searchLayer.insert(nodes);
-								searchLayer.insert(new Separator({
-									title: i18n("results_end")
-								}));
+								searchLayer.insert(new Progressbar);
 							}
-						}.bind(this));
-					}
-				}),
-				devicesButton = new DevicesButton({
-					tooltip: i18n("popup_other_devices"),
-					click: function (e) {
-						this.on = deviceLayer.visible = !deviceLayer.visible;
-					}
-				}),
-				new ActionButton({
-					tooltip: i18n("popup_history_manager"),
-					icon: "icons/history-19.png",
-					click: function (e) {
-						Chrome.tabs.openOrSelect("chrome://history/", false);
-					}
-				}),
-				new ActionButton({
-					tooltip: i18n("popup_options"),
-					icon: "icons/options.png",
-					click: function (e) {
-						Chrome.tabs.openOrSelect("./options.html", false);
-					}
-				})
-			]
-		}));
-	}).apply(this, arr);
+							Promise.all(timeSectors().map(function (time) {
+								return Chrome.history.search({
+									text: value,
+									startTime: time.start,
+									endTime: time.end,
+								}).then(function (results) {
+									if (!results.length)
+										return [];
+									let nodes = results.map(function (result) {
+										if (!settings.timer) {
+											result.lastVisitTime = null;
+										}
+										return HistoryButton.create(result);
+									});
+									nodes.unshift(new Separator({
+										title: i18n(time.i18n)
+									}));
+									return nodes;
+								});
+							})).then(function (lists) {
+								if (searchInstance == currentSearchInstance) {
+									searchLayer.clear();
+									let nodes = Array.prototype.concat.apply([], lists);
+									if (nodes.length == 0)
+										searchLayer.insert(new Separator({
+											title: i18n("results_nothing_found")
+										}));
+									else searchLayer.insert(nodes);
+									searchLayer.insert(new Separator({
+										title: i18n("results_end")
+									}));
+								}
+							}.bind(this));
+						}
+					}),
+					devicesButton = new DevicesButton({
+						tooltip: i18n("popup_other_devices"),
+						click: function (e) {
+							this.on = deviceLayer.visible = !deviceLayer.visible;
+						}
+					}),
+					new ActionButton({
+						tooltip: i18n("popup_history_manager"),
+						icon: "icons/history-19.png",
+						click: function (e) {
+							Chrome.tabs.openOrSelect("chrome://history/", false);
+						}
+					}),
+					new ActionButton({
+						tooltip: i18n("popup_options"),
+						icon: "icons/options.png",
+						click: function (e) {
+							Chrome.tabs.openOrSelect("./options.html", false);
+						}
+					})
+				]
+			}));
+		}).apply(this, arr);
+	});
 });
