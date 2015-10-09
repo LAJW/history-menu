@@ -8,30 +8,34 @@ class Slider extends Node {
 			className: "Slider",
 			childNodes: [
 				$({
-					nodeName: "SPAN",
-					childNodes: [
-						$({
-							nodeName: "BUTTON",
-						})
-					]
+					nodeName: "INPUT",
+					type: "range",
+					min: e.min || 0,
+					max: e.max || 100,
+					step: e.step || 1,
+					value: e.value || 50
 				}),
-				$("")
+				$({
+					nodeName: "INPUT",
+					disabled: true,
+					value: e.value || 50
+				}),
+				$(e.title || "")
 			]
 		});
 		super(e);
-		this._knob = this.DOM.firstChild.firstChild;
+		this._knob = this.DOM.firstChild;
 		this._title = this.DOM.lastChild;
-		this.title = e.title || "";
-		this.value = e.value || 50;
-		this.stageCount = e.stageCount || 0;
+		this._display = this.DOM.childNodes[1];
 	}
 	fadeIn() { /* override */
-		this._moveHandler = document.body.addEventListener("mousemove", function (e) {
-			this.mousemove(e);
-		}.bind(this));
+		this._interval = setInterval(function () {
+			this._display.value = this._knob.value;
+		}.bind(this), 30);
 	}
-	fadeOut() {
-		document.body.removeEventListener(this.moveHandler);	
+	fadeOut() { /* override */
+		clearInterval(this._interval);
+		this._interval = null;
 	}
 	set title(value) {
 		typecheck(arguments, String);
@@ -43,30 +47,10 @@ class Slider extends Node {
 	// value in percent <0, 100>
 	set value(value) {
 		typecheck(arguments, Number);
-		if (value < 0)
-			value = 0;
-		if (value > 100)
-			value = 100;
-		// stageAliasing
-		if (this._stageCount) {
-			value = Math.round(value * (this._stageCount - 1) / 100) * 100 / (this._stageCount - 1);
-		}
-		this._value = value;
-		this._knob.style.left = value / 100 * 280+ "px";
+		this._knob.value = value;
 	}
 	get value() {
 		return this._value;
-	}
-	mousemove(e) {
-		this.value = Math.min((e.clientX - 10) / 280 * 100, 100);
-	}
-	// stageCount - how many possible values can the slider take (0 - infinite)
-	set stageCount(value) {
-		typecheck(arguments, Number);
-		this._stageCount = value;	
-	}
-	get stageCount() {
-		return this._stageCount;
 	}
 }
 
@@ -173,12 +157,47 @@ getSettings().then(function (settings) {
 					}
 				}),
 				new Slider({
-					stageCount: 25,
+					min: 0,
+					max: 25,
+					step: 5,
+					value: 10,
 					title: "Maximum Number Of Closed Tabs"
 				}),
 				new Slider({
-					stageCount: 40,
+					min: 0,
+					max: 50,
+					step: 5,
+					value: 20,
 					title: "Maximum Number Of History Entries"
+				}),
+				new Checkbox({
+					title: "Show Timer",
+					checked: true
+				}),
+				new Checkbox({
+					title: "Automatically expand folders",
+					checked: true
+				}),
+				new Checkbox({
+					title: "Prefer selecting existing tabs rather than creating new ones",
+					checked: true
+				}),
+				new Checkbox({
+					title: "Synchronize settings",
+					checked: true
+				}),
+				new Checkbox({
+					title: "Enable animations",
+					checked: true
+				}),
+				new Select({
+					title: "Language",
+					values: {
+						"": "Default (English)",
+						"en": "English",
+						"ja": "Japanese",
+						"pl": "Polish"
+					}
 				}),
 				new Header({title: "Behavior"})
 			]);

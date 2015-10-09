@@ -3,7 +3,7 @@
 var Checkbox = (function () {
 	let template = $({
 		nodeName: "label",
-		className: "checkbox",
+		className: "Checkbox",
 		childNodes: [
 			$({
 				nodeName: "input",
