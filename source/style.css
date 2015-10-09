@@ -97,6 +97,9 @@
 	vertical-align: middle;
 	margin-right: 5px;
 	text-align: center;
+	background: white;
+	border: 1px solid #777;
+	color: black;
 }
 
 .Slider input[type=range] {
@@ -109,4 +112,14 @@
 
 .Checkbox input {
 	vertical-align: top;
+}
+
+.Select {
+	display: block;
+}
+
+.Select select {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 5px;
 }

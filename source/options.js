@@ -123,6 +123,18 @@ function getI18n(locale) {
 	});
 }
 
+class ResetButton extends Node{
+	constructor(e) {
+		e = e || {};
+		e.DOM = $({
+			nodeName: "INPUT",
+			type: "button",
+			value: e.title || ""
+		});
+		super(e);
+	}
+}
+
 // Read-only settings server 
 function getSettings() {
 	return Promise.all([
@@ -137,17 +149,21 @@ function getSettings() {
 	});
 }
 
+/* IDEA: Reset button for each field */
+/* IDEA: Use background.js as a cache for history items */
+
 getSettings().then(function (settings) {
 	Promise.all([
 		Root.ready(),
 		getI18n(settings.locale)
 	]).then(function (arr) {
 		(function (root, i18n) {
-			root.setTheme("Ubuntu", true);
+			root.setTheme("Windows", true);
 			root.insert([
 				new Header({title: "Options page"}),
 				new Header({title: "Display"}),
 				new Select({
+					title: "Icon color",
 					values: {
 						"0": "Grey",
 						"1": "White",
@@ -157,33 +173,35 @@ getSettings().then(function (settings) {
 					}
 				}),
 				new Slider({
+					min: 200,
+					max: 400,
+					step: 10,
+					value: 350,
+					title: "Popup width"
+				}),
+				new Slider({
+					min: 300,
+					max: 600,
+					step: 10,
+					value: 600,
+					title: "Popup Height"
+				}),
+				new Slider({
 					min: 0,
 					max: 25,
 					step: 5,
 					value: 10,
-					title: "Maximum Number Of Closed Tabs"
+					title: "Maximum number of tabs"
 				}),
 				new Slider({
 					min: 0,
 					max: 50,
 					step: 5,
-					value: 20,
-					title: "Maximum Number Of History Entries"
+					value: 10,
+					title: "Number of history entries"
 				}),
 				new Checkbox({
 					title: "Show Timer",
-					checked: true
-				}),
-				new Checkbox({
-					title: "Automatically expand folders",
-					checked: true
-				}),
-				new Checkbox({
-					title: "Prefer selecting existing tabs rather than creating new ones",
-					checked: true
-				}),
-				new Checkbox({
-					title: "Synchronize settings",
 					checked: true
 				}),
 				new Checkbox({
@@ -193,13 +211,38 @@ getSettings().then(function (settings) {
 				new Select({
 					title: "Language",
 					values: {
-						"": "Default (English)",
+						"": "Auto (English)",
 						"en": "English",
 						"ja": "Japanese",
 						"pl": "Polish"
 					}
 				}),
-				new Header({title: "Behavior"})
+				new Select({
+					title: "Theme",
+					values: {
+						"": "Auto (Windows)",
+						"Windows": "Windows",
+						"Ubuntu": "Ubuntu",
+						"Other": "Other"
+					}
+				}),
+				new Header({title: "Behavior"}),
+								new Checkbox({
+					title: "Automatically expand folders",
+					checked: true
+				}),
+				new Checkbox({
+					title: "Prefer selecting existing tabs rather than creating new ones",
+					checked: true
+				}),
+				new Header({title: "Other"}),
+				new Checkbox({
+					title: "Synchronize settings",
+					checked: true
+				}),
+				new ResetButton ({
+					title: "Reset Settings"
+				})
 			]);
 		}).apply(this, arr);
 	});
