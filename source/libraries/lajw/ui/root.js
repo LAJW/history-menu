@@ -13,8 +13,9 @@ var Root = (function () {
 			});
 		}
 		setTheme(platform, animate) {
-			typecheck(arguments, ["Windows", "Ubuntu", undefined], Boolean);
-			this.DOM.classList.add(platform);
+			typecheck(arguments, String, Boolean);
+			if (platform)
+				this.DOM.classList.add(platform);
 			if (animate)
 				this.DOM.classList.add("animate");
 		}

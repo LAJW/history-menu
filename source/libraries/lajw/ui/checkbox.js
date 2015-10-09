@@ -22,10 +22,10 @@ var Checkbox = (function () {
 				}, undefined]);
 			e = e || {};
 			e.DOM = template.cloneNode(true);
-			e.DOM.onchange = function () {
-				self.change(self.checked);
-			}
 			super(e);
+			e.DOM.onchange = function () {
+				this.change(this.checked);
+			}.bind(this);
 			this._checkbox = this.DOM.firstChild;
 			this._title = this.DOM.lastChild;
 			this.change = e.change || function () {}

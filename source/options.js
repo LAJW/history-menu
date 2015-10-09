@@ -27,15 +27,11 @@ class Slider extends Node {
 		this._knob = this.DOM.firstChild;
 		this._title = this.DOM.lastChild;
 		this._display = this.DOM.childNodes[1];
-	}
-	fadeIn() { /* override */
-		this._interval = setInterval(function () {
-			this._display.value = this._knob.value;
-		}.bind(this), 30);
-	}
-	fadeOut() { /* override */
-		clearInterval(this._interval);
-		this._interval = null;
+		this.change = e.change || function () {}
+		this.DOM.addEventListener("change", function () {
+			this._display.value = this.value;
+			this.change(this.value);
+		}.bind(this))
 	}
 	set title(value) {
 		typecheck(arguments, String);
@@ -44,13 +40,12 @@ class Slider extends Node {
 	get title() {
 		return this._title.nodeValue;
 	}
-	// value in percent <0, 100>
 	set value(value) {
 		typecheck(arguments, Number);
 		this._knob.value = value;
 	}
 	get value() {
-		return this._value;
+		return this._knob.value;
 	}
 }
 
@@ -123,6 +118,79 @@ function getI18n(locale) {
 	});
 }
 
+class ResetButton extends Node{
+	constructor(e) {
+		e = e || {};
+		e.DOM = $({
+			nodeName: "INPUT",
+			type: "button",
+			value: e.title || ""
+		});
+		super(e);
+	}
+}
+
+function control(parent, propertyName) {
+	return function (value) {
+		parent[propertyName] = value;
+	}
+}
+
+// request instance of SettingsRW
+// although some settings should have ranges of possible values
+function getSettingsRW(defaultSettings) {
+	return Promise.all([
+		Chrome.storage.local.get(),
+		Chrome.storage.sync.get()
+	]).then(function (storages) {
+		let local = storages[0];
+		let sync = storages[1];
+		let map = defaultSettings || {};
+		let storage = null;
+		if (local.local) {
+			storage = chrome.storage.local;
+			for (let i in local) {
+				map[i] = local[i];
+			}
+		} else {
+			storage = chrome.storage.sync;
+			for (let i in sync) {
+				map[i] = sync[i];
+			}
+		}
+		let settings = {};
+		for (let i in map) {
+			if (i != "local")
+				Object.defineProperty(settings, i, {
+					set: function (value) {
+						map[i] = value;
+						let setting = {};
+						setting[i] = value;
+						storage.set(setting);
+					},
+					get: function () {
+						return map[i];
+					}
+				})
+		}
+		Object.defineProperty(settings, "reset", {
+			value: function () {
+				storage.set(defaultSettings)
+			}
+		}),
+		Object.defineProperty(settings, "local", {
+			get: function () {
+				return local.local;
+			},
+			set: function (value) {
+				chrome.storage.local.set({local: value}),
+				local.local = value;
+			}
+		})
+		return settings;
+	})
+}
+
 // Read-only settings server 
 function getSettings() {
 	return Promise.all([
@@ -137,70 +205,130 @@ function getSettings() {
 	});
 }
 
-getSettings().then(function (settings) {
-	Promise.all([
-		Root.ready(),
-		getI18n(settings.locale)
-	]).then(function (arr) {
-		(function (root, i18n) {
-			root.setTheme("Ubuntu", true);
+/* IDEA: Reset button for each field */
+/* IDEA: Use background.js as a cache for history items */
+/* IDEA: Use background.js as cache for all data */
+
+chromeFetch("defaults.json")
+	.then(JSON.parse)
+	.then(getSettingsRW)
+	.then(function (settings) {
+		return Promise.all([
+			Root.ready(),
+			getI18n(settings.locale),
+			settings
+		])
+	}).then(function (arr) {
+		(function (root, i18n, settings) {
+			root.setTheme("Windows", true);
 			root.insert([
 				new Header({title: "Options page"}),
 				new Header({title: "Display"}),
 				new Select({
+					title: "Icon color",
 					values: {
 						"0": "Grey",
 						"1": "White",
 						"2": "Red",
 						"3": "Blue",
 						"4": "Green"
+					},
+					selected: settings.icon,
+					change: function () {
+						settings.icon = this.selected;
 					}
+				}),
+				new Slider({
+					min: 200,
+					max: 400,
+					step: 10,
+					value: settings.width,
+					change: control(settings, "width"),
+					title: "Popup width",
+				}),
+				new Slider({
+					min: 300,
+					max: 600,
+					step: 10,
+					value: settings.height,
+					change: control(settings, "height"),
+					title: "Popup Height",
 				}),
 				new Slider({
 					min: 0,
 					max: 25,
 					step: 5,
-					value: 10,
-					title: "Maximum Number Of Closed Tabs"
+					value: settings.tabCount,
+					change: control(settings, "tabCount"),
+					title: "Maximum number of tabs"
 				}),
 				new Slider({
 					min: 0,
 					max: 50,
 					step: 5,
-					value: 20,
-					title: "Maximum Number Of History Entries"
+					value: settings.historyCount,
+					change: control(settings, "historyCount"),
+					title: "Number of history entries"
 				}),
 				new Checkbox({
 					title: "Show Timer",
-					checked: true
-				}),
-				new Checkbox({
-					title: "Automatically expand folders",
-					checked: true
-				}),
-				new Checkbox({
-					title: "Prefer selecting existing tabs rather than creating new ones",
-					checked: true
-				}),
-				new Checkbox({
-					title: "Synchronize settings",
-					checked: true
+					checked: settings.timer,
+					change: control(settings, "timer")
 				}),
 				new Checkbox({
 					title: "Enable animations",
-					checked: true
+					checked: settings.animate,
+					change: control(settings, "animate")
 				}),
 				new Select({
 					title: "Language",
 					values: {
-						"": "Default (English)",
+						"": "Auto (English)",
 						"en": "English",
 						"ja": "Japanese",
 						"pl": "Polish"
+					},
+					selected: settings.lang,
+					change: function () {
+						settings.language = this.selected;
 					}
 				}),
-				new Header({title: "Behavior"})
+				new Select({
+					title: "Theme",
+					values: {
+						"": "Auto (Windows)",
+						"Windows": "Windows",
+						"Ubuntu": "Ubuntu",
+						"Other": "Other"
+					},
+					selected: settings.theme,
+					change: function () {
+						settings.theme = this.selected;
+					}
+				}),
+				new Header({title: "Behavior"}),
+				new Checkbox({
+					title: "Automatically expand folders",
+					checked: settings.expand,
+					change: control(settings, "expand")
+				}),
+				new Checkbox({
+					title: "Prefer selecting existing tabs rather than creating new ones",
+					checked: settings.preferSelect,
+					change: control(settings, "preferSelect")
+				}),
+				new Header({title: "Other"}),
+				new Checkbox({
+					title: "Synchronize settings",
+					checked: !settings.local,
+					change: function (value) {
+						settings.local = !value;
+					}
+				}),
+				new ResetButton ({
+					title: "Reset Settings",
+					click: settings.reset.bind(settings)
+				})
 			]);
 		}).apply(this, arr);
 	});
-});
