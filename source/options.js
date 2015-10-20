@@ -1,5 +1,13 @@
 "use strict"
 
+function getPlatform() {
+	if (navigator.appVersion.indexOf("Win") != -1)
+		return "Windows";
+	else if (navigator.appVersion.indexOf("Linux") != -1)
+		return "Ubuntu";
+	else return "";
+}
+
 class Slider extends Node {
 	constructor(e) {
 		e = e || {};
@@ -127,6 +135,7 @@ class ResetButton extends Node{
 			value: e.title || ""
 		});
 		super(e);
+		this.click = e.click || function () {};
 	}
 }
 
@@ -145,7 +154,7 @@ function getSettingsRW(defaultSettings) {
 	]).then(function (storages) {
 		let local = storages[0];
 		let sync = storages[1];
-		let map = defaultSettings || {};
+		let map = Object.assign({}, defaultSettings) || {};
 		let storage = null;
 		if (local.local) {
 			storage = chrome.storage.local;
@@ -170,7 +179,8 @@ function getSettingsRW(defaultSettings) {
 					},
 					get: function () {
 						return map[i];
-					}
+					},
+					enumerable: true
 				})
 		}
 		Object.defineProperty(settings, "reset", {
@@ -183,9 +193,15 @@ function getSettingsRW(defaultSettings) {
 				return local.local;
 			},
 			set: function (value) {
-				chrome.storage.local.set({local: value}),
+				chrome.storage.local.set(sync);
 				local.local = value;
-			}
+				chrome.storage.local.set({local: value});
+				if (value)
+					storage = chrome.storage.local;
+				else
+					storage = chrome.storage.sync;
+			},
+			enumerable: true
 		})
 		return settings;
 	})
@@ -220,7 +236,7 @@ chromeFetch("defaults.json")
 		])
 	}).then(function (arr) {
 		(function (root, i18n, settings) {
-			root.setTheme("Windows", true);
+			root.setTheme(settings.theme || getPlatform(), settings.animate);
 			root.insert([
 				new Header({title: "Options page"}),
 				new Header({title: "Display"}),
@@ -283,20 +299,22 @@ chromeFetch("defaults.json")
 				new Select({
 					title: "Language",
 					values: {
-						"": "Auto (English)",
+						"": "Auto (UI Default / English)",
 						"en": "English",
 						"ja": "Japanese",
 						"pl": "Polish"
 					},
 					selected: settings.lang,
 					change: function () {
-						settings.language = this.selected;
+						settings.lang = this.selected;
+						
+						window.location = window.location;
 					}
 				}),
 				new Select({
 					title: "Theme",
 					values: {
-						"": "Auto (Windows)",
+						"": "Auto (" + getPlatform() + ")",
 						"Windows": "Windows",
 						"Ubuntu": "Ubuntu",
 						"Other": "Other"
@@ -304,6 +322,7 @@ chromeFetch("defaults.json")
 					selected: settings.theme,
 					change: function () {
 						settings.theme = this.selected;
+						window.location = window.location;
 					}
 				}),
 				new Header({title: "Behavior"}),
@@ -323,11 +342,15 @@ chromeFetch("defaults.json")
 					checked: !settings.local,
 					change: function (value) {
 						settings.local = !value;
+						window.location = window.location;
 					}
 				}),
 				new ResetButton ({
 					title: "Reset Settings",
-					click: settings.reset.bind(settings)
+					click: function () {
+						settings.reset();
+						window.location = window.location;
+					}
 				})
 			]);
 		}).apply(this, arr);

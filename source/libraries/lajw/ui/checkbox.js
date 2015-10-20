@@ -28,8 +28,9 @@ var Checkbox = (function () {
 			}.bind(this);
 			this._checkbox = this.DOM.firstChild;
 			this._title = this.DOM.lastChild;
-			this.change = e.change || function () {}
+			this.change = function () {}
 			this.checked = e.checked || false;
+			this.change = e.change || function () {}
 			this.title = e.title || "";
 		}
 		get title() {
