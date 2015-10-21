@@ -67,23 +67,21 @@ function getI18n(locale) {
 	// custom set to english - load only english
 	if (locale == "en")
 		return chromeFetch("_locales/en/messages.json")
-			.then(JSON.parse)
-			.then(function (locale) {
-				typecheck(arguments, String);
+			.then(function (json) {
+				let locale = JSON.parse(json);
 				return function (messageKey) {
+					typecheck(arguments, String);
 					let data = locale[messageKey];
 					return data ? data.message : "";
 				}
 			});
 	// custom set to non-english, english fallback
-	return Promise.all(
-			chromeFetch("_locales/" + locale + "/messages.json")
-				.then(JSON.parse),
+	return Promise.all([
+			chromeFetch("_locales/" + locale + "/messages.json"),
 			chromeFetch("_locales/en/messages.json")
-				.then(JSON.parse)
-	).then(function (locales) {
-		let locale = locales[0];
-		let enLocale = locales[1];
+	]).then(function (locales) {
+		let locale = JSON.parse(locales[0]);
+		let enLocale = JSON.parse(locales[1]);
 		return function (messageKey) {
 			let data = locale[messageKey] || enLocale[messageKey];
 			return data ? data.message : "";		
@@ -126,17 +124,18 @@ chromeFetch("defaults.json")
 	.then(function (settings) {
 		Promise.all([
 			Root.ready(),
-			Chrome.sessions.getRecent({maxResults: settings.tabCount | 0})
-				.then(function (sessions) {
-					return sessions.map(function (session) {
-						let bit = session.tab || session.window;
-						if (settings.timer)
-							bit.lastModified = session.lastModified;
-						if (session.tab)
-							return new TabButton(bit);
-						else return new WindowFolder(bit);
-					});
-				}),
+			settings.tabCount | 0 ?
+				Chrome.sessions.getRecent({maxResults: settings.tabCount | 0})
+					.then(function (sessions) {
+						return sessions.map(function (session) {
+							let bit = session.tab || session.window;
+							if (settings.timer)
+								bit.lastModified = session.lastModified;
+							if (session.tab)
+								return new TabButton(bit);
+							else return new WindowFolder(bit);
+						});
+					}) : [],
 			Chrome.sessions.getDevices()
 				.then(function (devices) {
 					return devices.map(function (device) {
@@ -147,29 +146,30 @@ chromeFetch("defaults.json")
 						return DeviceFolder.create(device)
 					});
 				}),
-			Chrome.history.search({
-				text: "", 
-				startTime: Date.now() - 1000 * 3600 * 24 * 30, 
-				endTime: Date.now(),
-				maxResults: settings.historyCount | 0
-			}).then(function (results) {
-				return results.map(function (result) {
-					if (!settings.timer)
-						result.lastVisitTime = undefined;
-					return HistoryButton.create(result);
-				});
-			}),
-			getI18n(settings.locale),
+			settings.historyCount | 0 ? 
+				Chrome.history.search({
+					text: "", 
+					startTime: Date.now() - 1000 * 3600 * 24 * 30, 
+					endTime: Date.now(),
+					maxResults: settings.historyCount | 0
+				}).then(function (results) {
+					return results.map(function (result) {
+						if (!settings.timer)
+							result.lastVisitTime = undefined;
+						return HistoryButton.create(result);
+					});
+				}) : [],
+			getI18n(settings.lang),
 			settings
 		]).then(function (arr) {
 			(function (root, sessions, devices, history, i18n, settings) {
 				root.setTheme(settings.theme || getPlatform(), settings.animate);
-				root.width = settings.width;
+				root.width = settings.width | 0;
 				root.height = parseInt(settings.height);
 				let mainLayer = root.insert(new Layer({children: [].concat(
-					[new Separator({title: i18n("popup_recently_closed_tabs")})],
+					sessions.length ? [new Separator({title: i18n("popup_recently_closed_tabs")})] : [],
 					sessions,
-					[new Separator({title: i18n("popup_recent_history")})],
+					history.length ? [new Separator({title: i18n("popup_recent_history")})] : [],
 					history
 				)}));
 				
