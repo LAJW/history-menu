@@ -36,10 +36,6 @@ class Slider extends Node {
 		this._title = this.DOM.lastChild;
 		this._display = this.DOM.childNodes[1];
 		this.change = e.change || function () {}
-		this.DOM.addEventListener("change", function () {
-			this._display.value = this.value;
-			this.change(this.value);
-		}.bind(this))
 	}
 	set title(value) {
 		typecheck(arguments, String);
@@ -54,6 +50,20 @@ class Slider extends Node {
 	}
 	get value() {
 		return this._knob.value;
+	}
+	fadeIn() {
+		let oldValue = this.value;
+		this._interval = setInterval(function () {
+			if (this.value != oldValue) {
+				oldValue = this.value;
+				this._display.value = this.value;
+				this.change(this.value);
+			}
+		}.bind(this), 16);
+	}
+	fadeOut() {
+		clearInterval(this._interval);
+		this._interval = null;
 	}
 }
 
