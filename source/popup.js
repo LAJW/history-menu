@@ -164,6 +164,8 @@ chromeFetch("defaults.json")
 		]).then(function (arr) {
 			(function (root, sessions, devices, history, i18n, settings) {
 				root.setTheme(settings.theme || getPlatform(), settings.animate);
+				root.width = settings.width;
+				root.height = parseInt(settings.height);
 				let mainLayer = root.insert(new Layer({children: [].concat(
 					[new Separator({title: i18n("popup_recently_closed_tabs")})],
 					sessions,
