@@ -77,9 +77,7 @@ class Parent extends Node {
 	// void clear() - remove all elemnts from this node
 	clear() {
 		this._children.forEach(function (child) {
-			child._parent = undefined;
-		});
-		this._children = [];
-		this.container.innerHTML = "";
+			this.remove(child);
+		}.bind(this));
 	}
 }
