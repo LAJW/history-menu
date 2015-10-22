@@ -164,14 +164,16 @@ chromeFetch("defaults.json")
 		]).then(function (arr) {
 			(function (root, sessions, devices, history, i18n, settings) {
 				root.setTheme(settings.theme || getPlatform(), settings.animate);
-				root.width = settings.width | 0;
+				root.width = parseInt(settings.width);
 				root.height = parseInt(settings.height);
-				let mainLayer = root.insert(new Layer({children: [].concat(
-					sessions.length ? [new Separator({title: i18n("popup_recently_closed_tabs")})] : [],
-					sessions,
-					history.length ? [new Separator({title: i18n("popup_recent_history")})] : [],
-					history
-				)}));
+				if (sessions.length)
+					sessions.unshift(new Separator({title: i18n("popup_recently_closed_tabs")}));
+				if (history.length)
+					history.unshift(new Separator({title: i18n("popup_recent_history")}));
+				let children = settings.tabsFirst ? sessions.concat(history) : history.concat(sessions);
+				if (!children.length)
+					children = [new Separator({title: i18n("results_nothing_found")})];
+				let mainLayer = root.insert(new Layer({ children: children }));
 				
 				let deviceLayer = root.insert(new Layer({
 					visible: false,

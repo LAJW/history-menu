@@ -9,5 +9,6 @@
 	"animate": true,
 	"expand": true,
 	"preferSelect": true,
+	"tabsFirst": true,
 	"theme": ""
 }

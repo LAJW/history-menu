@@ -306,6 +306,11 @@ chromeFetch("defaults.json")
 					checked: settings.animate,
 					change: control(settings, "animate")
 				}),
+				new Checkbox({
+					title: "Show tabs before history",
+					checked: settings.tabsFirst,
+					change: control(settings, "tabsFirst")
+				}),
 				new Select({
 					title: "Language",
 					values: {
