@@ -114,22 +114,21 @@ function getI18n(locale) {
 		return chromeFetch("_locales/en/messages.json")
 			.then(JSON.parse)
 			.then(function (locale) {
-				typecheck(arguments, String);
 				return function (messageKey) {
+					typecheck(arguments, String);
 					let data = locale[messageKey];
 					return data ? data.message : "";
 				}
 			});
 	// custom set to non-english, english fallback
-	return Promise.all(
-			chromeFetch("_locales/" + locale + "/messages.json")
-				.then(JSON.parse),
+	return Promise.all([
+			chromeFetch("_locales/" + locale + "/messages.json"),
 			chromeFetch("_locales/en/messages.json")
-				.then(JSON.parse)
-	).then(function (locales) {
-		let locale = locales[0];
-		let enLocale = locales[1];
+	]).then(function (locales) {
+		let locale = JSON.parse(locales[0]);
+		let enLocale = JSON.parse(locales[1]);
 		return function (messageKey) {
+			typecheck(arguments, String);
 			let data = locale[messageKey] || enLocale[messageKey];
 			return data ? data.message : "";		
 		}
@@ -241,7 +240,7 @@ chromeFetch("defaults.json")
 	.then(function (settings) {
 		return Promise.all([
 			Root.ready(),
-			getI18n(settings.locale),
+			getI18n(settings.lang),
 			settings
 		])
 	}).then(function (arr) {
@@ -249,15 +248,15 @@ chromeFetch("defaults.json")
 			root.setTheme(settings.theme || getPlatform(), settings.animate);
 			root.insert([
 				new Header({title: "Options page"}),
-				new Header({title: "Display"}),
+				new Header({title: i18n("options_display")}),
 				new Select({
-					title: "Icon color",
+					title: i18n("icon_color"),
 					values: {
-						"0": "Grey",
-						"1": "White",
-						"2": "Red",
-						"3": "Blue",
-						"4": "Green"
+						"0": i18n("granite"),
+						"1": i18n("white"),
+						"2": i18n("red"),
+						"3": i18n("blue"),
+						"4": i18n("green")
 					},
 					selected: settings.icon,
 					change: function () {
@@ -270,7 +269,7 @@ chromeFetch("defaults.json")
 					step: 10,
 					value: settings.width,
 					change: control(settings, "width"),
-					title: "Popup width",
+					title: i18n("options_width"),
 				}),
 				new Slider({
 					min: 300,
@@ -278,7 +277,7 @@ chromeFetch("defaults.json")
 					step: 10,
 					value: settings.height,
 					change: control(settings, "height"),
-					title: "Popup Height",
+					title: i18n("options_height"),
 				}),
 				new Slider({
 					min: 0,
@@ -286,33 +285,33 @@ chromeFetch("defaults.json")
 					step: 5,
 					value: settings.tabCount,
 					change: control(settings, "tabCount"),
-					title: "Maximum number of tabs"
+					title: i18n("options_tab_count")
 				}),
 				new Slider({
 					min: 0,
 					max: 50,
 					step: 5,
 					value: settings.historyCount,
-					change: control(settings, "historyCount"),
+					change: control(settings, i18n("options_history_count")),
 					title: "Number of history entries"
 				}),
 				new Checkbox({
-					title: "Show Timer",
+					title: i18n("options_timer"),
 					checked: settings.timer,
 					change: control(settings, "timer")
 				}),
 				new Checkbox({
-					title: "Enable animations",
+					title: i18n("options_animate"),
 					checked: settings.animate,
 					change: control(settings, "animate")
 				}),
 				new Checkbox({
-					title: "Show tabs before history",
+					title: i18n("options_tabs_first"),
 					checked: settings.tabsFirst,
 					change: control(settings, "tabsFirst")
 				}),
 				new Select({
-					title: "Language",
+					title: i18n("options_lang"),
 					values: {
 						"": "Auto (UI Default / English)",
 						"en": "English",
@@ -327,7 +326,7 @@ chromeFetch("defaults.json")
 					}
 				}),
 				new Select({
-					title: "Theme",
+					title: i18n("options_theme"),
 					values: {
 						"": "Auto (" + getPlatform() + ")",
 						"Windows": "Windows",
@@ -340,20 +339,20 @@ chromeFetch("defaults.json")
 						window.location = window.location;
 					}
 				}),
-				new Header({title: "Behavior"}),
+				new Header({title: i18n("options_behavior")}),
 				new Checkbox({
-					title: "Automatically expand folders",
+					title: i18n("options_expand_folders"),
 					checked: settings.expand,
 					change: control(settings, "expand")
 				}),
 				new Checkbox({
-					title: "Prefer selecting existing tabs rather than creating new ones",
+					title: i18n("options_prefer_select"),
 					checked: settings.preferSelect,
 					change: control(settings, "preferSelect")
 				}),
-				new Header({title: "Other"}),
+				new Header({title: i18n("options_other")}),
 				new Checkbox({
-					title: "Synchronize settings",
+					title: i18n("options_sync"),
 					checked: !settings.local,
 					change: function (value) {
 						settings.local = !value;
@@ -361,7 +360,7 @@ chromeFetch("defaults.json")
 					}
 				}),
 				new ResetButton ({
-					title: "Reset Settings",
+					title: i18n("options_reset"),
 					click: function () {
 						settings.reset();
 						window.location = window.location;

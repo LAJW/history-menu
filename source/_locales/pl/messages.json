@@ -62,6 +62,27 @@
 	"options_display": {
 		"message": "Wygląd"
 	},
+	"options_behavior": {
+		"message": "Zachowanie"
+	},
+	"options_other": {
+		"message": "Inne"
+	},
+	"options_height": {
+		"message": "Wysokość menu"
+	},
+	"options_width": {
+		"message": "Szereokość menu"
+	},
+	"options_tabs_first": {
+		"message": "Zamknięte karty przed historią"
+	},
+	"options_sync": {
+		"message": "Synchronizuj ustawienia"
+	},
+	"options_reset": {
+		"message": "Domyślne ustawienia"
+	},
 	"icon_color": {
 		"message": "Kolor ikony"
 	},
@@ -91,6 +112,15 @@
 	},
 	"options_expand_folders": {
 		"message": "Rozwijaj zamknięte okna"
+	},
+	"options_prefer_select": {
+		"message": "Nie otwieraj istniejących kart"
+	},
+	"options_lang": {
+		"message": "Język"
+	},
+	"options_theme": {
+		"message": "Styl interfejsu"
 	},
 	"options_animate": {
 		"message": "Włącz animacje"

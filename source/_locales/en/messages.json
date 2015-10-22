@@ -62,6 +62,27 @@
 	"options_display": {
 		"message": "Display"
 	},
+	"options_behavior": {
+		"message": "Behavior"
+	},
+	"options_other": {
+		"message": "Other"
+	},
+	"options_height": {
+		"message": "Popup height"
+	},
+	"options_width": {
+		"message": "Popup width"
+	},
+	"options_tabs_first": {
+		"message": "Show tabs before history"
+	},
+	"options_sync": {
+		"message": "Synchronize settings"
+	},
+	"options_reset": {
+		"message": "Reset settings"
+	},
 	"icon_color": {
 		"message": "Icon color"
 	},
@@ -91,6 +112,15 @@
 	},
 	"options_expand_folders": {
 		"message": "Expand closed windows"
+	},
+	"options_prefer_select": {
+		"message": "Prefer selecting existing tabs rather than creating duplicates"
+	},
+	"options_lang": {
+		"message": "Language"
+	},
+	"options_theme": {
+		"message": "Theme"
 	},
 	"options_animate": {
 		"message": "Enable animations"
