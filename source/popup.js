@@ -22,33 +22,6 @@ function timeSectors() {
 	];						
 }
 
-// fetch for chrome protocol
-function chromeFetch(url) {
-	return new Promise(function (resolve, reject) {
-		let xhr = new XMLHttpRequest();
-		xhr.open("GET", url);
-		xhr.onload = function () {
-			if (this.status >= 200 && this.status < 300)
-				resolve(xhr.response);
-			else reject(xhr.statusText);
-		}
-		xhr.onerror = function () {
-			reject(xhr.statusText);
-		}
-		xhr.send();
-	});
-}
-
-// Function.prototype.create - "new" abstraction, for use in functional code
-Object.defineProperty(Function.prototype, "create", {
-	get: function () {
-		let self = this;
-		return function (a, b, c, d, e, f, g, h) {
-			return new self(a, b, c, d, e, f, g, h)
-		}
-	}
-})
-
 // remove protocol://[www.] from url
 function trimURL(url) {
 	typecheck(arguments, String);	
@@ -56,66 +29,6 @@ function trimURL(url) {
 	if (url.substr(0,4) == "www.")
 		url = url.substr(4);
 	return url;
-}
-
-// get i18n engine in promise
-function getI18n(locale) {
-	typecheck(arguments, [String, undefined]);
-	// default locale - use default chrome locale engine
-	if (!locale)
-		return Promise.resolve(chrome.i18n.getMessage.bind(chrome.i18n));
-	// custom set to english - load only english
-	if (locale == "en")
-		return chromeFetch("_locales/en/messages.json")
-			.then(function (json) {
-				let locale = JSON.parse(json);
-				return function (messageKey) {
-					typecheck(arguments, String);
-					let data = locale[messageKey];
-					return data ? data.message : "";
-				}
-			});
-	// custom set to non-english, english fallback
-	return Promise.all([
-			chromeFetch("_locales/" + locale + "/messages.json"),
-			chromeFetch("_locales/en/messages.json")
-	]).then(function (locales) {
-		let locale = JSON.parse(locales[0]);
-		let enLocale = JSON.parse(locales[1]);
-		return function (messageKey) {
-			let data = locale[messageKey] || enLocale[messageKey];
-			return data ? data.message : "";		
-		}
-	});
-}
-
-// Read-only settings server 
-function getSettings(defaultSettings) {
-	defaultSettings = defaultSettings || {};
-	return Promise.all([
-		Chrome.storage.local.get(),
-		Chrome.storage.sync.get()
-	]).then(function (storages) {
-		let local = storages[0];
-		let sync = storages[1];
-		if (local.local)
-			return local;
-		else return sync;
-	}).then(function (settings) {
-		for (var i in defaultSettings) {
-			if (!settings.hasOwnProperty(i))
-				settings[i] = defaultSettings[i];
-		}
-		return settings;
-	});
-}
-
-function getPlatform() {
-	if (navigator.appVersion.indexOf("Win") != -1)
-		return "Windows";
-	else if (navigator.appVersion.indexOf("Linux") != -1)
-		return "Ubuntu";
-	else return "";
 }
 
 chromeFetch("defaults.json")
@@ -143,7 +56,7 @@ chromeFetch("defaults.json")
 							device.sessions.forEach(function (session) {
 								session.lastModified = undefined;
 							});
-						return DeviceFolder.create(device)
+						return new DeviceFolder(device)
 					});
 				}),
 			settings.historyCount | 0 ? 
@@ -156,7 +69,7 @@ chromeFetch("defaults.json")
 					return results.map(function (result) {
 						if (!settings.timer)
 							result.lastVisitTime = undefined;
-						return HistoryButton.create(result);
+						return new HistoryButton(result);
 					});
 				}) : [],
 			getI18n(settings.lang),
@@ -174,19 +87,12 @@ chromeFetch("defaults.json")
 				if (!children.length)
 					children = [new Separator({title: i18n("results_nothing_found")})];
 				let mainLayer = root.insert(new Layer({ children: children }));
-				
-				let deviceLayer = root.insert(new Layer({
-					visible: false,
-					children: devices
-				}));
-				let devicesButton;
 				let searchLayer = root.insert(new Layer({
 					visible: false,
-					children: [
-						new Separator({title: i18n("popup_search_history")})
-					]
+					children: [ new Separator({title: i18n("popup_search_history")}) ]
 				}));
 				let searchInstance = 0;
+				let devicesButton, deviceLayer;
 				root.insert(new MultiButton({
 					children: [
 						new Input({
@@ -214,7 +120,7 @@ chromeFetch("defaults.json")
 											if (!settings.timer) {
 												result.lastVisitTime = null;
 											}
-											return HistoryButton.create(result);
+											return new HistoryButton(result);
 										});
 										nodes.unshift(new Separator({
 											title: i18n(time.i18n)
@@ -237,12 +143,6 @@ chromeFetch("defaults.json")
 								}.bind(this));
 							}
 						}),
-						devicesButton = new DevicesButton({
-							tooltip: i18n("popup_other_devices"),
-							click: function (e) {
-								this.on = deviceLayer.visible = !deviceLayer.visible;
-							}
-						}),
 						new ActionButton({
 							tooltip: i18n("popup_history_manager"),
 							icon: "icons/history-19.png",
@@ -259,6 +159,20 @@ chromeFetch("defaults.json")
 						})
 					]
 				}));
+				if (devices.length) {
+					deviceLayer = root.insert(new Layer({
+						visible: false,
+						children: devices
+					}));
+					devicesButton = new DevicesButton({
+						tooltip: i18n("popup_other_devices"),
+						click: function (e) {
+							this.on = deviceLayer.visible = !deviceLayer.visible;
+						}
+					});
+					root.insert(deviceLayer);
+					mainButtons.insert(devicesButton);
+				}
 			}).apply(this, arr);
 		});
 	});

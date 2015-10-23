@@ -1,4 +1,82 @@
 "use strict"
+
+// fetch for chrome protocol
+function chromeFetch(url) {
+	return new Promise(function (resolve, reject) {
+		let xhr = new XMLHttpRequest();
+		xhr.open("GET", url);
+		xhr.onload = function () {
+			if (this.status >= 200 && this.status < 300)
+				resolve(xhr.response);
+			else reject(xhr.statusText);
+		}
+		xhr.onerror = function () {
+			reject(xhr.statusText);
+		}
+		xhr.send();
+	});
+}
+
+// get i18n engine in promise
+function getI18n(locale) {
+	typecheck(arguments, [String, undefined]);
+	// default locale - use default chrome locale engine
+	if (!locale)
+		return Promise.resolve(chrome.i18n.getMessage.bind(chrome.i18n));
+	// custom set to english - load only english
+	if (locale == "en")
+		return chromeFetch("_locales/en/messages.json")
+			.then(function (json) {
+				let locale = JSON.parse(json);
+				return function (messageKey) {
+					typecheck(arguments, String);
+					let data = locale[messageKey];
+					return data ? data.message : "";
+				}
+			});
+	// custom set to non-english, english fallback
+	return Promise.all([
+			chromeFetch("_locales/" + locale + "/messages.json"),
+			chromeFetch("_locales/en/messages.json")
+	]).then(function (locales) {
+		let locale = JSON.parse(locales[0]);
+		let enLocale = JSON.parse(locales[1]);
+		return function (messageKey) {
+			let data = locale[messageKey] || enLocale[messageKey];
+			return data ? data.message : "";		
+		}
+	});
+}
+
+function getPlatform() {
+	if (navigator.appVersion.indexOf("Win") != -1)
+		return "Windows";
+	else if (navigator.appVersion.indexOf("Linux") != -1)
+		return "Ubuntu";
+	else return "";
+}
+
+// Read-only settings server 
+function getSettings(defaultSettings) {
+	defaultSettings = defaultSettings || {};
+	return Promise.all([
+		Chrome.storage.local.get(),
+		Chrome.storage.sync.get()
+	]).then(function (storages) {
+		let local = storages[0];
+		let sync = storages[1];
+		if (local.local)
+			return local;
+		else return sync;
+	}).then(function (settings) {
+		for (var i in defaultSettings) {
+			if (!settings.hasOwnProperty(i))
+				settings[i] = defaultSettings[i];
+		}
+		return settings;
+	});
+}
+
 var Chrome;
 {
 	let wrap = function (system, funcKey) {
@@ -40,6 +118,14 @@ var Chrome;
 			sync: {
 				get: wrap(chrome.storage.sync, "get"),
 				set: wrap(chrome.storage.sync, "set")
+			}
+		},
+		settings: {
+			getReadOnly: function () {
+				
+			}, 
+			getReadWrite: function () {
+				
 			}
 		},
 		tabs: {
