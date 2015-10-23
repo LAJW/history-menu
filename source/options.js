@@ -216,20 +216,6 @@ function getSettingsRW(defaultSettings) {
 	})
 }
 
-// Read-only settings server 
-function getSettings() {
-	return Promise.all([
-		Chrome.storage.local.get(),
-		Chrome.storage.sync.get()
-	]).then(function (storages) {
-		let local = storages[0];
-		let sync = storages[1];
-		if (local.local)
-			return local;
-		else return sync;
-	});
-}
-
 /* IDEA: Reset button for each field */
 /* IDEA: Use background.js as a cache for history items */
 /* IDEA: Use background.js as cache for all data */
@@ -247,20 +233,23 @@ chromeFetch("defaults.json")
 		(function (root, i18n, settings) {
 			root.setTheme(settings.theme || getPlatform(), settings.animate);
 			root.insert([
-				new Header({title: "Options page"}),
+				new Header({title: i18n("popup_options")}),
 				new Header({title: i18n("options_display")}),
 				new Select({
 					title: i18n("icon_color"),
 					values: {
-						"0": i18n("granite"),
-						"1": i18n("white"),
-						"2": i18n("red"),
-						"3": i18n("blue"),
-						"4": i18n("green")
+						"granite": i18n("granite"),
+						"white": i18n("white"),
+						"red": i18n("red"),
+						"blue": i18n("blue"),
+						"green": i18n("green")
 					},
 					selected: settings.icon,
 					change: function () {
 						settings.icon = this.selected;
+						chrome.browserAction.setIcon({
+							path: "icons/history-19-" + this.selected + ".png"
+						})
 					}
 				}),
 				new Slider({

@@ -15,6 +15,9 @@
 	"icons": {
 		"128": "icons/history-128.png"
 	},
+	"background": {
+		"page": "background.html"
+	},
 	"default_locale": "en",
 	"options_page": "options.html",
 	"browser_action": {
