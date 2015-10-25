@@ -58,7 +58,9 @@ chromeFetch("defaults.json")
 						if (!settings.timer)
 							device.sessions.forEach(function (session) {
 								session.lastModified = undefined;
+								device.expand = true;
 							});
+						device.expand = true;
 						return new DeviceFolder(device)
 					});
 				}),
@@ -97,7 +99,7 @@ chromeFetch("defaults.json")
 				}));
 				let searchInstance = 0;
 				let devicesButton, deviceLayer;
-				root.insert(new MultiButton({
+				let mainButtons = root.insert(new MultiButton({
 					children: [
 						new Input({
 							placeholder: i18n("popup_search_history"),
@@ -106,7 +108,8 @@ chromeFetch("defaults.json")
 								let currentSearchInstance = ++searchInstance;
 								// layout update
 								searchLayer.visible = !!this.value;
-								deviceLayer.visible = false;
+								if (deviceLayer)
+									deviceLayer.visible = false;
 								devicesButton.on = false;
 								if (value) {
 									searchLayer.clear();
@@ -164,10 +167,10 @@ chromeFetch("defaults.json")
 					]
 				}));
 				if (devices.length) {
-					deviceLayer = root.insert(new Layer({
+					deviceLayer = new Layer({
 						visible: false,
 						children: devices
-					}));
+					});
 					devicesButton = new DevicesButton({
 						tooltip: i18n("popup_other_devices"),
 						click: function (e) {
@@ -175,7 +178,7 @@ chromeFetch("defaults.json")
 						}
 					});
 					root.insert(deviceLayer);
-					mainButtons.insert(devicesButton);
+					mainButtons.insert(devicesButton, mainButtons.children[1]);
 				}
 			}).apply(this, arr);
 		});

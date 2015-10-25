@@ -19,7 +19,8 @@ var WindowFolder = (function () {
 			this._timer = this.DOM.firstChild.appendChild(template.cloneNode(true)).firstChild;
 			if (window.lastModified)
 				this.timer = relativeTime(wnd.lastModified * 1000);
-			this.open = wnd.open;
+			if (wnd.open !== undefined)
+				this.open = wnd.open;
 			this.sessionId = wnd.sessionId;
 		}
 		mousedown(e) { /* override */
