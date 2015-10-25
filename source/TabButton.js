@@ -23,6 +23,10 @@ var TabButton = (function () {
 			if (tab.lastModified)
 				this.timer = relativeTime(tab.lastModified * 1000);
 		}
+		mousedown(e) { /* override */
+			if (e.which == 2)
+				e.preventDefault();
+		}
 		click(e) { /*override*/
 			e.preventDefault();
 			Chrome.sessions.restore(this.sessionId, e.which == 2 || e.ctrlKey);

@@ -7,25 +7,29 @@ var WindowFolder = (function () {
 		childNodes: [$("")]
 	});
 	class WindowFolder extends Folder {
-		constructor(window) {
+		constructor(wnd) {
 			typecheck.loose(arguments, {
 				sessionId: String,
 			});
 			super();
-			this.title = "Window (Number of tabs: " + window.tabs.length + ")";
-			for (let tab of window.tabs) {
+			this.title = "Window (Number of tabs: " + wnd.tabs.length + ")";
+			for (let tab of wnd.tabs) {
 				this.insert(new TabButton(tab));
 			}
 			this._timer = this.DOM.firstChild.appendChild(template.cloneNode(true)).firstChild;
 			if (window.lastModified)
-				this.timer = relativeTime(window.lastModified * 1000);
+				this.timer = relativeTime(wnd.lastModified * 1000);
+			this.open = wnd.open;
+			this.sessionId = wnd.sessionId;
+		}
+		mousedown(e) { /* override */
+			e.preventDefault();
 		}
 		click(e) { /*override*/
 			e.preventDefault();
-			Folder.prototype.click.call(this, e);
 			if (e.which == 2 || e.ctrlKey) {
 				Chrome.sessions.restore(this.sessionId, true);
-			}
+			} else Folder.prototype.click.call(this, e);
 		}
 		set timer(value) {
 			typecheck(arguments, [String, undefined]);

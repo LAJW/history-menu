@@ -12,6 +12,13 @@ var HistoryButton = (function () {
 	});
 	class HistoryButton extends Button {
 		constructor(item) {
+			typecheck.loose(arguments, [{
+				tooltip: [String, undefined],
+				title: [String, undefined],
+				url: String,
+				lastVisitTime: [Number, undefined],
+				preferSelect: [Boolean, undefined]
+			}, undefined]);
 			if (!item.title) {
 				item.tooltip = item.url;
 				item.title = trimURL(item.url);
@@ -24,16 +31,27 @@ var HistoryButton = (function () {
 			this.url = item.url;
 			this.icon = "chrome://favicon/" + item.url;
 			this._timer = this.DOM.appendChild(template.cloneNode(true)).firstChild;
+			this.preferSelect = item.preferSelect;
 			if (item.lastVisitTime)
 				this.timer = relativeTime(item.lastVisitTime);
 			this._remove = this.DOM.appendChild(removeButton.cloneNode(true));
+			this.preferSelect = item.preferSelect;
+		}
+		mousedown(e) /*override*/ {
+			if (e.which == 2)
+				e.preventDefault();
 		}
 		click(e) { /*override*/
 			e.preventDefault();
 			if (e.target == this._remove) {
-				Chrome.history.deleteUrl({url: this.url});
+				Chrome.history.deleteUrl({ url: this.url });
 				this.parent.remove(this);
-			} else Chrome.tabs.openOrSelect(this.url, e.which == 2 || e.ctrlKey);
+			} else if (this.preferSelect)
+				Chrome.tabs.openOrSelect(this.url, e.which == 2 || e.ctrlKey);
+			else Chrome.tabs.create({
+				url: this.url, 
+				active: !(e.which == 2 || e.ctrlKey)
+			}).then(window.close);
 		}
 		get url() {
 			return this.DOM.href;	

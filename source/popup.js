@@ -46,7 +46,10 @@ chromeFetch("defaults.json")
 								bit.lastModified = session.lastModified;
 							if (session.tab)
 								return new TabButton(bit);
-							else return new WindowFolder(bit);
+							else {
+								bit.open = settings.expand;
+								return new WindowFolder(bit);
+							}
 						});
 					}) : [],
 			Chrome.sessions.getDevices()
@@ -67,6 +70,7 @@ chromeFetch("defaults.json")
 					maxResults: settings.historyCount | 0
 				}).then(function (results) {
 					return results.map(function (result) {
+						result.preferSelect = settings.preferSelect;
 						if (!settings.timer)
 							result.lastVisitTime = undefined;
 						return new HistoryButton(result);
@@ -80,16 +84,16 @@ chromeFetch("defaults.json")
 				root.width = parseInt(settings.width);
 				root.height = parseInt(settings.height);
 				if (sessions.length)
-					sessions.unshift(new Separator({title: i18n("popup_recently_closed_tabs")}));
+					sessions.unshift(new Separator({ title: i18n("popup_recently_closed_tabs") }));
 				if (history.length)
-					history.unshift(new Separator({title: i18n("popup_recent_history")}));
+					history.unshift(new Separator({ title: i18n("popup_recent_history") }));
 				let children = settings.tabsFirst ? sessions.concat(history) : history.concat(sessions);
 				if (!children.length)
-					children = [new Separator({title: i18n("results_nothing_found")})];
+					children = [new Separator({ title: i18n("results_nothing_found") })];
 				let mainLayer = root.insert(new Layer({ children: children }));
 				let searchLayer = root.insert(new Layer({
 					visible: false,
-					children: [ new Separator({title: i18n("popup_search_history")}) ]
+					children: [new Separator({ title: i18n("popup_search_history") })]
 				}));
 				let searchInstance = 0;
 				let devicesButton, deviceLayer;
