@@ -38,7 +38,7 @@ class Parent extends Node {
 			for (let i = 0, n = child.length; i < n; i++) {
 				let c = child[i];
 				c._parent = this;
-				this.DOM.insertBefore(c.DOM, before ? before.DOM : null);
+				this.container.insertBefore(c.DOM, before ? before.DOM : null);
 				c.fadeIn(Math.max(Math.min(n, 20) - i, 0) * 10);
 			}
 			let beforeChildren = this._children.slice(0, beforeIndex);
