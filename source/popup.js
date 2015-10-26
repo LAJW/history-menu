@@ -99,7 +99,7 @@ chromeFetch("defaults.json")
 				}));
 				let searchInstance = 0;
 				let devicesButton, deviceLayer;
-				let mainButtons = root.insert(new MultiButton({
+				let mainButtons = new MultiButton({
 					children: [
 						new Input({
 							placeholder: i18n("popup_search_history"),
@@ -165,7 +165,7 @@ chromeFetch("defaults.json")
 							}
 						})
 					]
-				}));
+				});
 				if (devices.length) {
 					deviceLayer = new Layer({
 						visible: false,
@@ -180,6 +180,7 @@ chromeFetch("defaults.json")
 					root.insert(deviceLayer);
 					mainButtons.insert(devicesButton, mainButtons.children[1]);
 				}
+				root.insert(mainButtons);
 			}).apply(this, arr);
 		});
 	});
