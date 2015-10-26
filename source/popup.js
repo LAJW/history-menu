@@ -92,7 +92,7 @@ chromeFetch("defaults.json")
 				let children = settings.tabsFirst ? sessions.concat(history) : history.concat(sessions);
 				if (!children.length)
 					children = [new Separator({ title: i18n("results_nothing_found") })];
-				let mainLayer = root.insert(new Layer({ children: children }));
+				root.insert(new Layer({ children: children }));
 				let searchLayer = root.insert(new Layer({
 					visible: false,
 					children: [new Separator({ title: i18n("popup_search_history") })]
