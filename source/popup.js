@@ -116,39 +116,44 @@ chromeFetch("defaults.json")
 									searchLayer.clear();
 									searchLayer.insert(new Progressbar);
 								}
-								Promise.all(timeSectors().map(function (time) {
-									return Chrome.history.search({
-										text: value,
-										startTime: time.start,
-										endTime: time.end,
-									}).then(function (results) {
-										if (searchInstance == currentSearchInstance || !results.length)
-											return [];	
-										let nodes = results.map(function (result) {
-											if (!settings.timer) {
-												result.lastVisitTime = null;
-											}
-											return new HistoryButton(result);
-										});
-										nodes.unshift(new Separator({
-											title: i18n(time.i18n)
-										}));
-										return nodes;
-									});
-								})).then(function (lists) {
-									if (searchInstance == currentSearchInstance) {
-										searchLayer.clear();
-										let nodes = Array.prototype.concat.apply([], lists);
-										if (nodes.length == 0)
-											searchLayer.insert(new Separator({
-												title: i18n("results_nothing_found")
+								setTimeout(function () {
+									if (searchInstance != currentSearchInstance)
+										return;
+									Promise.all(timeSectors().map(function (time) {
+										return Chrome.history.search({
+											text: value,
+											startTime: time.start,
+											endTime: time.end,
+										}).then(function (results) {
+											if (searchInstance != currentSearchInstance || !results.length)
+												return [];	
+											let nodes = results.map(function (result) {
+												if (!settings.timer) {
+													result.lastVisitTime = null;
+												}
+												return new HistoryButton(result);
+											});
+											nodes.unshift(new Separator({
+												title: i18n(time.i18n)
 											}));
-										else searchLayer.insert(nodes);
-										searchLayer.insert(new Separator({
-											title: i18n("results_end")
-										}));
-									}
-								}.bind(this));
+											return nodes;
+										});
+										console.log("alled");
+									})).then(function (lists) {
+										if (searchInstance == currentSearchInstance) {
+											searchLayer.clear();
+											let nodes = Array.prototype.concat.apply([], lists);
+											if (nodes.length == 0)
+												searchLayer.insert(new Separator({
+													title: i18n("results_nothing_found")
+												}));
+											else searchLayer.insert(nodes);
+											searchLayer.insert(new Separator({
+												title: i18n("results_end")
+											}));
+										}
+									}.bind(this));
+								}, 1000);
 							}
 						}),
 						new ActionButton({
