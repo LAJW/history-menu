@@ -233,9 +233,9 @@ chromeFetch("defaults.json")
 					change: control(settings, "tabsFirst")
 				}),
 				new Select({
-					title: i18n("options_lang"),
+					title: i18n("options_lang") + " (Language)",
 					values: {
-						"": "Auto (UI Default / English)",
+						"": "Auto",
 						"en": "English",
 						"ja": "Japanese",
 						"pl": "Polish"
