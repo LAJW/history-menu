@@ -108,9 +108,10 @@ chromeFetch("defaults.json")
 								let currentSearchInstance = ++searchInstance;
 								// layout update
 								searchLayer.visible = !!this.value;
-								if (deviceLayer)
+								if (deviceLayer) {
 									deviceLayer.visible = false;
-								devicesButton.on = false;
+									devicesButton.on = false;
+								}
 								if (value) {
 									searchLayer.clear();
 									searchLayer.insert(new Progressbar);
@@ -121,8 +122,8 @@ chromeFetch("defaults.json")
 										startTime: time.start,
 										endTime: time.end,
 									}).then(function (results) {
-										if (!results.length)
-											return [];
+										if (searchInstance == currentSearchInstance || !results.length)
+											return [];	
 										let nodes = results.map(function (result) {
 											if (!settings.timer) {
 												result.lastVisitTime = null;
