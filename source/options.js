@@ -1,5 +1,11 @@
 "use strict"
 
+define(["./Chrome", "./libraries/lajw/ui/Checkbox",
+		"./libraries/lajw/ui/Header", "./libraries/lajw/ui/Node",
+		"./libraries/lajw/ui/Root", "./libraries/lajw/ui/Select",
+		"./Slider.js"],
+		function (Chrome, Checkbox, Header, Node, Root, Select, Slider) {
+
 // fetch for chrome protocol
 function chromeFetch(url) {
 	return new Promise(function (resolve, reject) {
@@ -34,38 +40,6 @@ function trimURL(url) {
 	if (url.substr(0,4) == "www.")
 		url = url.substr(4);
 	return url;
-}
-
-// get i18n engine in promise
-function getI18n(locale) {
-	typecheck(arguments, [String, undefined]);
-	// default locale - use default chrome locale engine
-	if (!locale)
-		return Promise.resolve(chrome.i18n.getMessage.bind(chrome.i18n));
-	// custom set to english - load only english
-	if (locale == "en")
-		return chromeFetch("_locales/en/messages.json")
-			.then(JSON.parse)
-			.then(function (locale) {
-				return function (messageKey) {
-					typecheck(arguments, String);
-					let data = locale[messageKey];
-					return data ? data.message : "";
-				}
-			});
-	// custom set to non-english, english fallback
-	return Promise.all([
-			chromeFetch("_locales/" + locale + "/messages.json"),
-			chromeFetch("_locales/en/messages.json")
-	]).then(function (locales) {
-		let locale = JSON.parse(locales[0]);
-		let enLocale = JSON.parse(locales[1]);
-		return function (messageKey) {
-			typecheck(arguments, String);
-			let data = locale[messageKey] || enLocale[messageKey];
-			return data ? data.message : "";		
-		}
-	});
 }
 
 class ClassicButton extends Node{
@@ -149,22 +123,18 @@ function getSettingsRW(defaultSettings) {
 	})
 }
 
-/* IDEA: Reset button for each field */
-/* IDEA: Use background.js as a cache for history items */
-/* IDEA: Use background.js as cache for all data */
-
 chromeFetch("defaults.json")
 	.then(JSON.parse)
 	.then(getSettingsRW)
 	.then(function (settings) {
 		return Promise.all([
 			Root.ready(),
-			getI18n(settings.lang),
+			Chrome.getI18n(settings.lang),
 			settings
 		])
 	}).then(function (arr) {
 		(function (root, i18n, settings) {
-			root.setTheme(settings.theme || getPlatform(), settings.animate);
+			root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate);
 			root.insert([
 				new Header({title: i18n("popup_options")}),
 				new Header({title: i18n("options_display")}),
@@ -250,7 +220,7 @@ chromeFetch("defaults.json")
 				new Select({
 					title: i18n("options_theme"),
 					values: {
-						"": "Auto (" + getPlatform() + ")",
+						"": "Auto (" + Chrome.getPlatform() + ")",
 						"Windows": "Windows",
 						"Ubuntu": "Ubuntu",
 						"Other": "Other"
@@ -291,3 +261,4 @@ chromeFetch("defaults.json")
 			]);
 		}).apply(this, arr);
 	});
+});

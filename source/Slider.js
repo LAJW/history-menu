@@ -1,6 +1,8 @@
 "use strict"
 
-class Slider extends Node {
+define(["./libraries/lajw/ui/Node"], function (Node) {
+
+return class Slider extends Node {
 	constructor(e) {
 		e = e || {};
 		e.DOM = $({
@@ -58,3 +60,5 @@ class Slider extends Node {
 		this._interval = null;
 	}
 }
+
+});
