@@ -1,5 +1,8 @@
 "use strict"
 
+define(["chrome", "WindowFolder", "TabButton", "HistoryButton"],
+function(Chrome, WindowFolder, TabButton, HistoryButton) {
+
 // get time sectors for search
 function timeSectors() {
 	let now = Date.now();
@@ -19,7 +22,7 @@ function timeSectors() {
 		{ start: prevWeek, end: lastWeek, i18n: "results_last_week" },
 		{ start: lastMonth, end: prevWeek, i18n: "results_this_month" },
 		{ start: prevMonth, end: lastMonth, i18n: "results_last_month" }
-	];						
+	];
 }
 
 // remove protocol://[www.] from url
@@ -31,9 +34,9 @@ function trimURL(url) {
 	return url;
 }
 
-chromeFetch("defaults.json")
+Chrome.fetch("defaults.json")
 	.then(JSON.parse)
-	.then(getSettings)
+	.then(Chrome.getSettings)
 	.then(function (settings) {
 		Promise.all([
 			Root.ready(),
@@ -78,11 +81,11 @@ chromeFetch("defaults.json")
 						return new HistoryButton(result);
 					});
 				}) : [],
-			getI18n(settings.lang),
+			Chrome.getI18n(settings.lang),
 			settings
 		]).then(function (arr) {
 			(function (root, sessions, devices, history, i18n, settings) {
-				root.setTheme(settings.theme || getPlatform(), settings.animate);
+				root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate);
 				root.width = parseInt(settings.width);
 				root.height = parseInt(settings.height);
 				if (sessions.length)
@@ -190,3 +193,4 @@ chromeFetch("defaults.json")
 			}).apply(this, arr);
 		});
 	});
+});
