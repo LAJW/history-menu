@@ -57,10 +57,10 @@ function relativeTime(value) {
 }
 
 /**
-* DOM Element generator
-* @param {Object} params - parameters describing element to be created
-* @return {Element} - created element
-*/
+ * DOM Element generator
+ * @param {Object} params - parameters describing element to be created
+ * @return {Element} - created element
+ */
 function $(params) {
 	typecheck(arguments, [Object, String]);
 	if (typeof(params) == "string")

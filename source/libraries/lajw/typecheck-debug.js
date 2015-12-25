@@ -1,14 +1,14 @@
 "use strict"
 /**
-* Checks if argument list matches type pattern. Throws TypeError if something 
-* went wrong.
-* @param {Object} callerArgs - Optional caller's "arguments" object or other 
-* array-like object
-* @param {...Mixed} types - types to be checked against
-* @param {typecheck.trail | typecheck.loose} - (optional) trail last type or 
-* do loose typecheck (pt arguments and parameters)
-* @throw {TypeError} - error with information about invalid parameter
-*/
+ * Checks if argument list matches type pattern. Throws TypeError if something 
+ * went wrong.
+ * @param {Object} callerArgs - Optional caller's "arguments" object or other 
+ * array-like object
+ * @param {...Mixed} types - types to be checked against
+ * @param {typecheck.trail | typecheck.loose} - (optional) trail last type or 
+ * do loose typecheck (pt arguments and parameters)
+ * @throw {TypeError} - error with information about invalid parameter
+ */
 function typecheck(callerArgs) {
 	var loose = false;
 	if (!arguments.length)

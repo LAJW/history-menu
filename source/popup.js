@@ -27,15 +27,6 @@ function timeSectors() {
 	];
 }
 
-// remove protocol://[www.] from url
-function trimURL(url) {
-	typecheck(arguments, String);	
-	url = url.substr(url.indexOf("://") + 3);
-	if (url.substr(0,4) == "www.")
-		url = url.substr(4);
-	return url;
-}
-
 Chrome.fetch("defaults.json")
 	.then(JSON.parse)
 	.then(Chrome.getSettings)
