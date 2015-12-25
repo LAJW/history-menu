@@ -1,7 +1,9 @@
 "use strict"
 
-define(["chrome", "WindowFolder", "TabButton", "HistoryButton"],
-function(Chrome, WindowFolder, TabButton, HistoryButton) {
+define(["ActionButton", "chrome", "DeviceFolder", "WindowFolder", "TabButton", 
+		"HistoryButton"],
+function (ActionButton, Chrome, DeviceFolder, WindowFolder, TabButton, 
+		HistoryButton) {
 
 // get time sectors for search
 function timeSectors() {

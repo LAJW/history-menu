@@ -1,6 +1,8 @@
 "use strict"
 
-class DeviceFolder extends Folder {
+define([], function () {
+
+return class DeviceFolder extends Folder {
 	constructor (device) {
 		super({
 			children: device.sessions.map(function (session) {
@@ -12,3 +14,5 @@ class DeviceFolder extends Folder {
 		this.title = device.deviceName;
 	}
 }
+
+});

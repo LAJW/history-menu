@@ -3,8 +3,8 @@
  *
  * Webkit Extension API wrapper using ES6 features - promises, accessors and 
  * classes. Levels differences between different Webkit implementations (Opera,
- * Chrome). Also adds some useful features (settings management, tab management,
- * fetch for extension-local files, language switching, etc.)
+ * Chrome). Also adds some useful features of its own (settings management, tab
+ * management, fetch for extension-local files, language switching, etc.)
  *
  * @author Lukasz A.J. Wrona (lukasz.andrzej.wrona@gmail.com)
  *
