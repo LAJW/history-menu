@@ -1,5 +1,7 @@
 "use strict"
 
+define(["ActionButton"], function (ActionButton) {
+
 class DevicesButton extends ActionButton {
 	constructor(e) {
 		super(e);	
@@ -18,3 +20,5 @@ class DevicesButton extends ActionButton {
 		return this._on;
 	}
 }
+
+});

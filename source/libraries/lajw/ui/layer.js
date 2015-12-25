@@ -1,5 +1,8 @@
 "use strict"
-class Layer extends Parent {
+
+define(["./Parent"], function (Parent) {
+
+return class Layer extends Parent {
 	constructor(e) {
 		typecheck.loose(arguments, [{
 			visible: [Boolean, undefined]
@@ -20,3 +23,5 @@ class Layer extends Parent {
 		this.DOM.classList.toggle("visible", value);
 	}
 }
+
+});

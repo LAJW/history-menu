@@ -1,5 +1,7 @@
 "use strict"
-define(["chrome"], function(Chrome) {
+
+define(["./Chrome", "./libraries/lajw/ui/Folder"], function(Chrome, Folder) {
+
 const template = $({
 	nodeName: "DIV",
 	className: "Timer hidden",

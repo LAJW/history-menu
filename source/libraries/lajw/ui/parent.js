@@ -1,5 +1,8 @@
 "use strict"
-class Parent extends Node {
+
+define(["./Node"], function (Node) {
+
+return class Parent extends Node {
 	constructor(e) {
 		typecheck(arguments,
 			[{
@@ -81,3 +84,5 @@ class Parent extends Node {
 		}.bind(this));
 	}
 }
+
+});

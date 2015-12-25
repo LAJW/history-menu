@@ -1,15 +1,18 @@
 "use strict"
-define(["chrome"], function(Chrome) {
+
+define(["chrome", "libraries/lajw/ui/Button"], function(Chrome, Button) {
 
 const template = $({
 	nodeName: "DIV",
 	className: "Timer hidden",
 	childNodes: [$("")]
 });
+
 const removeButton = $({
 	nodeName: "DIV",
 	className: "Remove"
 });
+
 return class HistoryButton extends Button {
 	constructor(item) {
 		typecheck.loose(arguments, [{

@@ -1,9 +1,11 @@
 "use strict"
 
-define(["ActionButton", "chrome", "DeviceFolder", "WindowFolder", "TabButton", 
-		"HistoryButton"],
-function (ActionButton, Chrome, DeviceFolder, WindowFolder, TabButton, 
-		HistoryButton) {
+define(["./ActionButton", "./Chrome", "./DeviceFolder", "./libraries/lajw/ui/Input",
+		"./libraries/lajw/ui/Layer", "./libraries/lajw/ui/MultiButton",
+		"./libraries/lajw/ui/Separator", "./WindowFolder", "./TabButton",
+		"./HistoryButton", "./libraries/lajw/ui/Root"],
+function (ActionButton, Chrome, DeviceFolder, Input, Layer, MultiButton,
+		Separator, WindowFolder, TabButton, HistoryButton, Root) {
 
 // get time sectors for search
 function timeSectors() {
