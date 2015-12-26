@@ -1,12 +1,12 @@
 /************* source/popup.js - WHM Popup Entry Point Script *****************/
 /**
  * @file This file is the entry point for Wrona History Menu Popup.
- * @license This file is distributed under the GNU General Public License
- * version 3. See LICENSE for details.
- * @copyright Copyright 2015 (c) Lukasz A.J. Wrona. All rights reserved.
+ * @copyright Copyright 2015 (c) Lukasz A.J. Wrona. All rights reserved.  This
+ * file is distributed under the GNU General Public License version 3. See
+ * LICENSE for details.
  * @author Lukasz A.J. Wrona (lukasz.andrzej.wrona@gmail.com)
- *
  */
+
 "use strict"
 
 define(["./ActionButton", "./Chrome", "./DeviceFolder", "./libraries/lajw/ui/Input",
@@ -64,7 +64,8 @@ function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings,
 				startTime: time.start,
 				endTime: time.end,
 			}).then(function (results) {
-				if (searchInstance != currentSearchInstance || !results.length)
+				if (searchInstance != currentSearchInstance 
+					|| results.length > 0)
 					return [];	
 				let nodes = results.map(function (result) {
 					if (!settings.timer) {
@@ -99,28 +100,40 @@ function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings,
 	}, 500);
 }
 
-function main(root, sessions, devices, history, i18n, settings) {
-	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate);
-	root.width = parseInt(settings.width);
-	root.height = parseInt(settings.height);
-	if (sessions.length) {
-		sessions.unshift(
-				new Separator({ title: i18n("popup_recently_closed_tabs") }));
+function getMainLayer(sessions, devices, history, i18n, settings) {
+	if (sessions.length > 0) {
+		sessions.unshift(new Separator({
+			title: i18n("popup_recently_closed_tabs")
+		}));
 	}
-	if (history.length) {
-		history.unshift(
-				new Separator({ title: i18n("popup_recent_history") }));
+	if (history.length > 0) {
+		history.unshift(new Separator({
+			title: i18n("popup_recent_history")
+		}));
 	}
 	let children = settings.tabsFirst 
 		? sessions.concat(history) 
 		: history.concat(sessions);
-	if (!children.length) {
-		children.push(new Separator({ title: i18n("results_nothing_found") }));
+	if (children.length == 0) {
+		history.unshift(new Separator({
+			title: i18n("results_nothing_found")
+		}));
 	}
-	root.insert(new Layer({ children: children }));
+	return new Layer({
+		children: children
+	});
+}
+
+function main(root, sessions, devices, history, i18n, settings) {
+	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate);
+	root.width = parseInt(settings.width);
+	root.height = parseInt(settings.height);
+	root.insert(getMainLayer(sessions, devices, history, i18n, settings));
 	let searchLayer = root.insert(new Layer({
 		visible: false,
-		children: [new Separator({ title: i18n("popup_search_history") })]
+		children: [new Separator({
+			title: i18n("popup_search_history")
+		})]
 	}));
 	let devicesButton, deviceLayer;
 	let mainButtons = new MultiButton({
@@ -147,7 +160,7 @@ function main(root, sessions, devices, history, i18n, settings) {
 			})
 		]
 	});
-	if (devices.length) {
+	if (devices.length > 0) {
 		deviceLayer = new Layer({
 			visible: false,
 			children: devices
@@ -164,7 +177,7 @@ function main(root, sessions, devices, history, i18n, settings) {
 	root.insert(mainButtons);
 }
 
-function sessionToButton(timerEnabled, session) {
+function sessionToButton(settings, session) {
 	let bit = session.tab || session.window;
 	if (settings.timer) {
 		bit.lastModified = session.lastModified;
@@ -177,51 +190,57 @@ function sessionToButton(timerEnabled, session) {
 	}
 }
 
-function fetchAll(settings) {
-	return Promise.all([
-		Root.ready(),
-		settings.tabCount | 0 ?
-			Chrome.sessions.getRecent({maxResults: settings.tabCount | 0})
-				.then(function (sessions) {
-					return sessions.map(sessionToButton);
-				}) : [],
-		Chrome.sessions.getDevices()
-			.then(function (devices) {
-				return devices.map(function (device) {
-					if (!settings.timer)
-						device.sessions.forEach(function (session) {
-							session.lastModified = undefined;
-							device.expand = true;
-						});
-					device.expand = true;
-					return new DeviceFolder(device)
+function getSessionNodes(settings) {
+	return Chrome.sessions.getRecent({
+		maxResults: parseInt(settings.tabCount)
+	}).then(function (sessions) {
+		return sessions.map(sessionToButton.bind(null, settings));
+	});
+}
+
+function getDeviceNodes(settings) {
+	return Chrome.sessions.getDevices().then(function (devices) {
+		return devices.map(function (device) {
+			if (!settings.timer) {
+				device.sessions.forEach(function (session) {
+					session.lastModified = undefined;
 				});
-			}),
-		settings.historyCount | 0 ? 
-			Chrome.history.search({
-				text: "", 
-				startTime: Date.now() - 1000 * 3600 * 24 * 30, 
-				endTime: Date.now(),
-				maxResults: settings.historyCount | 0
-			}).then(function (results) {
-				return results.map(function (result) {
-					result.preferSelect = settings.preferSelect;
-					if (!settings.timer)
-						result.lastVisitTime = undefined;
-					return new HistoryButton(result);
-				});
-			}) : [],
-		Chrome.getI18n(settings.lang),
-		settings
-	])
+			}
+			return new DeviceFolder(device)
+		});
+	});
+}
+
+function getHistoryNodes(settings) {
+	return Chrome.history.search({
+		text: "", 
+		startTime: Date.now() - 1000 * 3600 * 24 * 30, 
+		endTime: Date.now(),
+		maxResults: parseInt(settings.historyCount)
+	}).then(function (results) {
+		return results.map(function (result) {
+			result.preferSelect = settings.preferSelect;
+			if (!settings.timer) {
+				result.lastVisitTime = undefined;
+			}
+			return new HistoryButton(result);
+		});
+	});
 }
 
 Chrome.fetch("defaults.json")
 	.then(JSON.parse)
 	.then(Chrome.getSettings)
-	.then(fetchAll)
-	.then(function (arr) {
+	.then(function (settings) {
+		return Promise.all([
+			Root.ready(),
+			getSessionNodes(settings),
+			getDeviceNodes(settings),
+			getHistoryNodes(settings),
+			Chrome.getI18n(settings.lang),
+			settings
+		])
+	}).then(function (arr) {
 		main.apply(null, arr);
 	});
-
 });
