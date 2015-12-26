@@ -1,6 +1,6 @@
 "use strict"
 
-define(["ActionButton"], function (ActionButton) {
+define(["./ActionButton"], function (ActionButton) {
 
 class DevicesButton extends ActionButton {
 	constructor(e) {
