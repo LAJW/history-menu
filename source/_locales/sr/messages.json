@@ -1,0 +1,95 @@
+{
+   "blue": {
+      "message": "Плава"
+   },
+   "description": {
+      "message": "Пронађите и вратите недавно затворене картице, прозоре и историју."
+   },
+   "granite": {
+      "message": "Гранит"
+   },
+   "green": {
+      "message": "Зелена"
+   },
+   "icon_color": {
+      "message": "Боја иконице"
+   },
+   "options_about": {
+      "message": "Информације"
+   },
+   "options_about_message": {
+      "message": "Лиценца: \u003Ca href='http://opensource.org/licenses/MIT'>The MIT License\u003C/a>\u003Cbr>Copyright © 2015 Łukasz A.J. Wrona\u003Cbr>\u003Ca href='https://twitter.com/lajwrona'>Twitter @lajwrona\u003C/a>"
+   },
+   "options_animate": {
+      "message": "Омогући анимације"
+   },
+   "options_display": {
+      "message": "Приказ"
+   },
+   "options_expand_folders": {
+      "message": "Развиј затворене прозоре"
+   },
+   "options_history_count": {
+      "message": "Максималан број уноса историје"
+   },
+   "options_tab_count": {
+      "message": "Максималан број затворених картица"
+   },
+   "options_timer": {
+      "message": "Прикажи време посете"
+   },
+   "popup_back": {
+      "message": "Назад"
+   },
+   "popup_history_manager": {
+      "message": "Прикажи сву историју"
+   },
+   "popup_number_of_tabs": {
+      "message": "Број картица"
+   },
+   "popup_ok": {
+      "message": "ОК"
+   },
+   "popup_options": {
+      "message": "Опције"
+   },
+   "popup_other_devices": {
+      "message": "Други уређаји"
+   },
+   "popup_recent_history": {
+      "message": "Недавна историја"
+   },
+   "popup_recently_closed_tabs": {
+      "message": "Недавно затворене картице"
+   },
+   "popup_search_history": {
+      "message": "Претражи историју"
+   },
+   "popup_window": {
+      "message": "Прозор"
+   },
+   "red": {
+      "message": "Црвена"
+   },
+   "results_end": {
+      "message": "Крај резултата"
+   },
+   "results_nothing_found": {
+      "message": "Ништа није пронађено"
+   },
+   "results_recently": {
+      "message": "Недавно"
+   },
+   "results_this_month": {
+      "message": "Раније овог месеца"
+   },
+   "results_this_week": {
+      "message": "Раније ове седмице"
+   },
+   "results_today": {
+      "message": "Раније данас"
+   },
+   "white": {
+      "message": "Бела"
+   }
+}
