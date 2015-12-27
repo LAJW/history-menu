@@ -39,65 +39,82 @@ function timeSectors() {
 	];
 }
 
-let searchInstance = 0;
+class Token {
+	constructor(tokenFactory) {
+		typecheck(arguments, TokenFactory);
+		this._id = ++tokenFactory._id;
+		this._tokenFactory = tokenFactory;
+	}
+	get valid() {
+		return this._id == this._tokenFactory._id;
+	}
+	valueOf() {
+		return this.valid;
+	}
+}
+
+class TokenFactory {
+	constructor() {
+		this._id = 0;
+	}
+}
+
+let tokenFactory = new TokenFactory();
 function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings,
 		value) {
-	let currentSearchInstance = ++searchInstance;
-	// layout update
-	searchLayer.visible = !!value;
+	let token = new Token(tokenFactory);
 	if (deviceLayer) {
 		deviceLayer.visible = false;
 		devicesButton.on = false;
 	}
+	searchLayer.clear();
 	if (value) {
-		try {
-			searchLayer.clear();
-		} catch (e) { }
+		searchLayer.visible = true;
 		searchLayer.insert(new Progressbar);
-	}
-	setTimeout(function () {
-		if (searchInstance != currentSearchInstance)
-			return;
-		Promise.all(timeSectors().map(function (time) {
-			return Chrome.history.search({
-				text: value,
-				startTime: time.start,
-				endTime: time.end,
-			}).then(function (results) {
-				if (searchInstance != currentSearchInstance 
-					|| results.length > 0)
-					return [];	
-				let nodes = results.map(function (result) {
-					if (!settings.timer) {
-						result.lastVisitTime = null;
+		setTimeout(function () {
+			if (!token.valid)
+				return;
+			let promise = Promise.resolve();
+			for (let sector of timeSectors()) {
+				promise = promise.then(function () {
+					return Chrome.history.search({
+						text: value,
+						startTime: sector.start,
+						endTime: sector.end,
+					})
+				}).then(function (results) {
+					if (!results.length || !token.valid) 
+						return
+					let nodes = [new Separator(
+						{title: i18n(sector.i18n)}
+					)];
+					for (let result of results) {
+						if (!settings.timer) {
+							result.lastVisitTime = null;
+						}
+						nodes.push(new HistoryButton(result));
 					}
-					return new HistoryButton(result);
+					searchLayer.insert(nodes);
 				});
-				nodes.unshift(new Separator({
-					title: i18n(time.i18n)
-				}));
-				return nodes;
-			});
-		})).then(function (lists) {
-			if (searchInstance == currentSearchInstance) {
-				searchLayer.clear();
-				let nodes = Array.prototype.concat.apply([], lists);
-				if (nodes.length == 0)
+			}
+			promise.then(function () {
+				if (!token.valid)
+					return;
+				searchLayer.remove(searchLayer.children[0]);
+				if (searchLayer.children.length) {
+					searchLayer.insert(new Separator({
+						title: i18n("results_end")
+					}));
+				} else {
 					searchLayer.insert(new Separator({
 						title: i18n("results_nothing_found")
 					}));
-				else searchLayer.insert(nodes);
-				searchLayer.insert(new Separator({
-					title: i18n("results_end")
-				}));
-			}
-		}.bind(this))
-		.catch(function () {
-			try {
-				searchLayer.clear();
-			} catch (e) { }
-		});
-	}, 500);
+				}
+			});
+		}.bind(this), 500);
+	} else {
+		searchLayer.visible = false;
+	}
 }
 
 function getMainLayer(sessions, devices, history, i18n, settings) {

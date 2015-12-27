@@ -21,44 +21,75 @@ return class Parent extends Node {
 		}
 	}
 	// insert child, before other child or at the end, return it
-	insert(child, before) {
+	insert(first, second) {
 		typecheck(arguments, 
 			[Node, Array],
 			[Node, undefined]
 		);
-		let beforeIndex;
-		if (before) {
-			beforeIndex = this._children.indexOf(before);
-			if (before.parent !== this || beforeIndex < 0) 
-				throw new TypeError("before does not belong to this parent");
-		}
-		// insert many
-		if (child instanceof Array) {
-			for (let c of child) 
-				if (child.parent)
-					throw new TypeError("one of the children already has a parent");
-
-			for (let i = 0, n = child.length; i < n; i++) {
-				let c = child[i];
-				c._parent = this;
-				this.container.insertBefore(c.DOM, before ? before.DOM : null);
-				c.fadeIn(Math.max(Math.min(n, 20) - i, 0) * 10);
+		if (second) {
+			if (first instanceof Array) {
+				return this._insertManyBefore(first, before);
+			} else {
+				return this._insertBefore(first, before);
 			}
-			let beforeChildren = this._children.slice(0, beforeIndex);
-			let afterChildren = this._children.slice(beforeIndex);
-			this._children = beforeChildren.concat(child, afterChildren);
-		// insert one
 		} else {
-			if (child.parent)
-				throw new TypeError("child already has a parent");
-			this.container.insertBefore(child.DOM, before ? before.DOM : null);
-			if (before)
-				this._children.splice(beforeIndex, 0, child);
-			else this._children.push(child);
-			child.fadeIn(0);
-			child._parent = this;
+			if (first instanceof Array) {
+				return this._appendMany(first);
+			} else {
+				return this._append(first);
+			}
 		}
+	}
+	_append(child) { // exception safe
+		typecheck(arguments, Node);
+		this._validateChildCandidate(child);
+		this.container.appendChild(child.DOM);
+		this._children.push(child);
+		child._parent = this;
+		child.fadeIn(0);
 		return child;
+	}
+	_appendMany(children) { // not exception safe
+		children.forEach(function (child, i) {
+			this._validateChildCandidate(child);
+			this.container.appendChild(child.DOM);
+			this._children.push(child);
+			child._parent = this;
+			child.fadeIn(Math.max(Math.min(children.length, 20) - i, 0) * 10);
+		}.bind(this));
+	}
+	_insertBefore(child, before) { // exception safe
+		typecheck(arguments, Node, Node);
+		this._validateChildCandidate(child);
+		this._validateChild(before);
+		this.container.insertBefore(child.DOM, before.DOM);
+		this._children.splice(this._children.indexOf(before), 0, child);
+		child._parent = this;
+		child.fadeIn(0);
+		return child;
+	}
+	_insertManyBefore(children, before) { // not exception safe
+		this._validateChild(before);
+		children.forEach(function (child, i) {
+			this._validateChildCandidate(child);
+			this.container.insertBefore(child.DOM, before.DOM);
+			this._children.splice(this._children.indexOf(before), 0, child);
+			child._parent = this;
+			child.fadeIn(Math.max(Math.min(children.length, 20) - i, 0) * 10);
+		}.bind(this));
+	}
+	_validateChildCandidate(child) {
+		if (child.parent) {
+			throw new TypeError("Child already has a parent");
+		}
+	}
+	_validateChild(child) {
+		if (child.parent != this) {
+			throw new TypeError("Before is not a child of this node");
+		}
+	}
+	_empty() {
+		return this._children.length == 0;
 	}
 	// remove child from child list, return it
 	remove(child) {
@@ -77,9 +108,14 @@ return class Parent extends Node {
 	get children() {
 		return this._children.slice();
 	}
+	set children(value) {
+		typecheck(arguments, Array);
+		this.clear();
+		this._appendMany(value);
+	}
 	// void clear() - remove all elemnts from this node
 	clear() {
-		this._children.forEach(function (child) {
+		this.children.forEach(function (child) {
 			this.remove(child);
 		}.bind(this));
 	}

@@ -40,6 +40,9 @@ return class Input extends Node {
 		this._input = this.DOM.firstChild;
 		this._cancel = this.DOM.lastChild;
 		this._input.onkeyup = this._input.onchange = function () {
+			if (this._oldValue == this.value)
+				return;
+			this._oldValue = this.value;
 			this.change(this.value);
 			this._toggleClearButton();
 		}.bind(this);
