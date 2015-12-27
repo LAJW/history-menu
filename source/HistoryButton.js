@@ -68,6 +68,14 @@ return class HistoryButton extends TimerButton {
 	set url(value) {
 		this.DOM.href = value;
 	}
+	set highlighted(value) {
+		typecheck(arguments, Boolean);
+		this._highlighted = value;
+		this.DOM.classList.toggle("highlighted", value);
+	}
+	get highlighted() {
+		return this._highlighted;
+	}
 }
 
 });

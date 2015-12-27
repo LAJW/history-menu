@@ -61,6 +61,48 @@ class TokenFactory {
 }
 
 let tokenFactory = new TokenFactory();
+let selectedResult = 0;
+let searchResults = [];
+
+let keyCode = {
+	arrowUp: 38,
+	arrowDown: 40,
+	tab: 9,
+	enter: 13
+};
+
+document.body.onkeydown = function (e) {
+	if ((e.keyCode == keyCode.arrowDown 
+			|| e.keyCode == keyCode.tab && !e.shiftKey)
+		&& selectedResult + 1 <
+			searchResults.length) {
+		searchResults[selectedResult].highlighted = false;
+		selectedResult++;
+		searchResults[selectedResult].highlighted = true;
+		if (searchResults[selectedResult - 5]) {
+			searchResults[selectedResult - 5].DOM.scrollIntoView();
+		}
+		e.preventDefault();
+	} else if ((e.keyCode == keyCode.arrowUp 
+			|| e.keyCode == keyCode.tab && e.shiftKey)
+		&& selectedResult - 1 >= 0) {
+		searchResults[selectedResult].highlighted = false;
+		selectedResult--;
+		searchResults[selectedResult].highlighted = true;
+		if (searchResults[selectedResult - 5]) {
+			searchResults[selectedResult - 5].DOM.scrollIntoView();
+		}
+		e.preventDefault();
+	} else if (e.keyCode == keyCode.enter) {
+		if (searchResults.length > 0) {
+			searchResults[selectedResult].click({
+				preventDefault: e.preventDefault.bind(e),
+				ctrlClick: e.shiftKey
+			});
+		}
+	}
+}
+
 function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings,
 		value) {
 	let token = new Token(tokenFactory);
@@ -69,6 +111,8 @@ function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings,
 		devicesButton.on = false;
 	}
 	searchLayer.clear();
+	selectedResult = 0;
+	searchResults = [];
 	if (value) {
 		searchLayer.visible = true;
 		searchLayer.insert(new Progressbar);
@@ -86,21 +130,25 @@ function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings,
 				}).then(function (results) {
 					if (!results.length || !token.valid) 
 						return
-					let nodes = [new Separator(
-						{title: i18n(sector.i18n)}
-					)];
-					for (let result of results) {
+					let nodes = results.map(function (result) {
 						if (!settings.timer) {
 							result.lastVisitTime = null;
 						}
-						nodes.push(new HistoryButton(result));
-					}
+						return new HistoryButton(result);
+					});
+					searchResults = searchResults.concat(nodes.slice());
+					nodes.unshift(new Separator(
+						{title: i18n(sector.i18n)}
+					));
 					searchLayer.insert(nodes);
 				});
 			}
 			promise.then(function () {
 				if (!token.valid)
 					return;
+				if (searchResults.length > 0) {
+					searchResults[0].highlighted = true;
+				}
 				searchLayer.remove(searchLayer.children[0]);
 				if (searchLayer.children.length) {
 					searchLayer.insert(new Separator({
