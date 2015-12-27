@@ -2,7 +2,7 @@
 
 define(["./ActionButton"], function (ActionButton) {
 
-class DevicesButton extends ActionButton {
+return class DevicesButton extends ActionButton {
 	constructor(e) {
 		super(e);	
 		this.DOM.appendChild($({

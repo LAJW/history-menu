@@ -9,13 +9,14 @@
 
 "use strict"
 
-define(["./ActionButton", "./Chrome", "./DeviceFolder", "./libraries/lajw/ui/Input",
-		"./libraries/lajw/ui/Layer", "./libraries/lajw/ui/MultiButton",
-		"./libraries/lajw/ui/Progressbar.js", "./libraries/lajw/ui/Separator",
-		"./WindowFolder", "./TabButton", "./HistoryButton",
-		"./libraries/lajw/ui/Root"],
-function (ActionButton, Chrome, DeviceFolder, Input, Layer, MultiButton,
-		Progressbar, Separator, WindowFolder, TabButton, HistoryButton, Root) {
+define(["./ActionButton", "./Chrome", "./DevicesButton", "./DeviceFolder",
+		"./libraries/lajw/ui/Input", "./libraries/lajw/ui/Layer",
+		"./libraries/lajw/ui/MultiButton", "./libraries/lajw/ui/Progressbar.js",
+		"./libraries/lajw/ui/Separator", "./WindowFolder", "./TabButton",
+		"./HistoryButton", "./libraries/lajw/ui/Root"],
+function (ActionButton, Chrome, DevicesButton, DeviceFolder, Input, Layer,
+	MultiButton, Progressbar, Separator, WindowFolder, TabButton, HistoryButton,
+	Root) {
 
 // get time sectors for search
 function timeSectors() {

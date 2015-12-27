@@ -1,6 +1,7 @@
 "use strict"
 
-define(["./libraries/lajw/ui/Folder"], function (Folder) {
+define(["./libraries/lajw/ui/Folder", "./WindowFolder"], function (Folder,
+	WindowFolder) {
 
 return class DeviceFolder extends Folder {
 	constructor (device) {

@@ -28,9 +28,9 @@ return class Parent extends Node {
 		);
 		if (second) {
 			if (first instanceof Array) {
-				return this._insertManyBefore(first, before);
+				return this._insertManyBefore(first, second);
 			} else {
-				return this._insertBefore(first, before);
+				return this._insertBefore(first, second);
 			}
 		} else {
 			if (first instanceof Array) {

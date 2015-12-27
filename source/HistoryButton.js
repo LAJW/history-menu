@@ -1,19 +1,13 @@
 "use strict"
 
-define(["./Chrome", "./libraries/lajw/ui/Button"], function(Chrome, Button) {
-
-const template = $({
-	nodeName: "DIV",
-	className: "Timer hidden",
-	childNodes: [$("")]
-});
+define(["./Chrome", "./TimerButton"], function(Chrome, TimerButton) {
 
 const removeButton = $({
 	nodeName: "DIV",
 	className: "Remove"
 });
 
-return class HistoryButton extends Button {
+return class HistoryButton extends TimerButton {
 	constructor(item) {
 		typecheck.loose(arguments, [{
 			tooltip: [String, undefined],
@@ -29,16 +23,28 @@ return class HistoryButton extends Button {
 		} else {
 			item.tooltip = item.title + "\n" + item.url;
 		}
+		item.timer = item.lastVisitTime;
 		super(item);
 		this.DOM.classList.add("History");
 		this.url = item.url;
 		this.icon = "chrome://favicon/" + item.url;
-		this._timer = this.DOM.appendChild(template.cloneNode(true)).firstChild;
 		this.preferSelect = item.preferSelect;
-		if (item.lastVisitTime)
-			this.timer = relativeTime(item.lastVisitTime);
+		if (item.lastVisitTime) {
+			this._lastModified = item.lastVisitTime;
+		}
 		this._remove = this.DOM.appendChild(removeButton.cloneNode(true));
 		this.preferSelect = item.preferSelect;
+	}
+	fadeIn(e) {
+		super.fadeIn(e);
+		if (this._lastModified) {
+			this._updateTimer();
+			this._interval = setInterval(this._updateTimer.bind(this), 500);
+		}
+	}
+	fadeOut(e) {
+		super.fadeOut(e);
+		clearInterval(this._interval);
 	}
 	mousedown(e) /*override*/ {
 		if (e.which == 2)
@@ -62,13 +68,6 @@ return class HistoryButton extends Button {
 	set url(value) {
 		this.DOM.href = value;
 	}
-	get timer() {
-		return this._timer.nodeValue;
-	}
-	set timer(value) {
-		typecheck(arguments, String);
-		this._timer.nodeValue = value;
-		this._timer.parentNode.classList.toggle("hidden", !value);
-	}
 }
+
 });

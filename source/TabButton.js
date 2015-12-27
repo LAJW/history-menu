@@ -1,13 +1,8 @@
 "use strict"
 
-define(["./libraries/lajw/ui/Button", "./Chrome"], function (Button, Chrome) {
-const template = $({
-	nodeName: "DIV",
-	className: "Timer hidden",
-	childNodes: [$("")]
-});
+define(["./TimerButton", "./Chrome"], function (TimerButton, Chrome) {
 
-return class TabButton extends Button {
+return class TabButton extends TimerButton {
    constructor(tab) {
 		typecheck.loose(arguments, {
 			sessionId: String,
@@ -16,12 +11,10 @@ return class TabButton extends Button {
 		super({
 			icon: "chrome://favicon/" + tab.url,
 			title: tab.title,
-			tooltip: tab.url
+			tooltip: tab.url,
+			timer: tab.lastModified * 1000
 		});
 		this.sessionId = tab.sessionId;
-		this._timer = this.DOM.appendChild(template.cloneNode(true)).firstChild;
-		if (tab.lastModified)
-			this.timer = relativeTime(tab.lastModified * 1000);
 	}
 	mousedown(e) { /* override */
 		if (e.which == 2)
@@ -31,13 +24,6 @@ return class TabButton extends Button {
 		e.preventDefault();
 		Chrome.sessions.restore(this.sessionId, e.which == 2 || e.ctrlKey);
 	}
-	set timer(value) {
-		typecheck(arguments, [String, undefined]);
-		this._timer.nodeValue = value;
-		this._timer.parentNode.classList.toggle("hidden", !value);
-	}
-	get timer() {
-		return this._timer.nodeValue;
-	}
 };
+
 });

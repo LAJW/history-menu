@@ -1,6 +1,7 @@
 "use strict"
 
-define(["./Chrome", "./libraries/lajw/ui/Folder"], function(Chrome, Folder) {
+define(["./Chrome", "./libraries/lajw/ui/Folder", "./TabButton.js"],
+		function(Chrome, Folder, TabButton) {
 
 const template = $({
 	nodeName: "DIV",
@@ -19,7 +20,7 @@ return class WindowFolder extends Folder {
 			this.insert(new TabButton(tab));
 		}
 		this._timer = this.DOM.firstChild.appendChild(template.cloneNode(true)).firstChild;
-		if (window.lastModified)
+		if (wnd.lastModified)
 			this.timer = relativeTime(wnd.lastModified * 1000);
 		if (wnd.open !== undefined)
 			this.open = wnd.open;
@@ -43,4 +44,5 @@ return class WindowFolder extends Folder {
 		return this._timer.nodeValue;
 	}
 }
+
 });
