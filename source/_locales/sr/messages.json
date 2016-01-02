@@ -1,95 +1,134 @@
 {
-   "blue": {
-      "message": "Плава"
-   },
-   "description": {
-      "message": "Пронађите и вратите недавно затворене картице, прозоре и историју."
-   },
-   "granite": {
-      "message": "Гранит"
-   },
-   "green": {
-      "message": "Зелена"
-   },
-   "icon_color": {
-      "message": "Боја иконице"
-   },
-   "options_about": {
-      "message": "Информације"
-   },
-   "options_about_message": {
-      "message": "Лиценца: \u003Ca href='http://opensource.org/licenses/MIT'>The MIT License\u003C/a>\u003Cbr>Copyright © 2015 Łukasz A.J. Wrona\u003Cbr>\u003Ca href='https://twitter.com/lajwrona'>Twitter @lajwrona\u003C/a>"
-   },
-   "options_animate": {
-      "message": "Омогући анимације"
-   },
-   "options_display": {
-      "message": "Приказ"
-   },
-   "options_expand_folders": {
-      "message": "Развиј затворене прозоре"
-   },
-   "options_history_count": {
-      "message": "Максималан број уноса историје"
-   },
-   "options_tab_count": {
-      "message": "Максималан број затворених картица"
-   },
-   "options_timer": {
-      "message": "Прикажи време посете"
-   },
-   "popup_back": {
-      "message": "Назад"
-   },
-   "popup_history_manager": {
-      "message": "Прикажи сву историју"
-   },
-   "popup_number_of_tabs": {
-      "message": "Број картица"
-   },
-   "popup_ok": {
-      "message": "ОК"
-   },
-   "popup_options": {
-      "message": "Опције"
-   },
-   "popup_other_devices": {
-      "message": "Други уређаји"
-   },
-   "popup_recent_history": {
-      "message": "Недавна историја"
-   },
-   "popup_recently_closed_tabs": {
-      "message": "Недавно затворене картице"
-   },
-   "popup_search_history": {
-      "message": "Претражи историју"
-   },
-   "popup_window": {
-      "message": "Прозор"
-   },
-   "red": {
-      "message": "Црвена"
-   },
-   "results_end": {
-      "message": "Крај резултата"
-   },
-   "results_nothing_found": {
-      "message": "Ништа није пронађено"
-   },
-   "results_recently": {
-      "message": "Недавно"
-   },
-   "results_this_month": {
-      "message": "Раније овог месеца"
-   },
-   "results_this_week": {
-      "message": "Раније ове седмице"
-   },
-   "results_today": {
-      "message": "Раније данас"
-   },
-   "white": {
-      "message": "Бела"
-   }
+	"description": {
+		"message": "Нађи и врати недавно затворене картице, прозоре и историју."
+	},
+	"popup_history_manager": {
+		"message": "Прикажи сву историју"
+	},
+	"popup_recently_closed_tabs": {
+		"message": "Недавно затворене картице"
+	},
+	"popup_recent_history": {
+		"message": "Недавно посећено"
+	},
+	"popup_search_history": {
+		"message": "Претражи историју"
+	},
+	"popup_other_devices": {
+		"message": "Остали уређаји"
+	},
+	"popup_options": {
+		"message": "Опције"
+	},
+	"popup_back": {
+		"message": "Назад"
+	},
+	"popup_ok": {
+		"message": "OK"
+	},
+	"popup_window": {
+		"message": "Прозор"
+	},
+	"popup_number_of_tabs": {
+		"message": "Број картица"
+	},
+	"results_recently": {
+		"message": "Недавно"
+	},
+	"results_today": {
+		"message": "Раније данас"
+	},
+	"results_yesterday": {
+		"message": "Јуче"
+	},
+	"results_this_week": {
+		"message": "Раније ове седмице"
+	},
+	"results_last_week": {
+		"message": "Прошле седмице"
+	},
+	"results_this_month": {
+		"message": "Раније овог месеца"
+	},
+	"results_last_month": {	
+		"message": "Прошлог месеца"
+	},
+	"results_nothing_found": {
+		"message": "Ништа није пронађено"
+	},
+	"results_end": {
+		"message": "Крај резултата"
+	},
+	"options_display": {
+		"message": "Приказ"
+	},
+	"options_behavior": {
+		"message": "Понашање"
+	},
+	"options_other": {
+		"message": "Остало"
+	},
+	"options_height": {
+		"message": "Висина менија"
+	},
+	"options_width": {
+		"message": "Ширина менија"
+	},
+	"options_tabs_first": {
+		"message": "Прикажи затворене картице испред историје"
+	},
+	"options_sync": {
+		"message": "Синхронизуј подешавања"
+	},
+	"options_reset": {
+		"message": "Врати на почетнa подешавања"
+	},
+	"icon_color": {
+		"message": "Боја иконице"
+	},
+	"granite": {
+		"message": "Гранит"
+	},
+	"white": {
+		"message": "Бела"	
+	},
+	"red": {
+		"message": "Црвена"
+	},
+	"green": {
+		"message": "Зелена"
+	},
+	"blue": {
+		"message": "Плава"
+	}, 
+	"options_timer": {
+		"message": "Прикажи време посете"
+	},
+	"options_tab_count": {
+		"message": "Максималан број затворених картица"
+	},
+	"options_history_count": {
+		"message": "Максималан број уноса историје"
+	},
+	"options_expand_folders": {
+		"message": "Развиј затворене прозоре"
+	},
+	"options_prefer_select": {
+		"message": "Изабери постојећу картицу уместо стварања дупликата"
+	},
+	"options_lang": {
+		"message": "Језик"
+	},
+	"options_theme": {
+		"message": "Тема"
+	},
+	"options_animate": {
+		"message": "Омогући анимације"
+	},
+	"options_about": {
+		"message": "Информације"
+	},
+	"options_about_message": {
+		"message": "Лиценца: <a href='http://opensource.org/licenses/MIT'>The MIT License</a><br>Copyright © 2015 Łukasz A.J. Wrona<br><a href='https://twitter.com/lajwrona'>Twitter @lajwrona</a>"
+	}
 }
