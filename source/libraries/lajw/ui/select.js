@@ -1,6 +1,6 @@
 "use strict"
 
-define(["./Node"], function (Node) {
+define(["./Node"], function (_Node) {
 
 const template = $({
 	nodeName: "LABEL",
@@ -13,7 +13,7 @@ const template = $({
 	]
 });
 
-return class Select extends Node {
+class Select extends _Node {
 	// PRIVATE: _selected, _values, _select
 	constructor(e) {
 		typecheck(arguments, {
@@ -78,6 +78,8 @@ return class Select extends Node {
 		return this.values[this.selected];
 	}
 }
+
+return Select;
 
 });
 

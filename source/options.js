@@ -4,7 +4,7 @@ define(["./Chrome", "./libraries/lajw/ui/Checkbox",
 		"./libraries/lajw/ui/Header", "./libraries/lajw/ui/Node",
 		"./libraries/lajw/ui/Root", "./libraries/lajw/ui/Select",
 		"./Slider.js"],
-		function (Chrome, Checkbox, Header, Node, Root, Select, Slider) {
+		function (Chrome, Checkbox, Header, _Node, Root, Select, Slider) {
 
 // Function.prototype.create - "new" abstraction, for use in functional code
 Object.defineProperty(Function.prototype, "create", {
@@ -25,7 +25,7 @@ function trimURL(url) {
 	return url;
 }
 
-class ClassicButton extends Node{
+class ClassicButton extends _Node{
 	constructor(e) {
 		e = e || {};
 		e.DOM = $({

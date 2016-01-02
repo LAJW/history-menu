@@ -1,16 +1,16 @@
 "use strict"
 
-define(["./Node", "./Parent"], function (Node, Parent) {
+define(["./Node", "./Parent"], function (_Node, Parent) {
 
 let root; 
-return class Root extends Parent {
+class Root extends Parent {
 	constructor() {
 		if (root)
 			throw new Error("Root already exists");
 		super({DOM: document.body});
 		['click', 'mousedown', 'mouseup'].forEach(function (eventName) {
 			document.body.addEventListener(eventName, function (e) {
-				Node.fromDOM(e.target)[eventName](e);
+				_Node.fromDOM(e.target)[eventName](e);
 			});
 		});
 	}
@@ -48,5 +48,7 @@ return class Root extends Parent {
 		});
 	}
 }
+
+return Root;
 
 });

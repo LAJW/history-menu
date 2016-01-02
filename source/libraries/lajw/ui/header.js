@@ -1,6 +1,6 @@
 "use strict"
 
-define(["./Node"], function (Node) {
+define(["./Node"], function (_Node) {
 
 const template = $({
 	nodeName: "H1",
@@ -8,7 +8,7 @@ const template = $({
 	childNodes: [$("")]
 });
 
-return class Header extends Node {
+class Header extends _Node {
 	constructor(e) {
 		typecheck(arguments, [{
 			title: [String, undefined]
@@ -27,5 +27,7 @@ return class Header extends Node {
 		this.DOM.firstChild.nodeValue = value;
 	}
 }
+
+return Header;
 
 });

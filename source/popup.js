@@ -71,7 +71,7 @@ let keyCode = {
 	enter: 13
 };
 
-document.body.onkeydown = function (e) {
+window.addEventListener("keydown", function (e) {
 	if ((e.keyCode == keyCode.arrowDown 
 			|| e.keyCode == keyCode.tab && !e.shiftKey)
 		&& selectedResult + 1 <
@@ -101,7 +101,7 @@ document.body.onkeydown = function (e) {
 			});
 		}
 	}
-}
+});
 
 function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings,
 		value) {
@@ -221,7 +221,7 @@ function main(root, sessions, devices, history, i18n, settings) {
 				tooltip: i18n("popup_options"),
 				icon: "icons/options.png",
 				click: function (e) {
-					Chrome.tabs.openOrSelect("./options.html", false);
+					Chrome.tabs.openOrSelect("chrome://extensions/?options=", false);
 				}
 			})
 		]

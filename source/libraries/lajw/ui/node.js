@@ -2,7 +2,7 @@
 
 define([], function () {
 
-return class Node {
+class Node {
 	constructor(e) {
 		typecheck(arguments, [{
 			DOM: [HTMLElement, String],
@@ -44,5 +44,7 @@ return class Node {
 		throw new TypeError("Element does not belong to any node");
 	}
 }
+
+return Node;
 
 });

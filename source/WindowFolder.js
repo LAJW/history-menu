@@ -9,7 +9,7 @@ const template = $({
 	childNodes: [$("")]
 });
 
-return class WindowFolder extends Folder {
+class WindowFolder extends Folder {
 	constructor(wnd) {
 		typecheck.loose(arguments, {
 			sessionId: String,
@@ -44,5 +44,7 @@ return class WindowFolder extends Folder {
 		return this._timer.nodeValue;
 	}
 }
+
+return WindowFolder;
 
 });

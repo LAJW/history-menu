@@ -7,7 +7,7 @@ const template = $({
 	childNodes: [$("")]
 });
 
-return class TimerButton extends Button {
+class TimerButton extends Button {
 	constructor(e) {
 		super(e);
 		this._timerNode = this.DOM.appendChild(template.cloneNode(true));
@@ -37,4 +37,7 @@ return class TimerButton extends Button {
 		}
 	}
 };
+
+return TimerButton;
+
 });

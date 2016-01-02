@@ -7,7 +7,7 @@ const template = $({
 	className: "MultiButton"
 });
 
-return class MultiButton extends Parent {
+class MultiButton extends Parent {
 	constructor(e) {
 		typecheck(arguments, [{
 			children: [Array, undefined]
@@ -17,5 +17,7 @@ return class MultiButton extends Parent {
 		super(e);
 	}
 }
+
+return MultiButton;
 
 });

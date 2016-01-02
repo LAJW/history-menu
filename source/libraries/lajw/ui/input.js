@@ -1,6 +1,6 @@
 "use strict"
 
-define(["./Node"], function (Node) {
+define(["./Node"], function (_Node) {
 
 // locked on Input - when you type sometihng, automatically focus this
 // input node
@@ -25,7 +25,7 @@ const template = $({
 	]
 });
 
-return class Input extends Node {
+class Input extends _Node {
 
 	constructor(e) {
 		typecheck(arguments, [{
@@ -103,5 +103,7 @@ return class Input extends Node {
 		this._cancel.classList.toggle("visible", !!this.value);
 	}
 }
+
+return Input;
 
 });

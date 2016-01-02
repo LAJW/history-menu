@@ -1,6 +1,6 @@
 "use strict"
 
-define(["./Node"], function (Node) {
+define(["./Node"], function (_Node) {
 
 let template = $({
 	nodeName: "label",
@@ -14,7 +14,7 @@ let template = $({
 	]
 });
 
-return class Checkbox extends Node {
+class Checkbox extends _Node {
 	// PRIVATE: _title, _checkbox
 	constructor(e) {
 		typecheck(arguments, [{
@@ -51,5 +51,7 @@ return class Checkbox extends Node {
 		this.change(value);
 	}
 }
+
+return Checkbox;
 
 });

@@ -7,7 +7,7 @@ const removeButton = $({
 	className: "Remove"
 });
 
-return class HistoryButton extends TimerButton {
+class HistoryButton extends TimerButton {
 	constructor(item) {
 		typecheck.loose(arguments, [{
 			tooltip: [String, undefined],
@@ -77,5 +77,7 @@ return class HistoryButton extends TimerButton {
 		return this._highlighted;
 	}
 }
+
+return HistoryButton;
 
 });

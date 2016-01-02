@@ -2,7 +2,7 @@
 
 define(["./TimerButton", "./Chrome"], function (TimerButton, Chrome) {
 
-return class TabButton extends TimerButton {
+class TabButton extends TimerButton {
    constructor(tab) {
 		typecheck.loose(arguments, {
 			sessionId: String,
@@ -25,5 +25,7 @@ return class TabButton extends TimerButton {
 		Chrome.sessions.restore(this.sessionId, e.which == 2 || e.ctrlKey);
 	}
 };
+
+return TabButton;
 
 });

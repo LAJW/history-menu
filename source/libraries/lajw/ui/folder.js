@@ -19,7 +19,7 @@ const template = $({
 });
 
 // PRIVATE PROPERTIES: _open, _empty, _title, _interval, _hover
-return class Folder extends Parent {
+class Folder extends Parent {
 	constructor(e) {
 		typecheck(arguments, [{
 			open: [Boolean, undefined],
@@ -90,5 +90,7 @@ return class Folder extends Parent {
 		this._title.title = value;
 	}
 }
+
+return Folder;
 
 });

@@ -1,6 +1,6 @@
 "use strict"
 
-define(["./Node"], function (Node) {
+define(["./Node"], function (_Node) {
 
 const template = $({
 	nodeName: "CANVAS",
@@ -9,7 +9,7 @@ const template = $({
 	width: 400
 });
 
-return class Progressbar extends Node {
+class Progressbar extends _Node {
 	constructor(e) {
 		e = e || {};
 		e.DOM = template.cloneNode(false);
@@ -48,5 +48,7 @@ return class Progressbar extends Node {
 		this._interval = null;
 	}
 }
+
+return Progressbar;
 
 });

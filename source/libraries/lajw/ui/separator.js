@@ -1,6 +1,6 @@
 "use strict"
 
-define(["./Node"], function (Node) {
+define(["./Node"], function (_Node) {
 
 const template = $({
 	nodeName: "DIV",
@@ -16,7 +16,7 @@ const template = $({
 	]
 });
 
-return class Separator extends Node {
+class Separator extends _Node {
 	// PRIVATE: _title
 	constructor(e) {
 		e = e || {};
@@ -38,5 +38,7 @@ return class Separator extends Node {
 		this.DOM.classList.add("fadeIn");
 	}
 }
+
+return Separator;
 
 });

@@ -3,7 +3,7 @@
 define(["./libraries/lajw/ui/Folder", "./WindowFolder"], function (Folder,
 	WindowFolder) {
 
-return class DeviceFolder extends Folder {
+class DeviceFolder extends Folder {
 	constructor (device) {
 		super({
 			children: device.sessions.map(function (session) {
@@ -15,5 +15,7 @@ return class DeviceFolder extends Folder {
 		this.title = device.deviceName;
 	}
 }
+
+return DeviceFolder;
 
 });
