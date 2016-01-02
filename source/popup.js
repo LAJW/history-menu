@@ -296,7 +296,7 @@ function getHistoryNodes(settings) {
 
 Chrome.fetch("defaults.json")
 	.then(JSON.parse)
-	.then(Chrome.getSettings)
+	.then(Chrome.settings.getReadOnly)
 	.then(function (settings) {
 		return Promise.all([
 			Root.ready(),

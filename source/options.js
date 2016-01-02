@@ -6,23 +6,6 @@ define(["./Chrome", "./libraries/lajw/ui/Checkbox",
 		"./Slider.js"],
 		function (Chrome, Checkbox, Header, Node, Root, Select, Slider) {
 
-// fetch for chrome protocol
-function chromeFetch(url) {
-	return new Promise(function (resolve, reject) {
-		let xhr = new XMLHttpRequest();
-		xhr.open("GET", url);
-		xhr.onload = function () {
-			if (this.status >= 200 && this.status < 300)
-				resolve(xhr.response);
-			else reject(xhr.statusText);
-		}
-		xhr.onerror = function () {
-			reject(xhr.statusText);
-		}
-		xhr.send();
-	});
-}
-
 // Function.prototype.create - "new" abstraction, for use in functional code
 Object.defineProperty(Function.prototype, "create", {
 	get: function () {
@@ -123,7 +106,7 @@ function getSettingsRW(defaultSettings) {
 	})
 }
 
-chromeFetch("defaults.json")
+Chrome.fetch("defaults.json")
 	.then(JSON.parse)
 	.then(getSettingsRW)
 	.then(function (settings) {
@@ -184,8 +167,8 @@ chromeFetch("defaults.json")
 					max: 50,
 					step: 5,
 					value: settings.historyCount,
-					change: control(settings, i18n("options_history_count")),
-					title: "Number of history entries"
+					change: control(settings, "historyCount"),
+					title: i18n("options_history_count")
 				}),
 				new Checkbox({
 					title: i18n("options_timer"),
@@ -208,7 +191,8 @@ chromeFetch("defaults.json")
 						"": "Auto",
 						"en": "English",
 						"ja": "Japanese",
-						"pl": "Polish"
+						"pl": "Polski",
+						"sr": "Srbski"
 					},
 					selected: settings.lang,
 					change: function () {
@@ -257,7 +241,14 @@ chromeFetch("defaults.json")
 						settings.reset();
 						window.location = window.location;
 					}
-				})
+				}),
+				new ClassicButton ({
+					title: i18n("options_about"),
+					click: function () {
+						settings.reset();
+						window.location = "http://layv.net/history-menu";
+					}
+				}),
 			]);
 		}).apply(this, arr);
 	});

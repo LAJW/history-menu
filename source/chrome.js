@@ -65,7 +65,7 @@ getI18n: function (locale) {
 		return Promise.resolve(chrome.i18n.getMessage.bind(chrome.i18n));
 	// custom set to english - load only english
 	if (locale == "en")
-		return chromeFetch("_locales/en/messages.json")
+		return Chrome.fetch("_locales/en/messages.json")
 			.then(function (json) {
 				let locale = JSON.parse(json);
 				return function (messageKey) {
@@ -76,8 +76,8 @@ getI18n: function (locale) {
 			});
 	// custom set to non-english, english fallback
 	return Promise.all([
-			chromeFetch("_locales/" + locale + "/messages.json"),
-			chromeFetch("_locales/en/messages.json")
+			Chrome.fetch("_locales/" + locale + "/messages.json"),
+			Chrome.fetch("_locales/en/messages.json")
 	]).then(function (locales) {
 		let locale = JSON.parse(locales[0]);
 		let enLocale = JSON.parse(locales[1]);
