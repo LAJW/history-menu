@@ -1,134 +1,174 @@
 {
 	"description": {
-		"message": "Find and restore recently closed tabs, windows and history."
+		"message": "Find and restore recently closed tabs, windows and history.",
+		"description": "Short description of extension's purpose displayed in browser's extension manager"
 	},
 	"popup_history_manager": {
-		"message": "Show All History"
+		"message": "Show All History",
+		"description": "Tooltip of a 'clock' button leading to history manager"
 	},
 	"popup_recently_closed_tabs": {
-		"message": "Recently Closed Tabs"
+		"message": "Recently Closed Tabs",
+		"description": "Label of separator over the list of recently closed tabs on the main page of the popup"
 	},
 	"popup_recent_history": {
-		"message": "Revently Visited"
+		"message": "Revently Visited",
+		"description": "Label of separator over the list of recently viewed pages on the main page of the popup"
 	},
 	"popup_search_history": {
-		"message": "Search History"
+		"message": "Search History",
+		"description": "Placeholder for searchbox input"
 	},
 	"popup_other_devices": {
-		"message": "Other Devices"
+		"message": "Other Devices",
+		"description": "Tooltip of a 'right arrow' button leading to a list of synchronized devices and tabs opened on them"
 	},
 	"popup_options": {
-		"message": "Options"
+		"message": "Options",
+		"description": "Tooltip of a hamburger button opening extension's settings page"
 	},
 	"popup_back": {
-		"message": "Back"
+		"message": "Back",
+		"description": "Tooltip of a left arrow button leading back to the main popup page"
 	},
 	"popup_ok": {
-		"message": "OK"
+		"message": "OK",
+		"description": "Confirmation button label. Currently Unused."
 	},
 	"popup_window": {
-		"message": "Window"
+		"message": "Window",
+		"description": "Displayed when showing closed window, ex: Window (Number of tabs: 7)"
 	},
 	"popup_number_of_tabs": {
-		"message": "Number of tabs"
+		"message": "Number of tabs",
+		"description": "Displayed when showing closed window, ex: Window (Number of tabs: 7)"
 	},
 	"results_recently": {
-		"message": "Recently"
+		"message": "Recently",
+		"description": "Separator over recent search results (last hour)"
 	},
 	"results_today": {
-		"message": "Eariler today"
+		"message": "Eariler today",
+		"description": "Separator over search results spanning between last hour and last 24 hours"
 	},
 	"results_yesterday": {
-		"message": "Yesterday"
+		"message": "Yesterday",
+		"description": "Separator over search results spanning between last 24 hours and last 48 hours"
 	},
 	"results_this_week": {
-		"message": "Earlier this week"
+		"message": "Earlier this week",
+		"description": "Separator over search results spanning between last 48 hours and last 7 days"
 	},
 	"results_last_week": {
-		"message": "Last week"
+		"message": "Last week",
+		"description": "Separator over search results between last 7 and 14 days7 and 14 days7 and 14 days7 and 14 days7 and 14 days7 and 14 days7 and 14 days"
 	},
 	"results_this_month": {
-		"message": "Earlier this month"
+		"message": "Earlier this month",
+		"description": "Separator over search results between last 14 and 28 days "
 	},
 	"results_last_month": {	
 		"message": "Last month"
+		"description": "Separator over search results between last 28 and 56 days "
 	},
 	"results_nothing_found": {
-		"message": "Nothing found"
+		"message": "Nothing found",
+		"description": "Message shown when no search results were found, and on the main page, if history has been cleared"
 	},
 	"results_end": {
-		"message": "End of results"
+		"message": "End of results",
+		"description": "Separator below all search results"
 	},
 	"options_display": {
-		"message": "Display"
+		"message": "Display",
+		"description": "Label of the Display section of options page"
 	},
 	"options_behavior": {
-		"message": "Behavior"
+		"message": "Behavior",
+		"description": "Label of the Behavior section of options page"
 	},
 	"options_other": {
-		"message": "Other"
+		"message": "Other",
+		"description": "Label of the Miscelanious section of options page"
 	},
 	"options_height": {
-		"message": "Popup height"
+		"message": "Popup height",
+		"description": "Label of popup height slider of the options page"
 	},
 	"options_width": {
-		"message": "Popup width"
+		"message": "Popup width",
+		"description": "Label of popup width slider of the options page"
 	},
 	"options_tabs_first": {
-		"message": "Show tabs before history"
+		"message": "Show tabs before history",
+		"description": "Label of checkbox switching display order of main page entries of the options page"
 	},
 	"options_sync": {
-		"message": "Synchronize settings"
+		"message": "Synchronize settings",
+		"description": "Label of checkbox switching between synchronized and unsynchronized options"
 	},
 	"options_reset": {
-		"message": "Reset settings"
+		"message": "Reset settings",
+		"description": "Label of a button used to reset settings to factory defaults of the options page"
 	},
 	"icon_color": {
-		"message": "Icon color"
+		"message": "Icon color",
+		"description": "Label of a select field for switching color of the extension icon"
 	},
 	"granite": {
-		"message": "Granite"
+		"message": "Granite",
+		"description": "Granite Icon color (color select field of the options menu)"
 	},
 	"white": {
-		"message": "White"	
+		"message": "White",
+		"description": "White Icon color (color select field of the options menu)"
 	},
 	"red": {
-		"message": "Red"
+		"message": "Red",
+		"description": "Red Icon color (color select field of the options menu)"
 	},
 	"green": {
-		"message": "Green"
+		"message": "Green",
+		"description": "Green Icon color (color select field of the options menu)"
 	},
 	"blue": {
-		"message": "Blue"
+		"message": "Blue",
+		"description": "Blue Icon color (color select field of the options menu"
 	}, 
 	"options_timer": {
-		"message": "Show visit time"
+		"message": "Show visit time",
+		"description": "Label of a checkbox enabling visit time on recently closed tab or history entreis of the options page"
 	},
 	"options_tab_count": {
-		"message": "Maximum number of closed tabs"
+		"message": "Maximum number of closed tabs",
+		"description": "Label of a slider controlling maximum number of shown closed tabs on the main popup page (min 0, max 25)
 	},
 	"options_history_count": {
-		"message": "Maximum number of history entries"
+		"message": "Maximum number of history entries",
+		"description": "Label of a slider controlling maximum number of shown history entries on the main  popup page (min 0, max 50)
 	},
 	"options_expand_folders": {
-		"message": "Expand closed windows"
+		"message": "Expand closed windows",
+		"description": "Label of a checkbox controlling whether windows should be automatically expanded, displaying all containng closed tabs within them"
 	},
 	"options_prefer_select": {
-		"message": "Prefer selecting existing tabs rather than creating duplicates"
+		"message": "Prefer selecting existing tabs rather than creating duplicates",
+		"description": "Label of a checkbox controlling the behavior of opening links. If checked extension will try to select existing tabs with matching URL, rather than creating new ones"
 	},
 	"options_lang": {
-		"message": "Language"
+		"message": "Language",
+		"description": "Label of a select field controlling the language of the extension"
 	},
 	"options_theme": {
-		"message": "Theme"
+		"message": "Theme",
+		"description": "Label of a select field controlling the theme of the extension"
 	},
 	"options_animate": {
-		"message": "Enable animations"
+		"message": "Enable animations",
+		"description": "Label of a select field enabling animations of the extension"
 	},
 	"options_about": {
-		"message": "About"
-	},
-	"options_about_message": {
-		"message": "License: <a href='http://opensource.org/licenses/MIT'>The MIT License</a><br>Copyright © 2015 Łukasz A.J. Wrona<br><a href='https://twitter.com/lajwrona'>Twitter @lajwrona</a>"
+		"message": "About",
+		"description": "Label of a button opening extension's homepage"
 	}
 }

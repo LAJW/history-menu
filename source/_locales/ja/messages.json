@@ -97,8 +97,5 @@
 	},
 	"options_about": {
 		"message": "情報"
-	},
-	"options_about_message": {
-		"message": "License: <a href='http://opensource.org/licenses/MIT'>The MIT License</a><br>Copyright © 2015 Łukasz A.J. Wrona<br><a href='https://twitter.com/lajwrona'>Twitter @lajwrona</a>"
 	}
 }
