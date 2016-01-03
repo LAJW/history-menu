@@ -2,13 +2,14 @@
 
 define(["./ActionButton"], function (ActionButton) {
 
+const arrowTemplate = $({
+	nodeName:  "DIV",
+	className: "Arrow"
+});
 class DevicesButton extends ActionButton {
 	constructor(e) {
 		super(e);	
-		this.DOM.appendChild($({
-			nodeName: "DIV",
-			className: "Arrow"
-		}));
+		this.DOM.appendChild(arrowTemplate);
 		this.on = e.on || false;
 	}
 	set on(value) {

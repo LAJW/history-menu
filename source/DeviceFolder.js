@@ -1,18 +1,19 @@
-"use strict"
+"use strict";
 
 define(["./libraries/lajw/ui/Folder", "./WindowFolder"], function (Folder,
 	WindowFolder) {
 
 class DeviceFolder extends Folder {
 	constructor (device) {
-		super({
-			children: device.sessions.map(function (session) {
-				let window = session.window;
-				window.lastModified = session.lastModified;
-				return new WindowFolder(window);
-			})
+		const children = device.sessions.map(function (session) {
+			const window        = session.window;
+			window.lastModified = session.lastModified;
+			return new WindowFolder(window);
 		});
-		this.title = device.deviceName;
+		super({
+			children: children
+		});
+		this.title     = device.deviceName;
 	}
 }
 

@@ -20,22 +20,22 @@ function (ActionButton, Chrome, DevicesButton, DeviceFolder, Input, Layer,
 
 // get time sectors for search
 function timeSectors() {
-	let now = Date.now();
-	let hour = 1000 * 3600;
-	let lastHour = now - hour;
-	let lastDay = now - hour * 24;
-	let yesterday = now - hour * 48;
-	let lastWeek = now - hour * 24 * 7;
-	let prevWeek = now - hour * 24 * 14;
-	let lastMonth = now - hour * 24 * 30;
-	let prevMonth = now - hour * 24 * 60;
+	const now       = Date.now();
+	const hour      = 1000 * 3600;
+	const lastHour  = now - hour;
+	const lastDay   = now - hour * 24;
+	const yesterday = now - hour * 48;
+	const lastWeek  = now - hour * 24 * 7;
+	const prevWeek  = now - hour * 24 * 14;
+	const lastMonth = now - hour * 24 * 30;
+	const prevMonth = now - hour * 24 * 60;
 	return [
-		{ start: lastHour, end: now, i18n: "results_recently" },
-		{ start: lastDay, end: lastHour, i18n: "results_today" },
-		{ start: yesterday, end: lastDay, i18n: "results_yesterday" },
-		{ start: lastWeek, end: yesterday, i18n: "results_this_week" },
-		{ start: prevWeek, end: lastWeek, i18n: "results_last_week" },
-		{ start: lastMonth, end: prevWeek, i18n: "results_this_month" },
+		{ start: lastHour,  end: now,       i18n: "results_recently" },
+		{ start: lastDay,   end: lastHour,  i18n: "results_today" },
+		{ start: yesterday, end: lastDay,   i18n: "results_yesterday" },
+		{ start: lastWeek,  end: yesterday, i18n: "results_this_week" },
+		{ start: prevWeek,  end: lastWeek,  i18n: "results_last_week" },
+		{ start: lastMonth, end: prevWeek,  i18n: "results_this_month" },
 		{ start: prevMonth, end: lastMonth, i18n: "results_last_month" }
 	];
 }
@@ -43,7 +43,8 @@ function timeSectors() {
 class Token {
 	constructor(tokenFactory) {
 		typecheck(arguments, TokenFactory);
-		this._id = ++tokenFactory._id;
+		tokenFactory._id += 1;
+		this._id           = tokenFactory._id;
 		this._tokenFactory = tokenFactory;
 	}
 	get valid() {
@@ -60,15 +61,15 @@ class TokenFactory {
 	}
 }
 
-let tokenFactory = new TokenFactory();
+const tokenFactory = new TokenFactory();
 let selectedResult = 0;
-let searchResults = [];
+let searchResults  = [];
 
-let keyCode = {
-	arrowUp: 38,
+const keyCode = {
+	arrowUp:   38,
 	arrowDown: 40,
-	tab: 9,
-	enter: 13
+	tab:       9,
+	enter:     13
 };
 
 window.addEventListener("keydown", function (e) {
@@ -105,41 +106,46 @@ window.addEventListener("keydown", function (e) {
 
 function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings,
 		value) {
-	let token = new Token(tokenFactory);
 	if (deviceLayer) {
 		deviceLayer.visible = false;
-		devicesButton.on = false;
+		devicesButton.on    = false;
 	}
+	typecheck(arguments,
+		[Layer,         undefined],
+		[DevicesButton, undefined],
+		Layer,
+		Object,
+		Object,
+		String);
+	const token         = new Token(tokenFactory);
+	selectedResult      = 0;
+	searchResults       = new Array;
+	searchLayer.visible = value.length > 0;
 	searchLayer.clear();
-	selectedResult = 0;
-	searchResults = [];
-	if (value) {
-		searchLayer.visible = true;
+	if (value.length > 0) {
 		searchLayer.insert(new Progressbar);
 		setTimeout(function () {
 			if (!token.valid)
 				return;
 			let promise = Promise.resolve();
-			for (let sector of timeSectors()) {
+			for (const sector of timeSectors()) {
 				promise = promise.then(function () {
 					return Chrome.history.search({
-						text: value,
+						text:      value,
 						startTime: sector.start,
-						endTime: sector.end,
+						endTime:   sector.end,
 					})
 				}).then(function (results) {
 					if (!results.length || !token.valid) 
 						return
-					let nodes = results.map(function (result) {
+					const nodes = results.map(function (result) {
 						if (!settings.timer) {
 							result.lastVisitTime = null;
 						}
 						return new HistoryButton(result);
 					});
-					searchResults = searchResults.concat(nodes.slice());
-					nodes.unshift(new Separator(
-						{title: i18n(sector.i18n)}
-					));
+					searchResults = searchResults.concat(nodes);
+					nodes.unshift(new Separator({title: i18n(sector.i18n)}));
 					searchLayer.insert(nodes);
 				});
 			}
@@ -161,8 +167,6 @@ function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings,
 				}
 			});
 		}.bind(this), 500);
-	} else {
-		searchLayer.visible = false;
 	}
 }
 
@@ -177,7 +181,7 @@ function getMainLayer(sessions, devices, history, i18n, settings) {
 			title: i18n("popup_recent_history")
 		}));
 	}
-	let children = settings.tabsFirst 
+	const children = settings.tabsFirst 
 		? sessions.concat(history) 
 		: history.concat(sessions);
 	if (children.length == 0) {
@@ -192,49 +196,52 @@ function getMainLayer(sessions, devices, history, i18n, settings) {
 
 function main(root, sessions, devices, history, i18n, settings) {
 	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate);
-	root.width = parseInt(settings.width);
+	root.width  = parseInt(settings.width);
 	root.height = parseInt(settings.height);
 	root.insert(getMainLayer(sessions, devices, history, i18n, settings));
-	let searchLayer = root.insert(new Layer({
-		visible: false,
+	const searchLayer = root.insert(new Layer({
+		visible:  false,
 		children: [new Separator({
 			title: i18n("popup_search_history")
 		})]
 	}));
 	let devicesButton, deviceLayer;
-	let mainButtons = new MultiButton({
+	const mainButtons = new MultiButton({
 		children: [
 			new Input({
 				placeholder: i18n("popup_search_history"),
-				lockon: true,
-				change: onSearch.bind(null, deviceLayer, devicesButton,
+				lockon:      true,
+				change:      onSearch.bind(null, deviceLayer, devicesButton,
 					searchLayer, i18n, settings)
 			}),
 			new ActionButton({
 				tooltip: i18n("popup_history_manager"),
-				icon: "icons/history-19.png",
-				click: function (e) {
+				icon:    "icons/history-19.png",
+				click:   function (e) {
 					Chrome.tabs.openOrSelect("chrome://history/", false);
 				}
 			}),
 			new ActionButton({
 				tooltip: i18n("popup_options"),
-				icon: "icons/options.png",
-				click: function (e) {
-					Chrome.tabs.openOrSelect("chrome://extensions/?options=", false);
+				icon:    "icons/options.png",
+				click:   function (e) {
+					Chrome.tabs.openOrSelect("chrome://extensions/?options=",
+						false);
 				}
 			})
 		]
 	});
 	if (devices.length > 0) {
 		deviceLayer = new Layer({
-			visible: false,
+			visible:  false,
 			children: devices
 		});
 		devicesButton = new DevicesButton({
 			tooltip: i18n("popup_other_devices"),
-			click: function (e) {
-				this.on = deviceLayer.visible = !deviceLayer.visible;
+			click:   function (e) {
+				const visible       = !deviceLayer.visible;
+				deviceLayer.visible = visible;
+				this.on             = visible;
 			}
 		});
 		root.insert(deviceLayer);
@@ -244,16 +251,13 @@ function main(root, sessions, devices, history, i18n, settings) {
 }
 
 function sessionToButton(settings, session) {
-	let bit = session.tab || session.window;
+	const object = session.tab || session.window;
 	if (settings.timer) {
-		bit.lastModified = session.lastModified;
+		object.lastModified = session.lastModified;
 	}
-	if (session.tab) {
-		return new TabButton(bit);
-	} else {
-		bit.open = settings.expand;
-		return new WindowFolder(bit);
-	}
+	return session.tab
+		? new TabButton(object)
+		: new WindowFolder(object);
 }
 
 function getSessionNodes(settings) {
@@ -278,10 +282,11 @@ function getDeviceNodes(settings) {
 }
 
 function getHistoryNodes(settings) {
+	const timestamp = Date.now();
 	return Chrome.history.search({
-		text: "", 
-		startTime: Date.now() - 1000 * 3600 * 24 * 30, 
-		endTime: Date.now(),
+		text:       "", 
+		startTime:  timestamp - 1000 * 3600 * 24 * 30, 
+		endTime:    timestamp,
 		maxResults: parseInt(settings.historyCount)
 	}).then(function (results) {
 		return results.map(function (result) {
