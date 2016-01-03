@@ -68,7 +68,7 @@
 		"description": "Separator over search results between last 14 and 28 days "
 	},
 	"results_last_month": {	
-		"message": "Last month"
+		"message": "Last month",
 		"description": "Separator over search results between last 28 and 56 days "
 	},
 	"results_nothing_found": {
@@ -141,11 +141,11 @@
 	},
 	"options_tab_count": {
 		"message": "Maximum number of closed tabs",
-		"description": "Label of a slider controlling maximum number of shown closed tabs on the main popup page (min 0, max 25)
+		"description": "Label of a slider controlling maximum number of shown closed tabs on the main popup page (min 0, max 25)"
 	},
 	"options_history_count": {
 		"message": "Maximum number of history entries",
-		"description": "Label of a slider controlling maximum number of shown history entries on the main  popup page (min 0, max 50)
+		"description": "Label of a slider controlling maximum number of shown history entries on the main  popup page (min 0, max 50)"
 	},
 	"options_expand_folders": {
 		"message": "Expand closed windows",
