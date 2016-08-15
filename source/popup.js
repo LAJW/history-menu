@@ -261,10 +261,11 @@ function sessionToButton(settings, session) {
 }
 
 function getSessionNodes(settings) {
-	return Chrome.sessions.getRecent({
-		maxResults: parseInt(settings.tabCount)
-	}).then(function (sessions) {
-		return sessions.map(sessionToButton.bind(null, settings));
+	return Chrome.sessions.getRecent({ })
+	.then(function (sessions) {
+		return sessions
+		.slice(0, parseInt(settings.tabCount || 25))
+		.map(sessionToButton.bind(null, settings));
 	});
 }
 
