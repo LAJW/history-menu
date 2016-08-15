@@ -6,6 +6,8 @@ const sliderTemplate = $({
 	nodeName: "LABEL",
 	className: "Slider",
 	childNodes: [
+		$(""),
+		$({ nodeName: "BR" }),
 		$({
 			nodeName: "INPUT",
 			type:     "range",
@@ -13,8 +15,7 @@ const sliderTemplate = $({
 		$({
 			nodeName: "INPUT",
 			disabled: true,
-		}),
-		$("")
+		})
 	]
 });
 
@@ -23,9 +24,9 @@ class Slider extends _Node {
 		e             = e || {};
 		e.DOM         = sliderTemplate.cloneNode(true);
 		super(e);
-		this._knob    = this.DOM.firstChild;
-		this._title   = this.DOM.lastChild;
-		this._display = this.DOM.childNodes[1];
+		this._knob    = this.DOM.childNodes[2];
+		this._title   = this.DOM.childNodes[0];
+		this._display = this.DOM.childNodes[3];
 		this.change   = e.change || function () {}
 		this.title    = e.title;
 		this.min      = e.min || 0;

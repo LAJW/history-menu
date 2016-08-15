@@ -100,10 +100,11 @@
 
 .Slider {
 	display: block;
+	margin: 4px;
 }
 
 .Slider input{
-	width:          23px;
+	width:          50px;
 	vertical-align: middle;
 	margin-right:   5px;
 	text-align:     center;
@@ -132,4 +133,8 @@
 	display:        inline-block;
 	vertical-align: middle;
 	margin:         5px;
+}
+
+input[type=button] {
+	margin-left : 4px;
 }
