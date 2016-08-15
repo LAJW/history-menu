@@ -11,7 +11,9 @@ class TabButton extends TimerButton {
 		super({
 			icon:   "chrome://favicon/" + tab.url,
 			title:   tab.title,
-			tooltip: tab.url,
+			tooltip: tab.title !== tab.url
+				? tab.title + "\n" + tab.url
+				: tab.url,
 			timer:   tab.lastModified * 1000
 		});
 		this.sessionId = tab.sessionId;
