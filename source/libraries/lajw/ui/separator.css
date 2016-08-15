@@ -8,10 +8,10 @@
 	line-height: 35px;
 	height: 35px;
 	z-index: 1;
-	left: 0px;
+	left: 29px;
 	top: 0px;
-	right: 0px;
-	text-background: white;
+	background: white;
+	padding-left: 0px;
 }
 
 body.Windows .Separator span{
