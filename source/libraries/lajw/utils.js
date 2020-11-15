@@ -1,17 +1,17 @@
 // css shortcuts
-function px(input) {
+window.px = function(input) {
 	typecheck(arguments, Number);
 	return Math.round(input) + "px";
 }
 
-function url(input) {
+window.url = function(input) {
 	typecheck(arguments, String);
 	return " url('" + input + "') ";
 }
 
 // converts to string, checks if supplied string is a valid URL
 // 1. String isURL(Mixed text)
-function isURL(text) {
+window.isURL = function(text) {
 	if (!instanceOf(text, String))
 		return false;
 	return text.indexOf("://") > 0 && text.indexOf(" ") < 0;
@@ -19,7 +19,7 @@ function isURL(text) {
 // converts to string, If supplied string is an URL, returns trimmed version of it, else returns supplied string
 // 1. String trimURL(Mixed text)
 
-function trimURL(text) {
+window.trimURL = function (text) {
 	text += '';
 	if (!isURL(text))
 		return text;
@@ -40,7 +40,7 @@ function trimURL(text) {
 // convert supplied time to human-readable time format relative to current date
 // relativeTime(Number timeInMilliseconds)
 
-function relativeTime(value) {
+window.relativeTime = function (value) {
 	typecheck(arguments, Number);
 	var diff = ( Date.now() - value ) / 1000;
 	if (diff < 60) {
@@ -61,7 +61,7 @@ function relativeTime(value) {
  * @param {Object} params - parameters describing element to be created
  * @return {Element} - created element
  */
-function $(params) {
+window.$ = function(params) {
 	typecheck(arguments, [Object, String]);
 	if (typeof(params) == "string")
 		return document.createTextNode(params);

@@ -7,7 +7,7 @@
  * @return {Boolean}
  */
 
-function instanceOf(value, type, loose) {
+window.instanceOf = function (value, type, loose) {
 	if (arguments.length < 2 || type === value) {
 		return true;
 	}
@@ -32,4 +32,3 @@ function instanceOf(value, type, loose) {
 		}) 
 		&& (loose || Object.keys(value).every(type.hasOwnProperty.bind(type)));
 }
-
