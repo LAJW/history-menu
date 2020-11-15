@@ -6,9 +6,6 @@
  * Chrome). Also adds some useful features of its own (settings management, tab
  * management, fetch for extension-local files, language switching, etc.)
  *
- * @author Lukasz A.J. Wrona (lukasz.andrzej.wrona@gmail.com)
- *
- * @license GNU Lesser General Public License version 3
  */
 
 /**
