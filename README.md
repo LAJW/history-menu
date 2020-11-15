@@ -17,7 +17,7 @@ If you have any problems with the extension, please e-mail me [lukasz.andrzej.wr
 
 GNU General Public License Version 3, see LICENSE for details
 
-##Contributors
+## Contributors
 
 Łukasz A.J. Wrona - Code, Maintenance, English and Polish translation
 
