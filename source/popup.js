@@ -21,6 +21,8 @@ import HistoryButton from "./HistoryButton.js"
 import Root from "./libraries/lajw/ui/Root.js"
 import DeviceFolder from "./DeviceFolder.js"
 
+let devicesButton, deviceLayer;
+
 // get time sectors for search
 function timeSectors() {
 	const now       = Date.now();
@@ -107,8 +109,7 @@ window.addEventListener("keydown", function (e) {
 	}
 });
 
-function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings,
-		value) {
+function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings, value) {
 	if (deviceLayer) {
 		deviceLayer.visible = false;
 		devicesButton.on    = false;
@@ -208,14 +209,12 @@ function main(root, sessions, devices, history, i18n, settings) {
 			title: i18n("popup_search_history")
 		})]
 	}));
-	let devicesButton, deviceLayer;
 	const mainButtons = new MultiButton({
 		children: [
 			new Input({
 				placeholder: i18n("popup_search_history"),
 				lockon:      true,
-				change:      onSearch.bind(null, deviceLayer, devicesButton,
-					searchLayer, i18n, settings)
+				change: value => onSearch(deviceLayer, devicesButton, searchLayer, i18n, settings, value ?? "")
 			}),
 			new ActionButton({
 				tooltip: i18n("popup_history_manager"),
