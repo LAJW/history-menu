@@ -1,6 +1,5 @@
-"use strict"
+import Parent from "./Parent.js"
 
-define(["./Parent"], function (Parent) {
 const template = $({
 	nodeName: "DIV",
 	className: "Folder",
@@ -19,7 +18,7 @@ const template = $({
 });
 
 // PRIVATE PROPERTIES: _open, _empty, _title, _interval, _hover
-class Folder extends Parent {
+export default class Folder extends Parent {
 	constructor(e) {
 		typecheck(arguments, [{
 			open: [Boolean, undefined],
@@ -90,7 +89,3 @@ class Folder extends Parent {
 		this._title.title = value;
 	}
 }
-
-return Folder;
-
-});

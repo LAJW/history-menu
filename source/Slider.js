@@ -1,6 +1,4 @@
-"use strict"
-
-define(["./libraries/lajw/ui/Node"], function (_Node) {
+import Node from "./libraries/lajw/ui/Node.js"
 
 const sliderTemplate = $({
 	nodeName: "LABEL",
@@ -19,7 +17,7 @@ const sliderTemplate = $({
 	]
 });
 
-class Slider extends _Node {
+export default class Slider extends Node {
 	constructor(e) {
 		e             = e || {};
 		e.DOM         = sliderTemplate.cloneNode(true);
@@ -85,7 +83,3 @@ class Slider extends _Node {
 		this._interval = null;
 	}
 }
-
-return Slider;
-
-});

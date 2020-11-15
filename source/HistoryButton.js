@@ -1,13 +1,12 @@
-"use strict"
-
-define(["./Chrome", "./TimerButton"], function(Chrome, TimerButton) {
+import TimerButton from "./TimerButton.js"
+import Chrome from "./Chrome.js"
 
 const removeButton = $({
 	nodeName: "DIV",
 	className: "Remove"
 });
 
-class HistoryButton extends TimerButton {
+export default class HistoryButton extends TimerButton {
 	constructor(item) {
 		typecheck.loose(arguments, [{
 			tooltip:       [String, undefined],
@@ -79,7 +78,3 @@ class HistoryButton extends TimerButton {
 		return this._highlighted;
 	}
 }
-
-return HistoryButton;
-
-});

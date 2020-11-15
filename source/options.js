@@ -1,11 +1,10 @@
-"use strict";
-
-// using _Node, for compatibility with Google Closure Compiler
-define(["./Chrome", "./libraries/lajw/ui/Checkbox",
-		"./libraries/lajw/ui/Header", "./libraries/lajw/ui/Node",
-		"./libraries/lajw/ui/Root", "./libraries/lajw/ui/Select",
-		"./Slider.js"],
-function (Chrome, Checkbox, Header, _Node, Root, Select, Slider) {
+import Chrome from "./Chrome.js"
+import Checkbox from "./libraries/lajw/ui/Checkbox.js"
+import Header from "./libraries/lajw/ui/Header.js"
+import Node from "./libraries/lajw/ui/Node.js"
+import Root from "./libraries/lajw/ui/Root.js"
+import Select from "./libraries/lajw/ui/Select.js"
+import Slider from "./Slider.js"
 
 // template for the Classic Button
 const classicButtonTemplate = $({
@@ -14,7 +13,7 @@ const classicButtonTemplate = $({
 });
 
 // Classic Button looking like <input type=Button>
-class ClassicButton extends _Node{
+class ClassicButton extends Node{
 	constructor(e) {
 		typecheck(arguments, {
 			click: [Function, undefined],
@@ -254,4 +253,3 @@ Chrome.fetch("defaults.json")
 			]);
 		}).apply(this, arr);
 	});
-});

@@ -1,6 +1,4 @@
-"use strict"
-
-define(["./Node"], function (_Node) {
+import Node from "./Node.js"
 
 let template = $({
 	nodeName: "A",
@@ -8,7 +6,7 @@ let template = $({
 	childNodes: [$("")]
 });
 
-class Button extends _Node {
+export default class Button extends Node {
 	constructor (e) {
 		typecheck(arguments, [{
 			icon: [String, undefined],
@@ -47,7 +45,3 @@ class Button extends _Node {
 		this.DOM.title = value;
 	}
 }
-
-return Button;
-
-});

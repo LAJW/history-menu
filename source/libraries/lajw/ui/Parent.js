@@ -1,8 +1,6 @@
-"use strict"
+import Node from "./Node.js"
 
-define(["./Node"], function (_Node) {
-
-class Parent extends _Node {
+export default class Parent extends Node {
 	constructor(e) {
 		typecheck(arguments,
 			[{
@@ -23,8 +21,8 @@ class Parent extends _Node {
 	// insert child, before other child or at the end, return it
 	insert(first, second) {
 		typecheck(arguments, 
-			[_Node, Array],
-			[_Node, undefined]
+			[Node, Array],
+			[Node, undefined]
 		);
 		if (second) {
 			if (first instanceof Array) {
@@ -41,7 +39,7 @@ class Parent extends _Node {
 		}
 	}
 	_append(child) { // exception safe
-		typecheck(arguments, _Node);
+		typecheck(arguments, Node);
 		this._validateChildCandidate(child);
 		this.container.appendChild(child.DOM);
 		this._children.push(child);
@@ -59,7 +57,7 @@ class Parent extends _Node {
 		}.bind(this));
 	}
 	_insertBefore(child, before) { // exception safe
-		typecheck(arguments, _Node, _Node);
+		typecheck(arguments, Node, Node);
 		this._validateChildCandidate(child);
 		this._validateChild(before);
 		this.container.insertBefore(child.DOM, before.DOM);
@@ -93,7 +91,7 @@ class Parent extends _Node {
 	}
 	// remove child from child list, return it
 	remove(child) {
-		typecheck(arguments, _Node);
+		typecheck(arguments, Node);
 		try {
 			this.container.removeChild(child.DOM);
 		} catch (e) {
@@ -120,7 +118,3 @@ class Parent extends _Node {
 		}.bind(this));
 	}
 }
-
-return Parent;
-
-});

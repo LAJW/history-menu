@@ -1,14 +1,8 @@
-"use strict"
+import Button from "./libraries/lajw/ui/Button.js"
 
-define(["./libraries/lajw/ui/Button"], function (_Button) {
-
-class ActionButton extends _Button {
+export default class ActionButton extends Button {
 	constructor (e) {
 		super(e);
 		this.click = e.click;
 	}
 }
-
-return ActionButton;
-
-});

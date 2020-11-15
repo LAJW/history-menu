@@ -1,7 +1,6 @@
-"use strict"
-
-define(["./Chrome", "./libraries/lajw/ui/Folder", "./TabButton.js"],
-		function(Chrome, Folder, TabButton) {
+import Chrome from "./Chrome.js"
+import Folder from "./libraries/lajw/ui/Folder.js"
+import TabButton from "./TabButton.js"
 
 const template = $({
 	nodeName:  "DIV",
@@ -9,7 +8,7 @@ const template = $({
 	childNodes: [$("")]
 });
 
-class WindowFolder extends Folder {
+export default class WindowFolder extends Folder {
 	constructor(wnd) {
 		typecheck.loose(arguments, {
 			sessionId: String,
@@ -50,7 +49,3 @@ class WindowFolder extends Folder {
 		return this._timer.nodeValue;
 	}
 }
-
-return WindowFolder;
-
-});

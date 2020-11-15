@@ -1,9 +1,7 @@
-"use strict";
+import Folder from "./libraries/lajw/ui/Folder.js"
+import WindowFolder from "./WindowFolder.js"
 
-define(["./libraries/lajw/ui/Folder", "./WindowFolder"], function (Folder,
-	WindowFolder) {
-
-class DeviceFolder extends Folder {
+export default class DeviceFolder extends Folder {
 	constructor (device) {
 		const children = device.sessions.map(function (session) {
 			const window        = session.window;
@@ -16,7 +14,3 @@ class DeviceFolder extends Folder {
 		this.title     = device.deviceName;
 	}
 }
-
-return DeviceFolder;
-
-});

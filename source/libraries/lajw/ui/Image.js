@@ -1,12 +1,10 @@
-"use strict"
-
-define(["./Node"], function (_Node) {
+import Node from "./Node.js"
 
 const template = $({
 	nodeName: "IMG"
 });
 
-class Image extends _Node {
+export default class Image extends Node {
 	constructor(e) {
 		typecheck(arguments, [{
 			src: [String, undefined],
@@ -36,7 +34,3 @@ class Image extends _Node {
 		this.DOM.alt = value;
 	}
 }
-
-return Image;
-
-});

@@ -7,16 +7,18 @@
  * @author Lukasz A.J. Wrona (lukasz.andrzej.wrona@gmail.com)
  */
 
-"use strict"
-
-define(["./ActionButton", "./Chrome", "./DevicesButton", "./DeviceFolder",
-		"./libraries/lajw/ui/Input", "./libraries/lajw/ui/Layer",
-		"./libraries/lajw/ui/MultiButton", "./libraries/lajw/ui/Progressbar.js",
-		"./libraries/lajw/ui/Separator", "./WindowFolder", "./TabButton",
-		"./HistoryButton", "./libraries/lajw/ui/Root"],
-function (ActionButton, Chrome, DevicesButton, DeviceFolder, Input, Layer,
-	MultiButton, Progressbar, Separator, WindowFolder, TabButton, HistoryButton,
-	Root) {
+import ActionButton from "./ActionButton.js"
+import Chrome from "./Chrome.js"
+import DevicesButton from "./DevicesButton.js"
+import Input from "./libraries/lajw/ui/Input.js"
+import Layer from "./libraries/lajw/ui/Layer.js"
+import MultiButton from "./libraries/lajw/ui/MultiButton.js"
+import Progressbar from "./libraries/lajw/ui/Progressbar.js"
+import Separator from "./libraries/lajw/ui/Separator.js"
+import WindowFolder from "./WindowFolder.js"
+import TabButton from "./TabButton.js"
+import HistoryButton from "./HistoryButton.js"
+import Root from "./libraries/lajw/ui/Root.js"
 
 // get time sectors for search
 function timeSectors() {
@@ -316,4 +318,3 @@ Chrome.fetch("defaults.json")
 	}).then(function (arr) {
 		main.apply(null, arr);
 	});
-});

@@ -1,13 +1,11 @@
-"use strict"
-
-define(["./Parent"], function (Parent) {
+import Parent from "./Parent.js"
 
 const template = $({
 	nodeName: "DIV",
 	className: "MultiButton"
 });
 
-class MultiButton extends Parent {
+export default class MultiButton extends Parent {
 	constructor(e) {
 		typecheck(arguments, [{
 			children: [Array, undefined]
@@ -17,7 +15,3 @@ class MultiButton extends Parent {
 		super(e);
 	}
 }
-
-return MultiButton;
-
-});

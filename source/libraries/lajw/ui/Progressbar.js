@@ -1,6 +1,4 @@
-"use strict"
-
-define(["./Node"], function (_Node) {
+import Node from "./Node.js"
 
 const template = $({
 	nodeName: "CANVAS",
@@ -9,7 +7,7 @@ const template = $({
 	width: 400
 });
 
-class Progressbar extends _Node {
+export default class Progressbar extends Node {
 	constructor(e) {
 		e = e || {};
 		e.DOM = template.cloneNode(false);
@@ -48,7 +46,3 @@ class Progressbar extends _Node {
 		this._interval = null;
 	}
 }
-
-return Progressbar;
-
-});

@@ -1,6 +1,4 @@
-"use strict"
-
-define(["./Node"], function (_Node) {
+import Node from "./Node.js"
 
 const template = $({
 	nodeName: "DIV",
@@ -16,7 +14,7 @@ const template = $({
 	]
 });
 
-class Separator extends _Node {
+export default class Separator extends Node {
 	// PRIVATE: _title
 	constructor(e) {
 		e = e || {};
@@ -38,7 +36,3 @@ class Separator extends _Node {
 		this.DOM.classList.add("fadeIn");
 	}
 }
-
-return Separator;
-
-});

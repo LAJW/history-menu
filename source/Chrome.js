@@ -11,9 +11,6 @@
  * @license GNU Lesser General Public License version 3
  */
 
-"use strict"
-define([], function () {
-
 /**
  * @brief Modernizes Chrome Extension API system function.
  *
@@ -47,7 +44,7 @@ function wrap(namespace, funcKey) {
 	}
 }
 
-let Chrome = {
+const Chrome = {
 
 /**
  * @brief Creates I18n function. I18n function returns locale message held under
@@ -365,5 +362,5 @@ tabs: {
 	}
 } // namespace Chrome.tabs
 } // namespace Chrome
-return Chrome;
-});
+
+export default Chrome

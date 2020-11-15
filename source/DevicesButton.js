@@ -1,12 +1,11 @@
-"use strict"
-
-define(["./ActionButton"], function (ActionButton) {
+import ActionButton from "./ActionButton.js"
 
 const arrowTemplate = $({
 	nodeName:  "DIV",
 	className: "Arrow"
 });
-class DevicesButton extends ActionButton {
+
+export default class DevicesButton extends ActionButton {
 	constructor(e) {
 		super(e);	
 		this.DOM.appendChild(arrowTemplate);
@@ -21,7 +20,3 @@ class DevicesButton extends ActionButton {
 		return this._on;
 	}
 }
-
-return DevicesButton;
-
-});

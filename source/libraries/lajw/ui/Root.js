@@ -1,16 +1,15 @@
-"use strict"
-
-define(["./Node", "./Parent"], function (_Node, Parent) {
+import Parent from "./Parent.js"
+import Node from "./Node.js"
 
 let root; 
-class Root extends Parent {
+export default class Root extends Parent {
 	constructor() {
 		if (root)
 			throw new Error("Root already exists");
 		super({DOM: document.body});
 		['click', 'mousedown', 'mouseup'].forEach(function (eventName) {
 			document.body.addEventListener(eventName, function (e) {
-				_Node.fromDOM(e.target)[eventName](e);
+				Node.fromDOM(e.target)[eventName](e);
 			});
 		});
 	}
@@ -48,7 +47,3 @@ class Root extends Parent {
 		});
 	}
 }
-
-return Root;
-
-});

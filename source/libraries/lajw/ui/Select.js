@@ -1,6 +1,4 @@
-"use strict"
-
-define(["./Node"], function (_Node) {
+import Node from "./Node.js"
 
 const template = $({
 	nodeName: "LABEL",
@@ -13,7 +11,7 @@ const template = $({
 	]
 });
 
-class Select extends _Node {
+export default class Select extends Node {
 	// PRIVATE: _selected, _values, _select
 	constructor(e) {
 		typecheck(arguments, {
@@ -78,8 +76,3 @@ class Select extends _Node {
 		return this.values[this.selected];
 	}
 }
-
-return Select;
-
-});
-

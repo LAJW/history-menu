@@ -1,6 +1,4 @@
-"use strict"
-
-define(["./Node"], function (_Node) {
+import Node from "./Node.js"
 
 let template = $({
 	nodeName: "label",
@@ -14,7 +12,7 @@ let template = $({
 	]
 });
 
-class Checkbox extends _Node {
+export default class Checkbox extends Node {
 	// PRIVATE: _title, _checkbox
 	constructor(e) {
 		typecheck(arguments, [{
@@ -51,7 +49,3 @@ class Checkbox extends _Node {
 		this.change(value);
 	}
 }
-
-return Checkbox;
-
-});

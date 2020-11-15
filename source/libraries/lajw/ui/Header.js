@@ -1,6 +1,4 @@
-"use strict"
-
-define(["./Node"], function (_Node) {
+import Node from "./Node.js"
 
 const template = $({
 	nodeName: "H1",
@@ -8,7 +6,7 @@ const template = $({
 	childNodes: [$("")]
 });
 
-class Header extends _Node {
+export default class Header extends Node {
 	constructor(e) {
 		typecheck(arguments, [{
 			title: [String, undefined]
@@ -27,7 +25,3 @@ class Header extends _Node {
 		this.DOM.firstChild.nodeValue = value;
 	}
 }
-
-return Header;
-
-});

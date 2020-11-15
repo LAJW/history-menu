@@ -1,13 +1,12 @@
-"use strict"
+import Button from "./libraries/lajw/ui/Button.js"
 
-define(["./libraries/lajw/ui/Button", "./Chrome"], function (Button, Chrome) {
 const template = $({
 	nodeName: "DIV",
 	className: "Timer hidden",
 	childNodes: [$("")]
 });
 
-class TimerButton extends Button {
+export default class TimerButton extends Button {
 	constructor(e) {
 		super(e);
 		this._timerNode = this.DOM.appendChild(template.cloneNode(true));
@@ -36,8 +35,4 @@ class TimerButton extends Button {
 				relativeTime(this.timer);
 		}
 	}
-};
-
-return TimerButton;
-
-});
+}

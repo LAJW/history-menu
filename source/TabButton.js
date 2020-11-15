@@ -1,8 +1,6 @@
-"use strict"
-
-define(["./TimerButton", "./Chrome"], function (TimerButton, Chrome) {
-
-class TabButton extends TimerButton {
+import TimerButton from "./TimerButton.js"
+import Chrome from "./Chrome.js"
+export default class TabButton extends TimerButton {
    constructor(tab) {
 		typecheck.loose(arguments, {
 			sessionId:    String,
@@ -27,8 +25,4 @@ class TabButton extends TimerButton {
 		e.preventDefault();
 		Chrome.sessions.restore(this.sessionId, e.which == 2 || e.ctrlKey);
 	}
-};
-
-return TabButton;
-
-});
+}

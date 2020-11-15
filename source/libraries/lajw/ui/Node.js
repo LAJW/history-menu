@@ -1,8 +1,4 @@
-"use strict"
-
-define([], function () {
-
-class Node {
+export default class Node {
 	constructor(e) {
 		typecheck(arguments, [{
 			DOM: [HTMLElement, String],
@@ -44,7 +40,3 @@ class Node {
 		throw new TypeError("Element does not belong to any node");
 	}
 }
-
-return Node;
-
-});
