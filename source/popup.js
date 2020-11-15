@@ -19,6 +19,7 @@ import WindowFolder from "./WindowFolder.js"
 import TabButton from "./TabButton.js"
 import HistoryButton from "./HistoryButton.js"
 import Root from "./libraries/lajw/ui/Root.js"
+import DeviceFolder from "./DeviceFolder.js"
 
 // get time sectors for search
 function timeSectors() {
