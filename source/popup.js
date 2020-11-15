@@ -227,7 +227,7 @@ function main(root, sessions, devices, history, i18n, settings) {
 				tooltip: i18n("popup_options"),
 				icon:    "icons/options.png",
 				click:   function (e) {
-					Chrome.tabs.openOrSelect("chrome://extensions/?options=",
+					Chrome.tabs.openOrSelect(`chrome://extensions/?options=${chrome.runtime.id}`,
 						false);
 				}
 			})
