@@ -11,15 +11,36 @@ History extension for Webkit-based browsers.
 
 ## Support
 
-If you have any problems with the extension, please e-mail me [lukasz.andrzej.wrona@gmail.com](lukasz.andrzej.wrona@gmail.com).
+If you have any problems with this extension, please e-mail me at
+[lukasz.andrzej.wrona@gmail.com](lukasz.andrzej.wrona@gmail.com).
 
 ## License
 
-GNU General Public License Version 3, see LICENSE for details
+GNU General Public License Version 3, see
+[LICENSE](https://github.com/LAJW/history-menu/blob/master/LICENSE) for
+details.
+
+## Development
+You can load this extension by pointing Chrome, Opera, Edge to the `source`
+directory.
+
+## Building (compressing)
+First, install the dependencies (requires nodejs 15.2.0+ and NPM).
+
+```bash
+npm install
+```
+
+Build (Chrome version)
+```bash
+npm run build
+```
+
+The extension will show up in the `build` directory.
 
 ## Contributors
 
-Łukasz A.J. Wrona - Code, Maintenance, English and Polish translation
+Łukasz A.J. Wrona - Code, Maintenance, English and Polish translations
 
 Anonymous - Original Japanese translation
 
