@@ -255,6 +255,7 @@ function sessionToButton(settings, session) {
 	if (settings.timer) {
 		object.lastModified = session.lastModified;
 	}
+        if (session.window !== undefined) object.open = settings.expand;	
 	return session.tab
 		? new TabButton(object)
 		: new WindowFolder(object);
