@@ -42,6 +42,8 @@ The extension will show up in the `build` directory.
 
 Łukasz A.J. Wrona - Code, Maintenance, English and Polish translations
 
+sorborfor - Russian translation
+
 Anonymous - Original Japanese translation
 
 Sijera - Serbian Cyrylic Translation
