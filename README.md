@@ -46,4 +46,4 @@ sorborfor - Russian translation
 
 Anonymous - Original Japanese translation
 
-Sijera - Serbian Cyrylic Translation
+Sijera - Serbian cyrylic translation
