@@ -1,27 +1,27 @@
 {
 	"description": {
-		"message": "閉じたカードとウィンドウやヒストリーなどを探し出して、戻して。"
+		"message": "閉じたタブとウィンドウや履歴などを探して復元する"
 	},
 	"popup_history_manager": {
-		"message": "すべての履歴を表示"
+		"message": "履歴を開く"
 	},
 	"popup_recently_closed_tabs": {
-		"message": "最近閉じたカード"
+		"message": "最近閉じたタブ"
 	},
 	"popup_recent_history": {
-		"message": "最近見たカード"
+		"message": "最近の履歴"
 	},
 	"popup_search_history": {
-		"message": "ヒストリーの中で検索して"
+		"message": "履歴の検索"
 	},
 	"popup_other_devices": {
-		"message": "I他のデバイス"
+		"message": "他のデバイス"
 	},
 	"popup_options": {
 		"message": "オプション"
 	},
 	"popup_back": {
-		"message": "戻り"
+		"message": "戻る"
 	},
 	"popup_ok": {
 		"message": "OK"
@@ -30,10 +30,10 @@
 		"message": "ウィンドウ"
 	},
 	"popup_number_of_tabs": {
-		"message": "カードの枚数"
+		"message": "タブの数"
 	},
 	"results_recently": {
-		"message": "最後"
+		"message": "最近"
 	},
 	"results_today": {
 		"message": "今日"
@@ -50,52 +50,52 @@
 	"results_this_month": {
 		"message": "今月"
 	},
-	"results_last_month": {	
+	"results_last_month": {
 		"message": "先月"
 	},
 	"results_nothing_found": {
-		"message": "何も見つかれなかった"
+		"message": "一致するものが見つかりませんでした"
 	},
 	"results_end": {
-		"message": "結果の終わり"
+		"message": "検索終了"
 	},
 	"options_display": {
-		"message": "外観"
+		"message": "表示"
 	},
 	"icon_color": {
 		"message": "アイコンの色"
 	},
 	"granite": {
-		"message": "花崗岩の"
+		"message": "御影石"
 	},
 	"white": {
-		"message": "ホワイト"	
+		"message": "白"
 	},
 	"red": {
 		"message": "赤"
 	},
 	"green": {
-		"message": "緑色"
+		"message": "緑"
 	},
 	"blue": {
 		"message": "青"
-	}, 
+	},
 	"options_timer": {
-		"message": "カードの閉鎖の時間を見せて"
+		"message": "閲覧時刻の表示"
 	},
 	"options_tab_count": {
-		"message": "タブの最大数"
+		"message": "閉じるタブの上限"
 	},
 	"options_history_count": {
-		"message": "履歴エントリの最大数"
+		"message": "履歴エントリの上限"
 	},
 	"options_expand_folders": {
-		"message": "閉じたウィンドウを拡大"
+		"message": "閉じたウインドウを開く"
 	},
 	"options_animate": {
-		"message": "アニメーションをオンにして"
+		"message": "アニメーション"
 	},
 	"options_about": {
-		"message": "情報"
+		"message": "バージョン情報"
 	}
 }
