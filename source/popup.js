@@ -174,7 +174,7 @@ function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings, value
 	}
 }
 
-function getMainLayer(sessions, devices, history, i18n, settings) {
+function getMainLayer(sessions, history, i18n, settings) {
 	if (sessions.length > 0) {
 		sessions.unshift(new Separator({
 			title: i18n("popup_recently_closed_tabs")
@@ -202,7 +202,7 @@ function main(root, sessions, devices, history, i18n, settings) {
 	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate);
 	root.width  = parseInt(settings.width);
 	root.height = parseInt(settings.height);
-	root.insert(getMainLayer(sessions, devices, history, i18n, settings));
+	root.insert(getMainLayer(sessions, history, i18n, settings));
 	const searchLayer = root.insert(new Layer({
 		visible:  false,
 		children: [new Separator({
