@@ -45,22 +45,26 @@ export default class HistoryButton extends TimerButton {
 		super.fadeOut(e);
 		clearInterval(this._interval);
 	}
-	mousedown(e) /*override*/ {
-		if (e.which == 2)
+	async click(e) { /*override*/
+		if (e.button === 0 || e.button === 1) {
 			e.preventDefault();
-	}
-	click(e) { /*override*/
-		e.preventDefault();
-		if (e.target == this._remove) {
-			Chrome.history.deleteUrl({ url: this.url });
-			this.parent.remove(this);
-		} else if (this.preferSelect) {
-			Chrome.tabs.openOrSelect(this.url, e.which == 2 || e.ctrlKey);
-		} else {
-			Chrome.tabs.create({
-				url:    this.url, 
-				active: !(e.which == 2 || e.ctrlKey)
-			}).then(window.close);
+			if (e.target == this._remove) {
+				if (e.button === 0) {
+					Chrome.history.deleteUrl({ url: this.url });
+					this.parent.remove(this);
+				}
+			} else if (this.preferSelect) {
+				await Chrome.tabs.openOrSelect(this.url, e.button === 1 || e.ctrlKey);
+				if (e.button === 0) {
+					window.close();
+				}
+			} else {
+				await Chrome.tabs.create({
+					url:    this.url, 
+					active: !(e.button === 1 || e.ctrlKey)
+				})
+				window.close()
+			}
 		}
 	}
 	get url() {

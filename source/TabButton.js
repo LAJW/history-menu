@@ -1,5 +1,6 @@
 import TimerButton from "./TimerButton.js"
 import Chrome from "./Chrome.js"
+
 export default class TabButton extends TimerButton {
    constructor(tab) {
 		typecheck.loose(arguments, {
@@ -16,13 +17,11 @@ export default class TabButton extends TimerButton {
 		});
 		this.sessionId = tab.sessionId;
 	}
-	mousedown(e) { /* override */
-		if (e.which == 2) {
+	async click(e) { /*override*/
+		if (e.button === 0 || e.button === 1) {
 			e.preventDefault();
+			await Chrome.sessions.restore(this.sessionId, e.button == 1 || e.ctrlKey);
+			await Chrome.tabs.update()
 		}
-	}
-	click(e) { /*override*/
-		e.preventDefault();
-		Chrome.sessions.restore(this.sessionId, e.which == 2 || e.ctrlKey);
 	}
 }

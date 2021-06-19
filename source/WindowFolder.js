@@ -34,10 +34,10 @@ export default class WindowFolder extends Folder {
 	}
 	click(e) { /*override*/
 		e.preventDefault();
-		if (e.which == 2 || e.ctrlKey) {
-			Chrome.sessions.restore(this.sessionId, true);
-		} else {
+		if (e.button == 1) {
 			Folder.prototype.click.call(this, e);
+		} else if (e.button == 2 || e.ctrlKey) {
+			Chrome.sessions.restore(this.sessionId, true);
 		}
 	}
 	set timer(value) {
