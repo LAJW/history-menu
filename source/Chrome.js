@@ -177,10 +177,12 @@ sessions: {
 		return new Promise(function (resolve) {
 			if (inBackground) {
 				chrome.tabs.getCurrent(function (tab) {
-					chrome.sessions.restore(sessionId, function () {
-						chrome.tabs.update(tab.id, {active: true},
-							resolve);
-					});
+					if (tab) {
+						chrome.sessions.restore(sessionId, function () {
+							chrome.tabs.update(tab.id, {active: true},
+								resolve);
+						});
+					}
 				})
 			} else chrome.sessions.restore(sessionId);
 		});
