@@ -1,8 +1,9 @@
-import Node from "./Node.ts"
+import Node from "./Node"
+import { $ } from "../utils"
 
 // locked on Input - when you type sometihng, automatically focus this
 // input node
-let lockon;
+let lockon : Input;
 
 window.addEventListener("keydown", function (e) {
 	if (lockon)
@@ -24,26 +25,28 @@ const template = $({
 });
 
 export default class Input extends Node {
+	_input : HTMLInputElement
+	_cancel : HTMLElement
+	_oldValue : string
+	change : (value : string) => void
 
-	constructor(e) {
-		typecheck(arguments, [{
-			value: [String, undefined],
-			placeholder: [String, undefined],
-			lockon: [Boolean, undefined],
-			change: [Function, undefined]
-		}, undefined]);
-		e = e || {};
-		e.DOM = template.cloneNode(true);
-		super(e);
-		this._input = this.DOM.firstChild;
-		this._cancel = this.DOM.lastChild;
-		this._input.onkeyup = this._input.onchange = function () {
+	constructor(e : {
+		id? : string
+		value? : string
+		placeholder? : string
+		lockon? : boolean
+		change? : (value : string) => void
+	} = {}) {
+		super({ id : e.id, DOM : template.cloneNode(true) as HTMLElement });
+		this._input = this.DOM.firstChild as HTMLInputElement;
+		this._cancel = this.DOM.lastChild as HTMLElement;
+		this._input.onkeyup = this._input.onchange = () => {
 			if (this._oldValue == this.value)
 				return;
 			this._oldValue = this.value;
 			this.change(this.value);
 			this._toggleClearButton();
-		}.bind(this);
+		};
 		this.change = function () {};
 		this.value = e.value || "";
 		this.change = e.change || function () {};
@@ -51,7 +54,7 @@ export default class Input extends Node {
 		this.lockon = e.lockon || false;
 	}
 
-	click(e) { // override
+	override click(e : MouseEvent) {
 		if (e.target == this._cancel)
 			this.value = "";
 		this._input.focus();
@@ -70,16 +73,14 @@ export default class Input extends Node {
 	get value() {
 		return this._input.value;
 	} 
-	set value(value) {
-		typecheck(arguments, String);
+	set value(value : string) {
 		this._input.value = value;
 		this._toggleClearButton();
-		this.change();
+		this.change(value);
 	}
 
 	// select Input to be locked on 
-	static lockon(input) {
-		typecheck(arguments, Input);
+	static lockon(input : Input) {
 		lockon = input;
 	}
 
@@ -87,8 +88,7 @@ export default class Input extends Node {
 	get lockon() {
 		return this === lockon;
 	}
-	set lockon(value) {
-		typecheck(arguments, Boolean);
+	set lockon(value : boolean) {
 		if (value)
 			lockon = this;
 		else if (this.lockon)
@@ -97,7 +97,6 @@ export default class Input extends Node {
 
 	// private void _toggleClearButton(void) - toggle "X" button
 	_toggleClearButton() {
-		typecheck(arguments);
 		this._cancel.classList.toggle("visible", !!this.value);
 	}
 }
