@@ -190,7 +190,8 @@ Chrome.fetch("defaults.json")
 						"en": "English",
 						"ja": "Japanese",
 						"pl": "Polski",
-						"sr": "Српски"
+						"sr": "Српски",
+						"ru": "Русский",
 					},
 					selected: settings.lang,
 					change:   function () {
