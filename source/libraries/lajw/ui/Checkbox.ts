@@ -1,4 +1,5 @@
-import Node from "./Node.ts"
+import Node from "./Node"
+import { $ } from "../utils"
 
 let template = $({
 	nodeName: "label",
@@ -13,38 +14,37 @@ let template = $({
 });
 
 export default class Checkbox extends Node {
-	// PRIVATE: _title, _checkbox
-	constructor(e) {
-		typecheck(arguments, [{
-			title: [String, undefined],
-			checked: [Boolean, undefined],
-			change: [Function, undefined]
-			}, undefined]);
+	_title : Text
+	_checkbox : HTMLInputElement
+	change : (value : boolean) => void
+	constructor(e? : {
+		id? : string,
+		title? : string
+		checked? : boolean
+		change? : (value : boolean) => void
+	}) {
 		e = e || {};
-		e.DOM = template.cloneNode(true);
-		super(e);
-		e.DOM.onchange = function () {
+		super({ id : e.id, DOM : template.cloneNode(true) as HTMLElement });
+		this.DOM.addEventListener("change", () => {
 			this.change(this.checked);
-		}.bind(this);
-		this._checkbox = this.DOM.firstChild;
-		this._title = this.DOM.lastChild;
+		})
+		this._checkbox = this.DOM.firstChild as HTMLInputElement;
+		this._title = this.DOM.lastChild as Text;
 		this.change = function () {}
 		this.checked = e.checked || false;
-		this.change = e.change || function () {}
+		this.change = e.change || function () {};
 		this.title = e.title || "";
 	}
 	get title() {
 		return this._title.nodeValue;
 	}
 	set title(value) {
-		typecheck(arguments, String);
 		this._title.nodeValue = value;
 	}
 	get checked() { 
 		return this._checkbox.checked;
 	}
 	set checked(value) {
-		typecheck(arguments, Boolean);
 		this._checkbox.checked = value;
 		this.change(value);
 	}

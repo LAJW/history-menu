@@ -1,5 +1,5 @@
 import Chrome from "./Chrome.js"
-import Checkbox from "./libraries/lajw/ui/Checkbox.js"
+import Checkbox from "./libraries/lajw/ui/Checkbox"
 import Header from "./libraries/lajw/ui/Header.js"
 import Node from "./libraries/lajw/ui/Node.ts"
 import Root from "./libraries/lajw/ui/Root.ts"

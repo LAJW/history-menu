@@ -53,13 +53,14 @@ export function relativeTime(value : number) {
 
 interface Template {
 	nodeName : string
-	className : string
+	className? : string
 	events? : {
 		click? : ((e: MouseEvent) => void)
 		mousedown? : ((e: MouseEvent) => void)
 		mouseup? : ((e: MouseEvent) => void)
 	},
-	childNodes : Node[] | undefined
+	childNodes? : Node[]
+	type? : string
 }
 
 export function $(params : Template | string) : HTMLElement | Node {
@@ -82,6 +83,9 @@ export function $(params : Template | string) : HTMLElement | Node {
 	}
 	if (params.className) {
 		element.className = params.className
+	}
+	if (params.type) {
+		(element as HTMLInputElement).type = params.type
 	}
 	return element;
 }
