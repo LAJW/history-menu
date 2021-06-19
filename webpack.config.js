@@ -9,6 +9,7 @@ const commonScripts = [
 ]
 
 module.exports = {
+  mode: "production",
   plugins: [
     new CopyPlugin({
       patterns: [
@@ -57,5 +58,6 @@ module.exports = {
         exclude: /node_modules/,
       },
     ]
-  }
+  },
+  devtool : "source-map"
 }
