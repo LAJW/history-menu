@@ -1,4 +1,4 @@
-import Parent from "./Parent.js"
+import Parent from "./Parent.ts"
 import Node from "./Node.ts"
 
 let root; 

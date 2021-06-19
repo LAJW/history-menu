@@ -1,29 +1,33 @@
 import Node from "./Node.ts"
 
 export default class Parent extends Node {
-	constructor(e) {
-		typecheck(arguments,
-			[{
-				container: [Element, undefined],
-				children: [Array, undefined]
-			}, undefined], typecheck.loose
-		);
+	readonly _children : Node[]
+	container : HTMLElement
+
+	constructor(e : {
+		DOM : HTMLElement | string
+		id : string | undefined
+		container : HTMLElement
+		children : Node[] | undefined
+	} | {
+		DOM : HTMLElement
+		id : string | undefined
+		container : HTMLElement | undefined
+		children : Node[] | undefined
+	}) {
 		super(e);
 		if (e) {
 			Object.defineProperty(this, "container", 
 				{value: e.container || this.DOM}
 			);
 			this._children = [];
-			if (e.children)
+			if (e.children) {
 				this.insert(e.children);
+			}
 		}
 	}
 	// insert child, before other child or at the end, return it
-	insert(first, second) {
-		typecheck(arguments, 
-			[Node, Array],
-			[Node, undefined]
-		);
+	insert(first : Node | Node[], second : Node | undefined = undefined) {
 		if (second) {
 			if (first instanceof Array) {
 				return this._insertManyBefore(first, second);
@@ -38,7 +42,7 @@ export default class Parent extends Node {
 			}
 		}
 	}
-	_append(child) { // exception safe
+	_append(child : Node) { // exception safe
 		typecheck(arguments, Node);
 		this._validateChildCandidate(child);
 		this.container.appendChild(child.DOM);
@@ -47,16 +51,16 @@ export default class Parent extends Node {
 		child.fadeIn(0);
 		return child;
 	}
-	_appendMany(children) { // not exception safe
-		children.forEach(function (child, i) {
+	_appendMany(children : Node[]) { // not exception safe
+		children.forEach((child, i) => {
 			this._validateChildCandidate(child);
 			this.container.appendChild(child.DOM);
 			this._children.push(child);
 			child._parent = this;
 			child.fadeIn(Math.max(Math.min(children.length, 20) - i, 0) * 10);
-		}.bind(this));
+		});
 	}
-	_insertBefore(child, before) { // exception safe
+	_insertBefore(child : Node, before : Node) { // exception safe
 		typecheck(arguments, Node, Node);
 		this._validateChildCandidate(child);
 		this._validateChild(before);
@@ -66,22 +70,22 @@ export default class Parent extends Node {
 		child.fadeIn(0);
 		return child;
 	}
-	_insertManyBefore(children, before) { // not exception safe
+	_insertManyBefore(children : Node[], before : Node) { // not exception safe
 		this._validateChild(before);
-		children.forEach(function (child, i) {
+		children.forEach((child, i) => {
 			this._validateChildCandidate(child);
 			this.container.insertBefore(child.DOM, before.DOM);
 			this._children.splice(this._children.indexOf(before), 0, child);
 			child._parent = this;
 			child.fadeIn(Math.max(Math.min(children.length, 20) - i, 0) * 10);
-		}.bind(this));
+		});
 	}
-	_validateChildCandidate(child) {
+	_validateChildCandidate(child : Node) {
 		if (child.parent) {
 			throw new TypeError("Child already has a parent");
 		}
 	}
-	_validateChild(child) {
+	_validateChild(child : Node) {
 		if (child.parent != this) {
 			throw new TypeError("Before is not a child of this node");
 		}
@@ -90,7 +94,7 @@ export default class Parent extends Node {
 		return this._children.length == 0;
 	}
 	// remove child from child list, return it
-	remove(child) {
+	remove(child : Node) {
 		typecheck(arguments, Node);
 		try {
 			this.container.removeChild(child.DOM);
@@ -107,14 +111,13 @@ export default class Parent extends Node {
 		return this._children.slice();
 	}
 	set children(value) {
-		typecheck(arguments, Array);
 		this.clear();
 		this._appendMany(value);
 	}
-	// void clear() - remove all elemnts from this node
+	// remove all elemnts from this node
 	clear() {
-		this.children.forEach(function (child) {
-			this.remove(child);
-		}.bind(this));
+		for (const child of this.children) {
+			this.remove(child)
+		}
 	}
 }

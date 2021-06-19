@@ -1,4 +1,4 @@
-import Parent from "./Parent.js"
+import Parent from "./Parent.ts"
 
 export default class Layer extends Parent {
 	constructor(e) {

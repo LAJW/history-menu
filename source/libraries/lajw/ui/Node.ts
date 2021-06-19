@@ -1,6 +1,6 @@
 export default class UINode {
 	readonly DOM: HTMLElement
-	readonly _parent : UINode | undefined
+	_parent : UINode | undefined
 
 	constructor(e : {
 		DOM: HTMLElement | string
