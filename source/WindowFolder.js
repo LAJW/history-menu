@@ -1,6 +1,6 @@
 import Chrome from "./Chrome.js"
 import Folder from "./libraries/lajw/ui/Folder.js"
-import TabButton from "./TabButton.js"
+import TabButton from "./TabButton"
 
 const template = $({
 	nodeName:  "DIV",

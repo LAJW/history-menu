@@ -1,4 +1,5 @@
-import Node from "./Node.ts"
+import Node from "./Node"
+import { $, url } from "../utils"
 
 let template = $({
 	nodeName: "A",
@@ -7,15 +8,18 @@ let template = $({
 });
 
 export default class Button extends Node {
-	constructor (e) {
-		typecheck(arguments, [{
-			icon: [String, undefined],
-			title: [String, undefined],
-			tooltip: [String, undefined],
-		}, undefined], typecheck.loose);
-		e = e || {};
-		e.DOM = template.cloneNode(true);
-		super(e);
+	_icon : string
+
+	constructor (e : {
+		id?: string,
+		icon?: string
+		title?: string
+		tooltip?: string
+	}) {
+		super({
+			DOM: template.cloneNode(true) as HTMLElement,
+			id: e.id,
+		});
 		this.title = e.title || "";
 		this.icon = e.icon || "";
 		this.tooltip = e.tooltip || "";
@@ -23,9 +27,9 @@ export default class Button extends Node {
 	get height() {
 		return 23; // HACK
 	}
-	fadeIn(delay) { /* override */
+	override fadeIn(delay : number) {
 		typecheck(arguments, Number);
-		this.DOM.style.WebkitAnimationDelay = delay + "ms";
+		this.DOM.style.animationDelay = delay + "ms";
 		this.DOM.classList.add("fadeIn");
 	}
 	get title() { return this.DOM.firstChild.nodeValue; }

@@ -7,17 +7,17 @@
  * @author Lukasz A.J. Wrona (lukasz.andrzej.wrona@gmail.com)
  */
 
-import ActionButton from "./ActionButton.js"
+import ActionButton from "./ActionButton"
 import Chrome from "./Chrome.js"
-import DevicesButton from "./DevicesButton.js"
+import DevicesButton from "./DevicesButton"
 import Input from "./libraries/lajw/ui/Input.js"
 import Layer from "./libraries/lajw/ui/Layer.js"
-import MultiButton from "./libraries/lajw/ui/MultiButton.js"
+import MultiButton from "./libraries/lajw/ui/MultiButton"
 import Progressbar from "./libraries/lajw/ui/Progressbar.js"
 import Separator from "./libraries/lajw/ui/Separator.js"
 import WindowFolder from "./WindowFolder.js"
-import TabButton from "./TabButton.js"
-import HistoryButton from "./HistoryButton.js"
+import TabButton from "./TabButton"
+import HistoryButton from "./HistoryButton"
 import Root from "./libraries/lajw/ui/Root.ts"
 import DeviceFolder from "./DeviceFolder.js"
 
