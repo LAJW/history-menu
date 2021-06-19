@@ -62,21 +62,26 @@ interface Template {
 	childNodes : Node[] | undefined
 }
 
-export function $(params : Template | string) : HTMLElement {
+export function $(params : Template | string) : HTMLElement | Node {
 	if (typeof(params) == "string")
 		return document.createTextNode(params);
-	var element = document.createElement(params.nodeName);
-	delete params.nodeName;
+	const element = document.createElement(params.nodeName);
 	if (params.events) {
-		for (var i in params.events)
-			element.addEventListener(i, params.events[i]);
-		delete params.nodeName;
+		if (params.events.click) {
+			element.addEventListener("click", params.events.click);
+		}
+		if (params.events.mousedown) {
+			element.addEventListener("mousedown", params.events.mousedown);
+		}
+		if (params.events.mouseup) {
+			element.addEventListener("mouseup", params.events.mouseup);
+		}
 	}
 	if (params.childNodes) {
 		params.childNodes.forEach(element.appendChild.bind(element));
-		delete params.childNodes;
 	}
-	for (var i in params)
-		element[i] = params[i];
+	if (params.className) {
+		element.className = params.className
+	}
 	return element;
 }
