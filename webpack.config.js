@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const commonScripts = [
   "./source/libraries/lajw/typecheck-release.js",
-  "./source/libraries/lajw/utils.js",
+  "./source/libraries/lajw/utilsGlobal.js",
   "./source/libraries/lajw/instanceof.js",
 ]
 

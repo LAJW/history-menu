@@ -1,25 +1,21 @@
 // css shortcuts
-window.px = function(input) {
-	typecheck(arguments, Number);
+export function px(input : number) {
 	return Math.round(input) + "px";
 }
 
-window.url = function(input) {
-	typecheck(arguments, String);
+export function url(input : string) {
 	return " url('" + input + "') ";
 }
 
 // converts to string, checks if supplied string is a valid URL
 // 1. String isURL(Mixed text)
-window.isURL = function(text) {
-	if (!instanceOf(text, String))
-		return false;
+export function isURL(text : string) {
 	return text.indexOf("://") > 0 && text.indexOf(" ") < 0;
 }
 // converts to string, If supplied string is an URL, returns trimmed version of it, else returns supplied string
 // 1. String trimURL(Mixed text)
 
-window.trimURL = function (text) {
+export function trimURL(text : string) {
 	text += '';
 	if (!isURL(text))
 		return text;
@@ -40,8 +36,7 @@ window.trimURL = function (text) {
 // convert supplied time to human-readable time format relative to current date
 // relativeTime(Number timeInMilliseconds)
 
-window.relativeTime = function (value) {
-	typecheck(arguments, Number);
+export function relativeTime(value : number) {
 	var diff = ( Date.now() - value ) / 1000;
 	if (diff < 60) {
 		return "<1m";
@@ -52,17 +47,22 @@ window.relativeTime = function (value) {
 	} else if (diff < 3600 * 24 * 365) {
 		return Math.round(diff / 3600 / 24) + "d";
 	} else {
-		return round(diff / 3600 / 24 / 365) + "y";	
+		return Math.round(diff / 3600 / 24 / 365) + "y";	
 	}
 }
 
-/**
- * DOM Element generator
- * @param {Object} params - parameters describing element to be created
- * @return {Element} - created element
- */
-window.$ = function(params) {
-	typecheck(arguments, [Object, String]);
+interface Template {
+	nodeName : string
+	className : string
+	events? : {
+		click? : ((e: MouseEvent) => void)
+		mousedown? : ((e: MouseEvent) => void)
+		mouseup? : ((e: MouseEvent) => void)
+	},
+	childNodes : Node[] | undefined
+}
+
+export function $(params : Template | string) : HTMLElement {
 	if (typeof(params) == "string")
 		return document.createTextNode(params);
 	var element = document.createElement(params.nodeName);
