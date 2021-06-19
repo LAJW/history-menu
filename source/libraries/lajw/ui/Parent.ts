@@ -1,4 +1,4 @@
-import Node from "./Node.ts"
+import Node from "./Node"
 
 export default class Parent extends Node {
 	readonly _children : Node[]
