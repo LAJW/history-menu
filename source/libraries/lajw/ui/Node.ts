@@ -4,7 +4,7 @@ export default class UINode {
 
 	constructor(e : {
 		DOM: HTMLElement | string
-		id: string | undefined
+		id?: string
 	}) {
 		if (e) {
 			const DOM = typeof e.DOM === "string" ? document.createElement(e.DOM) : e.DOM as HTMLElement;
