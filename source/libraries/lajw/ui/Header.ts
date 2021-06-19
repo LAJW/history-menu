@@ -1,4 +1,5 @@
-import Node from "./Node.ts"
+import Node from "./Node"
+import { $ } from "../utils"
 
 const template = $({
 	nodeName: "H1",
@@ -7,21 +8,15 @@ const template = $({
 });
 
 export default class Header extends Node {
-	constructor(e) {
-		typecheck(arguments, [{
-			title: [String, undefined]
-		}, undefined]);
-		e = e || {};
-		e.DOM = template.cloneNode(true);
-		super(e);
+	constructor(e : { id? : string, title? : string } = {}) {
+		super({id : e.id, DOM : template.cloneNode(true) as HTMLElement});
 		this.title = e.title || "";
 	}
 	// String title - header's text
 	get title() {
 		return this.DOM.firstChild.nodeValue;
 	}
-	set title(value) {
-		typecheck(arguments, String);
+	set title(value : string) {
 		this.DOM.firstChild.nodeValue = value;
 	}
 }
