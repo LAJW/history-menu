@@ -1,5 +1,5 @@
 import Chrome from "./Chrome.js"
-import Folder from "./libraries/lajw/ui/Folder.js"
+import Folder from "./libraries/lajw/ui/Folder"
 import TabButton from "./TabButton"
 
 const template = $({

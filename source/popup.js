@@ -15,11 +15,11 @@ import Layer from "./libraries/lajw/ui/Layer.js"
 import MultiButton from "./libraries/lajw/ui/MultiButton"
 import Progressbar from "./libraries/lajw/ui/Progressbar"
 import Separator from "./libraries/lajw/ui/Separator.js"
-import WindowFolder from "./WindowFolder.js"
+import WindowFolder from "./WindowFolder"
 import TabButton from "./TabButton"
 import HistoryButton from "./HistoryButton"
 import Root from "./libraries/lajw/ui/Root.ts"
-import DeviceFolder from "./DeviceFolder.js"
+import DeviceFolder from "./DeviceFolder"
 
 let devicesButton, deviceLayer;
 

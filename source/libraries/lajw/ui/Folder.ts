@@ -1,4 +1,6 @@
-import Parent from "./Parent.ts"
+import UINode from "./Node"
+import Parent from "./Parent"
+import { $, px } from "../utils"
 
 const template = $({
 	nodeName: "DIV",
@@ -17,42 +19,45 @@ const template = $({
 	})]
 });
 
-// PRIVATE PROPERTIES: _open, _empty, _title, _interval, _hover
+// PRIVATE PROPERTIES: _open, #empty, _title, _interval, _hover
 export default class Folder extends Parent {
-	constructor(e) {
-		typecheck(arguments, [{
-			open: [Boolean, undefined],
-		}, undefined], typecheck.loose);
-		e = e || {};
-		e.DOM = template.cloneNode(true);
-		e.container = e.DOM.lastChild;
-		let children = e.children;
+	_title : HTMLAnchorElement
+	_empty1 : HTMLElement
+	_open : boolean
+	constructor(e : {
+			title? : string,
+			open? : boolean,
+			children? : UINode[]
+		} = {}) {
+		const DOM = template.cloneNode(true) as HTMLElement;
+		const container = DOM.lastChild as HTMLElement;
+		const children = e.children
 		e.children = undefined;
-		super(e);
-		this._title = this.DOM.firstChild;
-		this._empty = this.DOM.childNodes[1];
+		super({ DOM, container, children });
+		this._title = this.DOM.firstChild as HTMLAnchorElement;
+		this._empty1 = this.DOM.childNodes[1] as HTMLElement;
 		this.title = e.title || "";
 		this.open = e.open === undefined ? true : e.open;
 		if (children) 
 			this.insert(children);
 	}
-	insert(child, before) { // override
-		Parent.prototype.insert.apply(this, arguments);
-		this._empty.classList.add("hidden");
+	override insert(child : UINode | UINode[], before? : UINode) {
+		super.insert(child, before);
+		this._empty1.classList.add("hidden");
 		this._updateStyle();
 	}
-	remove(child) { // override
-		Parent.prototype.remove.apply(this, arguments);
+	override remove(child : UINode) {
+		super.remove(child);
 		if (!this.children.length)
-			this._empty.classList.remove("hidden");
+			this._empty1.classList.remove("hidden");
 		this._updateStyle();
+		return child
 	}
-	fadeIn(delay) { // override
-		typecheck(arguments, Number);
-		this.DOM.style.WebkitAnimationDelay = delay + "ms";
+	override fadeIn(delay : number) {
+		this.DOM.style.animationDelay = delay + "ms";
 		this.DOM.classList.add("fadeIn");
 	}
-	click (e) { // override
+	override click () {
 		this.open = !this.open;
 	}
 	get height() {
@@ -67,13 +72,13 @@ export default class Folder extends Parent {
 	get open() {
 		return this._open;
 	}
-	set open(value) {
-		typecheck(arguments, Boolean);
+	set open(value : boolean) {
 		this._open = value;
 		this.DOM.classList.toggle("open", value);
 		this.DOM.style.maxHeight = px(this.height);
-		if (this.parent && value)
+		if (this.parent && value && this.parent instanceof Folder) {
 			this.parent.open = this.parent.open;
+		}
 	}
 	// update style after inserting new element
 	_updateStyle () {
@@ -83,8 +88,7 @@ export default class Folder extends Parent {
 	get title() {
 		return this._title.firstChild.nodeValue;
 	}
-	set title(value) {
-		typecheck(arguments, String);
+	set title(value : string) {
 		this._title.firstChild.nodeValue = value;
 		this._title.title = value;
 	}
