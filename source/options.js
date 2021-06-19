@@ -3,7 +3,7 @@ import Checkbox from "./libraries/lajw/ui/Checkbox"
 import Header from "./libraries/lajw/ui/Header"
 import Node from "./libraries/lajw/ui/Node.ts"
 import Root from "./libraries/lajw/ui/Root.ts"
-import Select from "./libraries/lajw/ui/Select.js"
+import Select from "./libraries/lajw/ui/Select"
 import Slider from "./Slider.js"
 
 // template for the Classic Button

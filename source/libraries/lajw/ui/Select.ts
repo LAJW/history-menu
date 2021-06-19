@@ -1,4 +1,5 @@
-import Node from "./Node.ts"
+import Node from "./Node"
+import { $ } from "../utils"
 
 const template = $({
 	nodeName: "LABEL",
@@ -12,21 +13,22 @@ const template = $({
 });
 
 export default class Select extends Node {
-	// PRIVATE: _selected, _values, _select
-	constructor(e) {
-		typecheck(arguments, {
-			title: [String, undefined],
-			values: Object,
-			selected: [String, undefined],
-			change: [Function, undefined]
-		});
-		e.DOM = template.cloneNode(true);
-		super(e);
-		this._select = this.DOM.firstChild;
-		this._title = this.DOM.lastChild;
-		this._select.onchange = function () {
+	_title : Text
+	_values : { [key: string]: string }
+	_select : HTMLSelectElement
+	change : (value : string) => void
+	constructor(e : {
+			title : string
+			values : { [key: string]: string }
+			selected : string
+			change : (value : string) => void
+		}) {
+		super({DOM : template.cloneNode(true) as HTMLElement});
+		this._select = this.DOM.firstChild as HTMLSelectElement;
+		this._title = this.DOM.lastChild as Text;
+		this._select.onchange = () => {
 			this.change(this.values[this.selected]);
-		}.bind(this);
+		}
 		this.change = e.change || function () { };
 		this.values = e.values;
 		this.selected = e.selected || Object.keys(e.values)[0];
@@ -37,7 +39,6 @@ export default class Select extends Node {
 		return this._values;
 	}
 	set values(values) {
-		typecheck(arguments, Object);
 		this._values = values;
 		this._select.innerHTML = "";
 		for (let i in values) {
@@ -52,8 +53,7 @@ export default class Select extends Node {
 	get selected() {
 		return this._select.options[this._select.selectedIndex].value;
 	}
-	set selected(key) {
-		typecheck(arguments, String);
+	set selected(key : string) {
 		if (this._values[key]) {
 			let options = this._select.options;
 			for (let i = 0, il = options.length; i < il; i++) {
@@ -65,10 +65,9 @@ export default class Select extends Node {
 	}
 	// String title - text label of the Select node
 	get title() {
-		this._title.nodeValue;
+		return this._title.nodeValue;
 	}
-	set title(value) {
-		typecheck(arguments, String);
+	set title(value : string) {
 		this._title.nodeValue = value;
 	}
 	// value - currently selected value
