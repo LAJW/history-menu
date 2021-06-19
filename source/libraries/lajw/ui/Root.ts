@@ -1,21 +1,20 @@
-import Parent from "./Parent.ts"
-import Node from "./Node.ts"
+import Parent from "./Parent"
+import Node from "./Node"
 
-let root; 
+let root : Root; 
 export default class Root extends Parent {
+	_width : number
+	_height : number
 	constructor() {
 		if (root)
 			throw new Error("Root already exists");
 		super({DOM: document.body});
-		['click', 'mousedown', 'mouseup'].forEach(function (eventName) {
-			document.body.addEventListener(eventName, function (e) {
-				Node.fromDOM(e.target)[eventName](e);
-			});
-		});
-		document.body.addEventListener("auxclick", e => Node.fromDOM(e.target).click(e));
+		document.body.addEventListener("click", e => Node.fromDOM(e.target as HTMLElement).click(e))
+		document.body.addEventListener("mouseup", e => Node.fromDOM(e.target as HTMLElement).mouseup())
+		document.body.addEventListener("mousedown", e => Node.fromDOM(e.target as HTMLElement).mousedown())
+		document.body.addEventListener("auxclick", e => Node.fromDOM(e.target as HTMLElement).click(e));
 	}
-	setTheme(platform, animate) {
-		typecheck(arguments, String, Boolean);
+	setTheme(platform? : string, animate? : string) {
 		if (platform)
 			this.DOM.classList.add(platform);
 		if (animate)
@@ -24,16 +23,14 @@ export default class Root extends Parent {
 	get width() {
 		return this._width;
 	}
-	set width(value) {
-		typecheck(arguments, Number);
+	set width(value : number) {
 		this.DOM.style.width = value + "px";
 		this._width = value;
 	}
 	get height() {
 		return this._height;
 	}
-	set height(value) {
-		typecheck(arguments, Number);
+	set height(value : number) {
 		this.DOM.style.height = value + "px";
 		this._height = value;
 	}

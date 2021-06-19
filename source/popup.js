@@ -18,7 +18,7 @@ import Separator from "./libraries/lajw/ui/Separator.js"
 import WindowFolder from "./WindowFolder.js"
 import TabButton from "./TabButton.js"
 import HistoryButton from "./HistoryButton.js"
-import Root from "./libraries/lajw/ui/Root.js"
+import Root from "./libraries/lajw/ui/Root.ts"
 import DeviceFolder from "./DeviceFolder.js"
 
 let devicesButton, deviceLayer;

@@ -2,7 +2,7 @@ import Chrome from "./Chrome.js"
 import Checkbox from "./libraries/lajw/ui/Checkbox.js"
 import Header from "./libraries/lajw/ui/Header.js"
 import Node from "./libraries/lajw/ui/Node.ts"
-import Root from "./libraries/lajw/ui/Root.js"
+import Root from "./libraries/lajw/ui/Root.ts"
 import Select from "./libraries/lajw/ui/Select.js"
 import Slider from "./Slider.js"
 
