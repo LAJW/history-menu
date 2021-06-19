@@ -85,3 +85,12 @@ export function $(params : Template | string) : HTMLElement | Node {
 	}
 	return element;
 }
+
+export default {
+	$,
+	px,
+	url,
+	isURL,
+	trimURL,
+	relativeTime,
+}
