@@ -331,7 +331,6 @@ tabs: {
 			let pattern = "*" + url.substr(colon);
 			return Chrome.tabs.query({url: pattern})
 				.then(function (tabs) {
-				console.log(tabs);
 				if (tabs.length) {
 					if (inBackground)
 						return Chrome.tabs.highlight({
