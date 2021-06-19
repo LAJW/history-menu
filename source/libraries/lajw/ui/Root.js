@@ -12,6 +12,7 @@ export default class Root extends Parent {
 				Node.fromDOM(e.target)[eventName](e);
 			});
 		});
+		document.body.addEventListener("auxclick", e => Node.fromDOM(e.target).click(e));
 	}
 	setTheme(platform, animate) {
 		typecheck(arguments, String, Boolean);
