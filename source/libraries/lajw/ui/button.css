@@ -3,7 +3,6 @@ a.Button:link, a.Button:visited {
 }
 
 a.Button:hover, a.Button.highlighted {
-	cursor: default;
 	color: white;
 	background-color: #555;
 }

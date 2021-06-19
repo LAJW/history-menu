@@ -17,10 +17,6 @@ body.Ubuntu {
 	font: 11pt "Ubuntu";
 }
 
-body:hover {
-	cursor: default;
-}
-
 input {
 	font: Arial 9pt;
 }
@@ -48,10 +44,6 @@ body.Ubuntu input {
 	background-position: 6px 3px;
 	background-repeat: no-repeat;
 	text-decoration: none;
-}
-
-.menuItem:hover {
-	cursor: default;
 }
 
 body.animate .menuItem {
