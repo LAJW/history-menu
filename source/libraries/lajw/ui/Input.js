@@ -1,4 +1,4 @@
-import Node from "./Node.js"
+import Node from "./Node.ts"
 
 // locked on Input - when you type sometihng, automatically focus this
 // input node

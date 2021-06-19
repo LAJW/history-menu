@@ -1,4 +1,4 @@
-import Node from "./Node.js"
+import Node from "./Node.ts"
 
 const template = $({
 	nodeName: "LABEL",

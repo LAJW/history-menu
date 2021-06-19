@@ -1,5 +1,5 @@
 import Parent from "./Parent.js"
-import Node from "./Node.js"
+import Node from "./Node.ts"
 
 let root; 
 export default class Root extends Parent {

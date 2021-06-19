@@ -1,4 +1,4 @@
-import Node from "./libraries/lajw/ui/Node.js"
+import Node from "./libraries/lajw/ui/Node.ts"
 
 const sliderTemplate = $({
 	nodeName: "LABEL",

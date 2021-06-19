@@ -1,4 +1,4 @@
-import Node from "./Node.js"
+import Node from "./Node.ts"
 
 export default class Parent extends Node {
 	constructor(e) {
