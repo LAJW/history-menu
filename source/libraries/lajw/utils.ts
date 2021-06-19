@@ -61,6 +61,8 @@ interface Template {
 	},
 	childNodes? : Node[]
 	type? : string
+	width? : number
+	height? : number
 }
 
 export function $(params : Template | string) : HTMLElement | Node {
@@ -86,6 +88,11 @@ export function $(params : Template | string) : HTMLElement | Node {
 	}
 	if (params.type) {
 		(element as HTMLInputElement).type = params.type
+	}
+	if (params.width) {
+		const canvas = element as HTMLCanvasElement
+		canvas.width = params.width
+		canvas.height = params.height
 	}
 	return element;
 }

@@ -1,4 +1,5 @@
-import Node from "./Node.ts"
+import Node from "./Node"
+import { $ } from "../utils"
 
 const template = $({
 	nodeName: "CANVAS",
@@ -8,22 +9,23 @@ const template = $({
 });
 
 export default class Progressbar extends Node {
-	constructor(e) {
-		e = e || {};
-		e.DOM = template.cloneNode(false);
-		super(e);
+	_interval : NodeJS.Timeout
+	constructor(e : { id? : string } = {}) {
+		super({ id : e.id, DOM : template.cloneNode(false) as HTMLElement });
 	}
-	fadeIn() { /* override */
-		let ctx = this.DOM.getContext("2d");
+	override fadeIn() {
+		const canvas = this.DOM as HTMLCanvasElement
+		let ctx = canvas.getContext("2d");
 		let c = [-0.1, -0.2, -0.3];
 		let then = Date.now();
 		this.DOM.style.width = "inherit";
-		this._interval = setInterval(function () {
+		this._interval = setInterval(() => {
 			if (!this.parent)
 				this.fadeOut(); // BUG - this shouldn't be neccessary
 			let width = this.DOM.offsetWidth | 0;
-			if (this.DOM.width != width)
-				this.DOM.width = width;
+			if (canvas.width != width) {
+				canvas.width = width;
+			}
 			ctx.fillStyle = "rgb(64, 129, 244)";
 			
 			let dt = (Date.now() - then) / 1000;
@@ -39,9 +41,9 @@ export default class Progressbar extends Node {
 					ctx.fill();
 				}
 			}
-		}.bind(this), 1);
+		}, 1);
 	}
-	fadeOut() { /* override */
+	override fadeOut() {
 		clearInterval(this._interval);
 		this._interval = null;
 	}
