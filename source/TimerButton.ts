@@ -29,8 +29,7 @@ export default class TimerButton extends Button {
 		super.fadeOut(e);
 		clearInterval(this._timerInterval);
 	}
-	set timer(value) {
-		typecheck(arguments, [Number, undefined]);
+	set timer(value : number) {
 		this._timer = value;
 		this._timerNode.classList.toggle("hidden", !value);
 		this._updateTimer();

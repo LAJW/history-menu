@@ -41,7 +41,6 @@ export default class Parent extends Node {
 		}
 	}
 	_append(child : Node) { // exception safe
-		typecheck(arguments, Node);
 		this._validateChildCandidate(child);
 		this.container.appendChild(child.DOM);
 		this._children.push(child);
@@ -59,7 +58,6 @@ export default class Parent extends Node {
 		});
 	}
 	_insertBefore(child : Node, before : Node) { // exception safe
-		typecheck(arguments, Node, Node);
 		this._validateChildCandidate(child);
 		this._validateChild(before);
 		this.container.insertBefore(child.DOM, before.DOM);
@@ -93,7 +91,6 @@ export default class Parent extends Node {
 	}
 	// remove child from child list, return it
 	remove(child : Node) {
-		typecheck(arguments, Node);
 		try {
 			this.container.removeChild(child.DOM);
 		} catch (e) {

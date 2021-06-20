@@ -19,8 +19,7 @@ export default class DevicesButton extends ActionButton {
 		this.DOM.appendChild(arrowTemplate);
 		this.on = e.on || false;
 	}
-	set on(value) {
-		typecheck(arguments, Boolean);
+	set on(value: boolean) {
 		this._on = value;
 		this.DOM.classList.toggle("on", value);
 	}

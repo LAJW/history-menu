@@ -120,13 +120,6 @@ function onSearch(deviceLayer : Layer, searchLayer : Layer, i18n : (key : string
 		deviceLayer.visible = false;
 		devicesButton.on    = false;
 	}
-	typecheck(arguments,
-		[Layer,         undefined],
-		[DevicesButton, undefined],
-		Layer,
-		Object,
-		Object,
-		String);
 	const token         = new Token(tokenFactory);
 	selectedResult      = 0;
 	searchResults       = new Array;

@@ -2,12 +2,6 @@ const path = require("path")
 const CopyPlugin = require("copy-webpack-plugin")
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const commonScripts = [
-  "./source/libraries/lajw/typecheck-release.js",
-  "./source/libraries/lajw/utilsGlobal.js",
-  "./source/libraries/lajw/instanceof.js",
-]
-
 module.exports = {
   mode: "production",
   plugins: [
@@ -21,9 +15,9 @@ module.exports = {
     new MiniCssExtractPlugin(),
   ],
   entry: {
-    popup      : [ ...commonScripts, "./source/popup.ts" ],
-    options    : [ ...commonScripts, "./source/options.ts" ],
-    background : [ ...commonScripts, "./source/background.ts" ],
+    popup      : [ "./source/popup.ts" ],
+    options    : [ "./source/options.ts" ],
+    background : [ "./source/background.ts" ],
     style      : [
       "./source/libraries/lajw/ui/popup.css",
       "./source/libraries/lajw/ui/button.css",

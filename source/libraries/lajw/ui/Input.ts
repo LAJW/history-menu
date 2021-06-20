@@ -64,8 +64,7 @@ export default class Input extends Node {
 	get placeholder() {
 		return this._input.placeholder;
 	}
-	set placeholder(value) {
-		typecheck(arguments, String);
+	set placeholder(value : string) {
 		this._input.placeholder = value;
 	}
 

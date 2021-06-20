@@ -24,24 +24,20 @@ export default class Button extends Node {
 		return 23; // HACK
 	}
 	override fadeIn(delay : number) {
-		typecheck(arguments, Number);
 		this.DOM.style.animationDelay = delay + "ms";
 		this.DOM.classList.add("fadeIn");
 	}
 	get title() { return this.DOM.firstChild.nodeValue; }
-	set title(value) { 
-		typecheck(arguments, String);
+	set title(value : string) { 
 		this.DOM.firstChild.nodeValue = value;	
 	}
 	get icon(){ return this._icon }
-	set icon(value) {
-		typecheck(arguments, String);
+	set icon(value : string) {
 		this._icon = value;
 		this.DOM.style.backgroundImage = value ? url(value) : "none";
 	}
 	get tooltip() { return this.DOM.title }
-	set tooltip(value) {
-		typecheck(arguments, String);
+	set tooltip(value : string) {
 		this.DOM.title = value;
 	}
 }
