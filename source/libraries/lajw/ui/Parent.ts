@@ -5,23 +5,17 @@ export default class Parent extends Node {
 	container : HTMLElement
 
 	constructor(e : {
-		DOM : HTMLElement | string
-		container : HTMLElement
-		children? : Node[]
-	} | {
 		DOM : HTMLElement
 		container? : HTMLElement
 		children? : Node[]
 	}) {
 		super(e);
-		if (e) {
-			Object.defineProperty(this, "container", 
-				{value: e.container || this.DOM}
-			);
-			this._children = [];
-			if (e.children) {
-				this.insert(e.children);
-			}
+		Object.defineProperty(this, "container", 
+			{value: e.container || this.DOM}
+		);
+		this._children = [];
+		if (e.children) {
+			this.insert(e.children);
 		}
 	}
 	// insert child, before other child or at the end, return it

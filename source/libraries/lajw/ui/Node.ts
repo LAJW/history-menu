@@ -2,14 +2,9 @@ export default class UINode {
 	readonly DOM: HTMLElement
 	_parent : UINode | undefined
 
-	constructor(e : {
-		DOM: HTMLElement | string
-	}) {
-		if (e) {
-			const DOM = typeof e.DOM === "string" ? document.createElement(e.DOM) : e.DOM as HTMLElement;
-			Object.defineProperty(this, "DOM", { value: DOM });
-			Object.defineProperty(DOM, "_node", { value: this });
-		}
+	constructor(e : { DOM: HTMLElement }) {
+		Object.defineProperty(this, "DOM", { value: e.DOM });
+		Object.defineProperty(e.DOM, "_node", { value: this });
 	}
 	get parent() {
 		return this._parent;
