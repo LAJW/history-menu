@@ -61,6 +61,7 @@ interface Template {
 	},
 	childNodes? : Node[]
 	type? : string
+	disabled? : boolean
 	width? : number
 	height? : number
 }
@@ -88,6 +89,9 @@ export function $(params : Template | string) : HTMLElement | Node {
 	}
 	if (params.type) {
 		(element as HTMLInputElement).type = params.type
+	}
+	if (params.disabled !== undefined) {
+		(element as HTMLInputElement).disabled = params.disabled
 	}
 	if (params.width) {
 		const canvas = element as HTMLCanvasElement
