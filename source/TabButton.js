@@ -1,5 +1,5 @@
 import TimerButton from "./TimerButton"
-import Chrome from "./Chrome.js"
+import Chrome from "./Chrome"
 
 export default class TabButton extends TimerButton {
    constructor(tab) {

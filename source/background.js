@@ -1,4 +1,4 @@
-import Chrome from "./Chrome.js"
+import Chrome from "./Chrome"
 
 Chrome.settings.getReadOnly({
 	icon: "granite"

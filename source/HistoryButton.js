@@ -1,5 +1,5 @@
 import TimerButton from "./TimerButton"
-import Chrome from "./Chrome.js"
+import Chrome from "./Chrome"
 
 const removeButton = $({
 	nodeName: "DIV",

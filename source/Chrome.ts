@@ -1,5 +1,5 @@
 /**
- * @file source/chrome.js - Webkit Extension API Wrapper.
+ * @file source/Chrome - Webkit Extension API Wrapper.
  *
  * Webkit Extension API wrapper using ES6 features - promises, accessors and 
  * classes. Levels differences between different Webkit implementations (Opera,
@@ -27,18 +27,23 @@
  * returned by callback
  */
 
-function wrap(namespace, funcKey) {
-	typecheck(arguments, Object, String);
-	if (!namespace[funcKey] || !(namespace[funcKey] instanceof Function)) {
-		throw new Error("namespace[funcKey] must be a function");
-	}
-	return function () {
-		let args = Array.prototype.slice.call(arguments);
-		return new Promise(function (resolve) {
-			args.push(resolve);
-			namespace[funcKey].apply(namespace, args);
-		});
-	}
+interface Settings {
+	width?: number,
+	height?: number,
+	tabCount?: number,
+	historyCount?: number,
+	icon?: string,
+	lang?: string,
+	timer?: boolean,
+	animate?: boolean,
+	expand?: boolean,
+	preferSelect?: boolean,
+	tabsFirst?: boolean,
+	theme?: string
+}
+
+interface LocalSettings extends Settings {
+	local : boolean
 }
 
 const Chrome = {
@@ -52,18 +57,16 @@ const Chrome = {
  * @param locale String: Optional ID of the locale ex: en, en-gb, de
  * @return Promise: to Locale Map
  */
-getI18n: function (locale) {
-	typecheck(arguments, [String, undefined]);
+getI18n(locale? : string) {
 	// default locale - use default chrome locale engine
 	if (!locale)
 		return Promise.resolve(chrome.i18n.getMessage.bind(chrome.i18n));
 	// custom set to english - load only english
 	if (locale == "en")
 		return Chrome.fetch("_locales/en/messages.json")
-			.then(function (json) {
-				let locale = JSON.parse(json);
-				return function (messageKey) {
-					typecheck(arguments, String);
+			.then(function (json : string) {
+				let locale : { [key : string] : { message : string } } = JSON.parse(json);
+				return function (messageKey : string) {
 					let data = locale[messageKey];
 					return data ? data.message : "";
 				}
@@ -72,10 +75,10 @@ getI18n: function (locale) {
 	return Promise.all([
 			Chrome.fetch("_locales/" + locale + "/messages.json"),
 			Chrome.fetch("_locales/en/messages.json")
-	]).then(function (locales) {
+	]).then(function (locales : string[]) {
 		let locale = JSON.parse(locales[0]);
 		let enLocale = JSON.parse(locales[1]);
-		return function (messageKey) {
+		return function (messageKey : string) {
 			let data = locale[messageKey] || enLocale[messageKey];
 			return data ? data.message : "";		
 		}
@@ -103,7 +106,7 @@ getPlatform: function() {
  * @param url String: path to the fetched file
  * @return: Promise Function returns Promise of string contents of the file
  */
-fetch: function(url) {
+fetch: function(url : string) : Promise<string> {
 	return new Promise(function (resolve, reject) {
 		let xhr = new XMLHttpRequest();
 		xhr.open("GET", url);
@@ -133,7 +136,8 @@ history: {
 	 * values
 	 * @return Promise: Function returns a Promise of search results
 	 */
-	search: wrap(chrome.history, "search"),
+	search: (query : chrome.history.HistoryQuery) =>
+		new Promise<chrome.history.HistoryItem[]>(resolve => chrome.history.search(query, resolve)),
 
 	/**
 	 * @brief Equivalent to chrome.history.deleteUrl. Callback result will be
@@ -141,7 +145,8 @@ history: {
 	 * @return Promise: Function returns empty Promise resolved after history
 	 * entry gets deleted
 	 */
-	deleteUrl: wrap(chrome.history, "deleteUrl")
+	deleteUrl: (url : chrome.history.Url) =>
+		new Promise<void>(resolve => chrome.history.deleteUrl(url, resolve)),
 }, // namespace Chrome.history
 
 sessions: {
@@ -152,14 +157,16 @@ sessions: {
 	 * @return Promise: Function returns Promise of an array of recently closed 
 	 * tabs
 	 */
-	getRecent: wrap(chrome.sessions, "getRecentlyClosed"),
+	getRecent: (filter : chrome.sessions.Filter) =>
+		new Promise<chrome.sessions.Session[]>(resolve => chrome.sessions.getRecentlyClosed(filter, resolve)),
 
 	/**
 	 * @brief Equivalent to chrome.sessions.getDevices Callback result will be
 	 * forwarded to returned promise
 	 * @return Promise of an array of devices
 	 */
-	getDevices: wrap(chrome.sessions, "getDevices"),
+	getDevices: (filter : chrome.sessions.Filter) =>
+		new Promise<chrome.sessions.Device[]>(resolve => chrome.sessions.getDevices(filter, resolve)),
 	
 	/**
 	 * @brief Restores specified session optionally in background
@@ -172,15 +179,13 @@ sessions: {
 	 * @return Promise: Returns promise that will be resolved after session gets
 	 * restored.
 	 */
-	restore: function (sessionId, inBackground) {
-		typecheck(arguments, String, [Boolean, undefined]);	
-		return new Promise(function (resolve) {
+	restore: function (sessionId : string, inBackground? : boolean) {
+		return new Promise<void>(function (resolve) {
 			if (inBackground) {
 				chrome.tabs.getCurrent(function (tab) {
 					if (tab) {
 						chrome.sessions.restore(sessionId, function () {
-							chrome.tabs.update(tab.id, {active: true},
-								resolve);
+							chrome.tabs.update(tab.id, {active: true}, () => resolve());
 						});
 					}
 				})
@@ -199,8 +204,7 @@ storage: {
 		 * @param Array: Optional array of keys to fetch
 		 * @return Promise: Promise of map of storage's local variables
 		 */
-		get: wrap(chrome.storage.local, "get"),
-
+		get: () => new Promise<any>(resolve => chrome.storage.local.get(resolve)),
 		/**
 		 * @brief Equivalent to chrome.storage.local.set Callback result will
 		 * be forwarded to returned promise
@@ -208,7 +212,8 @@ storage: {
 		 * @return Promise: Empty promise that will be resolved after all
 		 * properties are set.
 		 */
-		set: wrap(chrome.storage.local, "set")
+		set: (items : Object) =>
+			new Promise<void>(resolve => chrome.storage.local.set(items, resolve)),
 	}, // namespace Chrome.storage.local
 
 	sync: {
@@ -220,7 +225,7 @@ storage: {
 		 * @param Array: Optional array of keys to fetch
 		 * @return Promise: Promise of map of storage's local variables
 		 */
-		get: wrap(chrome.storage.sync, "get"),
+		get: () => new Promise<any>(resolve => chrome.storage.sync.get(resolve)),
 
 		/**
 		 * @brief Equivalent to chrome.storage.sync.set Callback result will
@@ -230,7 +235,8 @@ storage: {
 		 * @return Promise: Empty promise that will be resolved after all
 		 * properties are set.
 		 */
-		set: wrap(chrome.storage.sync, "set")
+		set: (items : Object) =>
+			new Promise<void>(resolve => chrome.storage.sync.set(items, resolve)),
 	} // namespace Chrome.storage.sync
 }, // namespace Chrome.storage
 
@@ -248,23 +254,18 @@ settings: {
 	 * settings that will be used as template if no settings are set yet.
 	 * @return Promise: Function returns promise of settings object literal
 	 */
-	getReadOnly: function (defaultSettings) {
-		defaultSettings = defaultSettings || {};
+	getReadOnly(defaultSettings : Settings = {}) : Promise<Settings> {
 		return Promise.all([
 			Chrome.storage.local.get(),
 			Chrome.storage.sync.get()
 		]).then(function (storages) {
-			let local = storages[0];
-			let sync = storages[1];
+			let local = storages[0] as LocalSettings;
+			let sync = storages[1] as Settings;
 			if (local.local)
 				return local;
 			else return sync;
 		}).then(function (settings) {
-			for (var i in defaultSettings) {
-				if (!settings.hasOwnProperty(i))
-					settings[i] = defaultSettings[i];
-			}
-			return settings;
+			return { ...defaultSettings, ...settings }
 		});
 	}, 
 
@@ -286,7 +287,7 @@ tabs: {
 	 * @return Promise: Function returns empty promise that will be resolved
 	 * once tab is created
 	 */
-	create: wrap(chrome.tabs, "create"),
+	create: (options : chrome.tabs.CreateProperties) => new Promise<chrome.tabs.Tab>(resolve => chrome.tabs.create(options, resolve)),
 
 	/**
 	 * @brief Equivalent to chrome.tabs.query.
@@ -294,7 +295,7 @@ tabs: {
 	 * to be found
 	 * @return Promise: Function returns promise of Array of found tabs
 	 */
-	query: wrap(chrome.tabs, "query"),
+	query: (query : chrome.tabs.QueryInfo) => new Promise<chrome.tabs.Tab[]>(resolve => chrome.tabs.query(query, resolve)),
 
 	/**
 	 * @brief Equivalent to chrome.tabs.create.
@@ -303,7 +304,7 @@ tabs: {
 	 * @return Promise: Function returns empty promise that will be resolved
 	 * once tab is updated
 	 */
-	update: wrap(chrome.tabs, "update"),
+	update: (id : number, properties : chrome.tabs.UpdateProperties) => new Promise<chrome.tabs.Tab>(resolve => chrome.tabs.update(id, properties, resolve)),
 
 	/**
 	 * @brief Equivalent to chrome.tabs.create.
@@ -312,7 +313,7 @@ tabs: {
 	 * @return Promise: Function returns empty promise that will be resolved
 	 * once tab is created
 	 */
-	highlight: wrap(chrome.tabs, "highlight"),
+	highlight: (info : chrome.tabs.HighlightInfo) => new Promise<chrome.windows.Window>(resolve => chrome.tabs.highlight(info, resolve)),
 
 	/**
 	 * @brief Creates new tab in current active window, specified by supplied 
@@ -325,31 +326,28 @@ tabs: {
 	 * @param inBackground Boolean: Optional. Create background tab.
 	 */
 	// open url or if tab with URL already exists, select it instead
-	openOrSelect: function (url, inBackground) {
-		typecheck(arguments, String, [Boolean, undefined]);
+	openOrSelect: async function (url : string, inBackground : boolean) {
 		let colon = url.indexOf(":");
 		if (colon >= 0) {
 			// external URL (has comma)
 			let pattern = "*" + url.substr(colon);
-			return Chrome.tabs.query({url: pattern})
-				.then(function (tabs) {
-				if (tabs.length) {
-					if (inBackground)
-						return Chrome.tabs.highlight({
-							tabs:
-								tabs.map(function (tab) { return tab.index; })
-						});		
-					else return Chrome.tabs.update(
-						tabs[0].id, 
-						{ active: true }
-					);
-				} else {
-					return Chrome.tabs.create({
-						url: url,
-						active: !inBackground
-					});
-				}
-			});
+			const tabs = await Chrome.tabs.query({url: pattern})
+			if (tabs.length) {
+				if (inBackground)
+					return Chrome.tabs.highlight({
+						tabs:
+							tabs.map(function (tab) { return tab.index; })
+					});		
+				else return Chrome.tabs.update(
+					tabs[0].id, 
+					{ active: true }
+				);
+			} else {
+				return Chrome.tabs.create({
+					url: url,
+					active: !inBackground
+				});
+			}
 		} else {
 			// extension-local URL
 			return Chrome.tabs.create({

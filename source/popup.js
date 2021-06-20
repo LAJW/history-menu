@@ -8,7 +8,7 @@
  */
 
 import ActionButton from "./ActionButton"
-import Chrome from "./Chrome.js"
+import Chrome from "./Chrome"
 import DevicesButton from "./DevicesButton"
 import Input from "./libraries/lajw/ui/Input"
 import Layer from "./libraries/lajw/ui/Layer"

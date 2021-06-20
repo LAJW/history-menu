@@ -1,4 +1,4 @@
-import Chrome from "./Chrome.js"
+import Chrome from "./Chrome"
 import Checkbox from "./libraries/lajw/ui/Checkbox"
 import Header from "./libraries/lajw/ui/Header"
 import Node from "./libraries/lajw/ui/Node.ts"

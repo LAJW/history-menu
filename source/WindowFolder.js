@@ -1,4 +1,4 @@
-import Chrome from "./Chrome.js"
+import Chrome from "./Chrome"
 import Folder from "./libraries/lajw/ui/Folder"
 import TabButton from "./TabButton"
 
