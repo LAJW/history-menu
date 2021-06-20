@@ -22,7 +22,7 @@ module.exports = {
   ],
   entry: {
     popup      : [ ...commonScripts, "./source/popup.ts" ],
-    options    : [ ...commonScripts, "./source/options.js" ],
+    options    : [ ...commonScripts, "./source/options.ts" ],
     background : [ ...commonScripts, "./source/background.ts" ],
     style      : [
       "./source/libraries/lajw/ui/popup.css",

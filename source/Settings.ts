@@ -1,4 +1,5 @@
 export interface Settings {
+	[key: string]: string | number | boolean
 	width?: number
 	height?: number
 	tabCount?: number
