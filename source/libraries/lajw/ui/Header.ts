@@ -8,8 +8,8 @@ const template = $({
 });
 
 export default class Header extends Node {
-	constructor(e : { id? : string, title? : string } = {}) {
-		super({id : e.id, DOM : template.cloneNode(true) as HTMLElement});
+	constructor(e : { title? : string } = {}) {
+		super({DOM : template.cloneNode(true) as HTMLElement});
 		this.title = e.title || "";
 	}
 	// String title - header's text

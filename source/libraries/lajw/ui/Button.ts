@@ -11,15 +11,11 @@ export default class Button extends Node {
 	_icon : string
 
 	constructor (e : {
-		id?: string,
 		icon?: string
 		title?: string
 		tooltip?: string
 	}) {
-		super({
-			DOM: template.cloneNode(true) as HTMLElement,
-			id: e.id,
-		});
+		super({ DOM: template.cloneNode(true) as HTMLElement });
 		this.title = e.title || "";
 		this.icon = e.icon || "";
 		this.tooltip = e.tooltip || "";

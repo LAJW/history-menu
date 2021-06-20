@@ -37,7 +37,7 @@ export default class Input extends Node {
 		lockon? : boolean
 		change? : (value : string) => void
 	} = {}) {
-		super({ id : e.id, DOM : template.cloneNode(true) as HTMLElement });
+		super({ DOM : template.cloneNode(true) as HTMLElement });
 		this._input = this.DOM.firstChild as HTMLInputElement;
 		this._cancel = this.DOM.lastChild as HTMLElement;
 		this._input.onkeyup = this._input.onchange = () => {

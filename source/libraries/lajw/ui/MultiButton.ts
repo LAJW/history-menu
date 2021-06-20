@@ -8,7 +8,7 @@ const template = $({
 });
 
 export default class MultiButton extends Parent {
-	constructor(e : { id? : string, children?: Node[] } = {}) {
+	constructor(e : { children?: Node[] } = {}) {
 		super({ ...e, DOM : template.cloneNode(false) as HTMLElement });
 	}
 }

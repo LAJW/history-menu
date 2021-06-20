@@ -10,7 +10,6 @@ const template = $({
 export default class Layer extends Parent {
 	_visible : boolean
 	constructor(e : {
-			id? : string
 			visible? : boolean
 			children? : Node[]
 		} = {}) {

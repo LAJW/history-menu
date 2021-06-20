@@ -6,12 +6,10 @@ export default class Parent extends Node {
 
 	constructor(e : {
 		DOM : HTMLElement | string
-		id? : string
 		container : HTMLElement
 		children? : Node[]
 	} | {
 		DOM : HTMLElement
-		id? : string
 		container? : HTMLElement
 		children? : Node[]
 	}) {

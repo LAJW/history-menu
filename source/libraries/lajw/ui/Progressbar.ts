@@ -10,8 +10,8 @@ const template = $({
 
 export default class Progressbar extends Node {
 	_interval : NodeJS.Timeout
-	constructor(e : { id? : string } = {}) {
-		super({ id : e.id, DOM : template.cloneNode(false) as HTMLElement });
+	constructor() {
+		super({ DOM : template.cloneNode(false) as HTMLElement });
 	}
 	override fadeIn() {
 		const canvas = this.DOM as HTMLCanvasElement

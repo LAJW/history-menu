@@ -18,13 +18,12 @@ export default class Checkbox extends Node {
 	_checkbox : HTMLInputElement
 	change : (value : boolean) => void
 	constructor(e? : {
-		id? : string,
 		title? : string
 		checked? : boolean
 		change? : (value : boolean) => void
 	}) {
 		e = e || {};
-		super({ id : e.id, DOM : template.cloneNode(true) as HTMLElement });
+		super({ DOM : template.cloneNode(true) as HTMLElement });
 		this.DOM.addEventListener("change", () => {
 			this.change(this.checked);
 		})

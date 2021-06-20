@@ -9,7 +9,6 @@ const arrowTemplate = $({
 export default class DevicesButton extends ActionButton {
 	_on : boolean
 	constructor(e : {
-		id?: string,
 		icon?: string
 		title?: string
 		tooltip?: string

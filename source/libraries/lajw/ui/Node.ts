@@ -4,22 +4,12 @@ export default class UINode {
 
 	constructor(e : {
 		DOM: HTMLElement | string
-		id?: string
 	}) {
 		if (e) {
 			const DOM = typeof e.DOM === "string" ? document.createElement(e.DOM) : e.DOM as HTMLElement;
 			Object.defineProperty(this, "DOM", { value: DOM });
 			Object.defineProperty(DOM, "_node", { value: this });
-			if (e.id) {
-				this.id = e.id;
-			}
 		}
-	}
-	get id() {
-		return this.DOM.id;
-	}
-	set id(value) {
-		this.DOM.id = value;
 	}
 	get parent() {
 		return this._parent;
