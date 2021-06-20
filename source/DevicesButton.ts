@@ -9,15 +9,12 @@ const arrowTemplate = $({
 export default class DevicesButton extends ActionButton {
 	_on : boolean
 	constructor(e : {
-		icon?: string
-		title?: string
-		tooltip?: string
+		tooltip: string
 		click : (e : MouseEvent) => void
-		on? : boolean
 	}) {
-		super(e);
+		super({...e, icon : "", title : ""});
 		this.DOM.appendChild(arrowTemplate);
-		this.on = e.on || false;
+		this.on = false;
 	}
 	set on(value: boolean) {
 		this._on = value;

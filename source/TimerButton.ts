@@ -12,9 +12,9 @@ export default class TimerButton extends Button {
 	_timerInterval : NodeJS.Timeout
 	_timer : number
 	constructor(e : {
-			icon?: string
-			title?: string
-			tooltip?: string
+			icon: string
+			title: string
+			tooltip: string
 			timer: number
 		}) {
 		super(e);

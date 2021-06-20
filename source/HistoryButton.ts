@@ -8,36 +8,46 @@ const removeButton = $({
 	className: "Remove"
 });
 
+function sanitize(item : {
+	title?: string
+	url?: string
+	lastVisitTime?: number
+}) {
+	if (!item.url) {
+		console.warn("Missing URL in HistoryItem")
+	}
+	const url = item.url ?? ""
+	const rewired = {
+		url,
+		timer : item.lastVisitTime,
+		icon : "chrome://favicon/" + item.url,
+	}
+	if (!item.title) {
+		return { ...rewired, title : trimURL(item.url), tooltip : item.url }
+	} else {
+		return { ...rewired, title : item.title, tooltip : item.title + "\n" + item.url }
+	}
+}
+
+interface HistoryButtonInfo extends chrome.history.HistoryItem {
+	preferSelect? : boolean
+}
+
 export default class HistoryButton extends TimerButton {
 	preferSelect: boolean
 	_lastModified: number
 	_remove: Node
 	_interval: NodeJS.Timeout
 	_highlighted: boolean
-	constructor(item : {
-		tooltip?: string
-		title?: string
-		url?: string
-		lastVisitTime?: number
-		preferSelect?: boolean
-	}) {
-		if (!item.title) {
-			item.tooltip = item.url;
-			item.title   = trimURL(item.url);
-			item.tooltip = item.url;
-		} else {
-			item.tooltip = item.title + "\n" + item.url;
-		}
-		super({...item, timer : item.lastVisitTime});
+	constructor(item : HistoryButtonInfo) {
+		super(sanitize(item));
 		this.DOM.classList.add("History");
-		this.url          = item.url;
-		this.icon         = "chrome://favicon/" + item.url;
-		this.preferSelect = item.preferSelect;
+		this.url          = item.url ?? "";
+		this.preferSelect = item.preferSelect ?? false;
 		if (item.lastVisitTime) {
 			this._lastModified = item.lastVisitTime;
 		}
 		this._remove      = this.DOM.appendChild(removeButton.cloneNode(true));
-		this.preferSelect = item.preferSelect;
 	}
 	override fadeIn(e : number) {
 		super.fadeIn(e);

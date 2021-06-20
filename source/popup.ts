@@ -215,6 +215,7 @@ function main(root : Root, sessions : Node[], devices : DeviceFolder[], history 
 				change: value => onSearch(deviceLayer, searchLayer, i18n, settings, value ?? "")
 			}),
 			new ActionButton({
+				title:   "",
 				tooltip: i18n("popup_history_manager"),
 				icon:    "icons/history-19.png",
 				click:   function (e) {
@@ -222,6 +223,7 @@ function main(root : Root, sessions : Node[], devices : DeviceFolder[], history 
 				}
 			}),
 			new ActionButton({
+				title:   "",
 				tooltip: i18n("popup_options"),
 				icon:    "icons/options.png",
 				click:   function (e) {
