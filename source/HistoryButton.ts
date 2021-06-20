@@ -1,5 +1,7 @@
 import TimerButton from "./TimerButton"
 import Chrome from "./Chrome"
+import { $, trimURL } from "./libraries/lajw/utils"
+import Parent from "./libraries/lajw/ui/Parent";
 
 const removeButton = $({
 	nodeName: "DIV",
@@ -7,14 +9,18 @@ const removeButton = $({
 });
 
 export default class HistoryButton extends TimerButton {
-	constructor(item) {
-		typecheck.loose(arguments, [{
-			tooltip:       [String, undefined],
-			title:         [String, undefined],
-			url:           String,
-			lastVisitTime: [Number, undefined],
-			preferSelect:  [Boolean, undefined]
-		}, undefined]);
+	preferSelect: boolean
+	_lastModified: number
+	_remove: Node
+	_interval: NodeJS.Timeout
+	_highlighted: boolean
+	constructor(item : {
+		tooltip?: string
+		title?: string
+		url?: string
+		lastVisitTime?: number
+		preferSelect?: boolean
+	}) {
 		if (!item.title) {
 			item.tooltip = item.url;
 			item.title   = trimURL(item.url);
@@ -22,8 +28,7 @@ export default class HistoryButton extends TimerButton {
 		} else {
 			item.tooltip = item.title + "\n" + item.url;
 		}
-		item.timer        = item.lastVisitTime;
-		super(item);
+		super({...item, timer : item.lastVisitTime});
 		this.DOM.classList.add("History");
 		this.url          = item.url;
 		this.icon         = "chrome://favicon/" + item.url;
@@ -34,24 +39,24 @@ export default class HistoryButton extends TimerButton {
 		this._remove      = this.DOM.appendChild(removeButton.cloneNode(true));
 		this.preferSelect = item.preferSelect;
 	}
-	fadeIn(e) { /* override */
+	override fadeIn(e : number) {
 		super.fadeIn(e);
 		if (this._lastModified) {
 			this._updateTimer();
 			this._interval = setInterval(this._updateTimer.bind(this), 500);
 		}
 	}
-	fadeOut(e) { /* override */
+	override fadeOut(e : number) {
 		super.fadeOut(e);
 		clearInterval(this._interval);
 	}
-	async click(e) { /*override*/
+	override async click(e : MouseEvent) {
 		if (e.button === 0 || e.button === 1) {
 			e.preventDefault();
 			if (e.target == this._remove) {
 				if (e.button === 0) {
 					Chrome.history.deleteUrl({ url: this.url });
-					this.parent.remove(this);
+					(this.parent as Parent).remove(this);
 				}
 			} else if (this.preferSelect) {
 				await Chrome.tabs.openOrSelect(this.url, e.button === 1 || e.ctrlKey);
@@ -68,13 +73,12 @@ export default class HistoryButton extends TimerButton {
 		}
 	}
 	get url() {
-		return this.DOM.href;	
+		return (this.DOM as HTMLAnchorElement).href;
 	}
-	set url(value) {
-		this.DOM.href = value;
+	set url(value : string) {
+		(this.DOM as HTMLAnchorElement).href = value;
 	}
-	set highlighted(value) {
-		typecheck(arguments, Boolean);
+	set highlighted(value : boolean) {
 		this._highlighted = value;
 		this.DOM.classList.toggle("highlighted", value);
 	}

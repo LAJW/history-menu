@@ -1,4 +1,5 @@
 import Button from "./libraries/lajw/ui/Button"
+import { $, relativeTime } from "./libraries/lajw/utils";
 
 const template = $({
 	nodeName: "DIV",
@@ -7,16 +8,25 @@ const template = $({
 });
 
 export default class TimerButton extends Button {
-	constructor(e) {
+	_timerNode : HTMLElement
+	_timerInterval : NodeJS.Timeout
+	_timer : number
+	constructor(e : {
+			id?: string,
+			icon?: string
+			title?: string
+			tooltip?: string
+			timer: number
+		}) {
 		super(e);
-		this._timerNode = this.DOM.appendChild(template.cloneNode(true));
+		this._timerNode = this.DOM.appendChild(template.cloneNode(true)) as HTMLElement;
 		this.timer = e.timer;
 	}
-	fadeIn(e) { // override
+	override fadeIn(e : number) {
 		super.fadeIn(e);
 		this._timerInterval = setInterval(this._updateTimer.bind(this), 500);
 	}
-	fadeOut(e) { // override
+	override fadeOut(e : number) {
 		super.fadeOut(e);
 		clearInterval(this._timerInterval);
 	}
@@ -31,8 +41,7 @@ export default class TimerButton extends Button {
 	}
 	_updateTimer() {
 		if (this.timer) {
-			this._timerNode.firstChild.nodeValue =
-				relativeTime(this.timer);
+			this._timerNode.firstChild.nodeValue = relativeTime(this.timer);
 		}
 	}
 }
