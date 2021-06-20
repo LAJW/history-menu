@@ -10,8 +10,8 @@ export default class Root extends Parent {
 			throw new Error("Root already exists");
 		super({DOM: document.body});
 		document.body.addEventListener("click", e => Node.fromDOM(e.target as HTMLElement).click(e))
-		document.body.addEventListener("mouseup", e => Node.fromDOM(e.target as HTMLElement).mouseup())
-		document.body.addEventListener("mousedown", e => Node.fromDOM(e.target as HTMLElement).mousedown())
+		document.body.addEventListener("mouseup", e => Node.fromDOM(e.target as HTMLElement).mouseup(e))
+		document.body.addEventListener("mousedown", e => Node.fromDOM(e.target as HTMLElement).mousedown(e))
 		document.body.addEventListener("auxclick", e => Node.fromDOM(e.target as HTMLElement).click(e));
 	}
 	setTheme(platform? : string, animate? : string) {

@@ -57,7 +57,7 @@ export default class Folder extends Parent {
 		this.DOM.style.animationDelay = delay + "ms";
 		this.DOM.classList.add("fadeIn");
 	}
-	override click () {
+	override click (e : MouseEvent) {
 		this.open = !this.open;
 	}
 	get height() {

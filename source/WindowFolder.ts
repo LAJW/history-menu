@@ -1,6 +1,7 @@
 import Chrome from "./Chrome"
 import Folder from "./libraries/lajw/ui/Folder"
 import TabButton from "./TabButton"
+import { $, relativeTime } from "./libraries/lajw/utils"
 
 const template = $({
 	nodeName:  "DIV",
@@ -8,11 +9,15 @@ const template = $({
 	childNodes: [$("")]
 });
 
+interface WindowFolderInfo extends chrome.windows.Window {
+	lastModified : number
+	open? : boolean
+}
+
 export default class WindowFolder extends Folder {
-	constructor(wnd) {
-		typecheck.loose(arguments, {
-			sessionId: String,
-		});
+	_timer : Node
+	sessionId : string
+	constructor(wnd : WindowFolderInfo) {
 		super();
 		this._timer = this.DOM.firstChild
 			.appendChild(template.cloneNode(true))
@@ -29,10 +34,10 @@ export default class WindowFolder extends Folder {
 		}
 		this.sessionId = wnd.sessionId;
 	}
-	mousedown(e) { /* override */
+	override mousedown(e : MouseEvent) {
 		e.preventDefault();
 	}
-	click(e) { /*override*/
+	override click(e : MouseEvent) {
 		e.preventDefault();
 		if (e.button == 1) {
 			Folder.prototype.click.call(this, e);
@@ -40,10 +45,9 @@ export default class WindowFolder extends Folder {
 			Chrome.sessions.restore(this.sessionId, true);
 		}
 	}
-	set timer(value) {
-		typecheck(arguments, [String, undefined]);
+	set timer(value : string) {
 		this._timer.nodeValue = value;
-		this._timer.parentNode.classList.toggle("hidden", !value);
+		(this._timer.parentNode as HTMLElement).classList.toggle("hidden", !value);
 	}
 	get timer() {
 		return this._timer.nodeValue;

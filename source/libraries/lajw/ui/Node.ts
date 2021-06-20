@@ -30,8 +30,8 @@ export default class UINode {
 	fadeIn(delay : number) : void { }
 	fadeOut(delay : number) : void { }
 	click(e : MouseEvent) { }
-	mousedown() { }
-	mouseup() { }
+	mousedown(e : MouseEvent) { }
+	mouseup(e : MouseEvent) { }
 
 	// get Node from existing DOM Element
 	static fromDOM(element : HTMLElement) : UINode {
