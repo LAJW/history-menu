@@ -21,7 +21,7 @@ module.exports = {
     new MiniCssExtractPlugin(),
   ],
   entry: {
-    popup      : [ ...commonScripts, "./source/popup.js" ],
+    popup      : [ ...commonScripts, "./source/popup.ts" ],
     options    : [ ...commonScripts, "./source/options.js" ],
     background : [ ...commonScripts, "./source/background.js" ],
     style      : [

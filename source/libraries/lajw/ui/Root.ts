@@ -14,7 +14,7 @@ export default class Root extends Parent {
 		document.body.addEventListener("mousedown", e => Node.fromDOM(e.target as HTMLElement).mousedown(e))
 		document.body.addEventListener("auxclick", e => Node.fromDOM(e.target as HTMLElement).click(e));
 	}
-	setTheme(platform? : string, animate? : string) {
+	setTheme(platform? : string, animate? : boolean) {
 		if (platform)
 			this.DOM.classList.add(platform);
 		if (animate)
@@ -34,7 +34,7 @@ export default class Root extends Parent {
 		this.DOM.style.height = value + "px";
 		this._height = value;
 	}
-	static ready() {
+	static ready() : Promise<Root> {
 		return new Promise(function (resolve) {
 			function callback() {
 				resolve(root = root || new Root);

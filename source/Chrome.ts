@@ -8,6 +8,8 @@
  *
  */
 
+import { LocalSettings, Settings } from "./Settings";
+
 /**
  * @brief Modernizes Chrome Extension API system function.
  *
@@ -27,25 +29,6 @@
  * returned by callback
  */
 
-interface Settings {
-	width?: number,
-	height?: number,
-	tabCount?: number,
-	historyCount?: number,
-	icon?: string,
-	lang?: string,
-	timer?: boolean,
-	animate?: boolean,
-	expand?: boolean,
-	preferSelect?: boolean,
-	tabsFirst?: boolean,
-	theme?: string
-}
-
-interface LocalSettings extends Settings {
-	local : boolean
-}
-
 const Chrome = {
 
 /**
@@ -57,32 +40,30 @@ const Chrome = {
  * @param locale String: Optional ID of the locale ex: en, en-gb, de
  * @return Promise: to Locale Map
  */
-getI18n(locale? : string) {
+async getI18n(locale? : string) : Promise<(key : string) => string> {
 	// default locale - use default chrome locale engine
 	if (!locale)
-		return Promise.resolve(chrome.i18n.getMessage.bind(chrome.i18n));
+		return chrome.i18n.getMessage.bind(chrome.i18n);
 	// custom set to english - load only english
-	if (locale == "en")
-		return Chrome.fetch("_locales/en/messages.json")
-			.then(function (json : string) {
-				let locale : { [key : string] : { message : string } } = JSON.parse(json);
-				return function (messageKey : string) {
-					let data = locale[messageKey];
-					return data ? data.message : "";
-				}
-			});
-	// custom set to non-english, english fallback
-	return Promise.all([
-			Chrome.fetch("_locales/" + locale + "/messages.json"),
-			Chrome.fetch("_locales/en/messages.json")
-	]).then(function (locales : string[]) {
-		let locale = JSON.parse(locales[0]);
-		let enLocale = JSON.parse(locales[1]);
-		return function (messageKey : string) {
-			let data = locale[messageKey] || enLocale[messageKey];
-			return data ? data.message : "";		
+	if (locale == "en") {
+		const json = await Chrome.fetch("_locales/en/messages.json")
+		let locale : { [key : string] : { message : string } } = JSON.parse(json);
+		return function (messageKey : string) : string {
+			let data = locale[messageKey];
+			return data ? data.message : "";
 		}
-	});
+	}
+	// custom set to non-english, english fallback
+	const locales = await Promise.all([
+		Chrome.fetch("_locales/" + locale + "/messages.json"),
+		Chrome.fetch("_locales/en/messages.json")
+	])
+	const curLocale = JSON.parse(locales[0]);
+	const enLocale = JSON.parse(locales[1]);
+	return function (messageKey : string) : string {
+		let data = curLocale[messageKey] || enLocale[messageKey];
+		return data ? data.message : "";
+	}
 },
 
 /**
@@ -165,8 +146,8 @@ sessions: {
 	 * forwarded to returned promise
 	 * @return Promise of an array of devices
 	 */
-	getDevices: (filter : chrome.sessions.Filter) =>
-		new Promise<chrome.sessions.Device[]>(resolve => chrome.sessions.getDevices(filter, resolve)),
+	getDevices: () =>
+		new Promise<chrome.sessions.Device[]>(resolve => chrome.sessions.getDevices(resolve)),
 	
 	/**
 	 * @brief Restores specified session optionally in background

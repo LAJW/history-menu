@@ -18,10 +18,12 @@ import Separator from "./libraries/lajw/ui/Separator"
 import WindowFolder from "./WindowFolder"
 import TabButton from "./TabButton"
 import HistoryButton from "./HistoryButton"
-import Root from "./libraries/lajw/ui/Root.ts"
+import Root from "./libraries/lajw/ui/Root"
 import DeviceFolder from "./DeviceFolder"
+import Node from "./libraries/lajw/ui/Node"
+import { Settings } from "./Settings"
 
-let devicesButton, deviceLayer;
+let devicesButton : DevicesButton, deviceLayer : Layer;
 
 // get time sectors for search
 function timeSectors() {
@@ -46,8 +48,9 @@ function timeSectors() {
 }
 
 class Token {
-	constructor(tokenFactory) {
-		typecheck(arguments, TokenFactory);
+	_id : number
+	_tokenFactory : TokenFactory
+	constructor(tokenFactory : TokenFactory) {
 		tokenFactory._id += 1;
 		this._id           = tokenFactory._id;
 		this._tokenFactory = tokenFactory;
@@ -61,6 +64,7 @@ class Token {
 }
 
 class TokenFactory {
+	_id : number
 	constructor() {
 		this._id = 0;
 	}
@@ -68,7 +72,7 @@ class TokenFactory {
 
 const tokenFactory = new TokenFactory();
 let selectedResult = 0;
-let searchResults  = [];
+let searchResults : HistoryButton[] = [];
 
 const keyCode = {
 	arrowUp:   38,
@@ -101,15 +105,17 @@ window.addEventListener("keydown", function (e) {
 		e.preventDefault();
 	} else if (e.keyCode == keyCode.enter) {
 		if (searchResults.length > 0) {
+			// @ts-ignore
+			// TODO: Outstanding, events might have to be rewired
 			searchResults[selectedResult].click({
-				preventDefault: e.preventDefault.bind(e),
-				ctrlClick: e.shiftKey
+				preventDefault: () => e.preventDefault,
+				button: e.shiftKey ? 0 : 1
 			});
 		}
 	}
 });
 
-function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings, value) {
+function onSearch(deviceLayer : Layer, searchLayer : Layer, i18n : (key : string) => string, settings : Settings, value : string) {
 	if (deviceLayer) {
 		deviceLayer.visible = false;
 		devicesButton.on    = false;
@@ -149,8 +155,7 @@ function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings, value
 						return new HistoryButton(result);
 					});
 					searchResults = searchResults.concat(nodes);
-					nodes.unshift(new Separator({title: i18n(sector.i18n)}));
-					searchLayer.insert(nodes);
+					searchLayer.insert([new Separator({title: i18n(sector.i18n)}), ...nodes]);
 				});
 			}
 			promise.then(function () {
@@ -174,7 +179,7 @@ function onSearch(deviceLayer, deivcesButton, searchLayer, i18n, settings, value
 	}
 }
 
-function getMainLayer(sessions, history, i18n, settings) {
+function getMainLayer(sessions : Node[], history : Node[], i18n : (key : string) => string, settings : Settings) {
 	if (sessions.length > 0) {
 		sessions.unshift(new Separator({
 			title: i18n("popup_recently_closed_tabs")
@@ -198,23 +203,23 @@ function getMainLayer(sessions, history, i18n, settings) {
 	});
 }
 
-function main(root, sessions, devices, history, i18n, settings) {
+function main(root : Root, sessions : Node[], devices : DeviceFolder[], history : HistoryButton[], i18n : (key : string) => string, settings : Settings) {
 	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate);
-	root.width  = parseInt(settings.width);
-	root.height = parseInt(settings.height);
+	root.width  = settings.width || 0;
+	root.height = settings.height || 0;
 	root.insert(getMainLayer(sessions, history, i18n, settings));
 	const searchLayer = root.insert(new Layer({
 		visible:  false,
 		children: [new Separator({
 			title: i18n("popup_search_history")
 		})]
-	}));
+	})) as Layer;
 	const mainButtons = new MultiButton({
 		children: [
 			new Input({
 				placeholder: i18n("popup_search_history"),
 				lockon:      true,
-				change: value => onSearch(deviceLayer, devicesButton, searchLayer, i18n, settings, value ?? "")
+				change: value => onSearch(deviceLayer, searchLayer, i18n, settings, value ?? "")
 			}),
 			new ActionButton({
 				tooltip: i18n("popup_history_manager"),
@@ -252,29 +257,30 @@ function main(root, sessions, devices, history, i18n, settings) {
 	root.insert(mainButtons);
 }
 
-function sessionToButton(settings, session) {
-	const object = session.tab || session.window;
-	if (settings.timer) {
-		object.lastModified = session.lastModified;
+function sessionToButton(settings : Settings, session : chrome.sessions.Session) {
+	if (session.tab) {
+		return new TabButton({
+			...session.tab,
+			lastModified : settings.timer ? session.lastModified : undefined,
+		})
 	}
-	if (session.window !== undefined) {
-		object.open = settings.expand;	
-	}
-	return session.tab
-		? new TabButton(object)
-		: new WindowFolder(object);
+	return new WindowFolder({
+		...session.window,
+		lastModified : settings.timer ? session.lastModified : undefined,
+		open : session.window !== undefined ? settings.expand : undefined
+	})
 }
 
-function getSessionNodes(settings) {
+function getSessionNodes(settings : Settings) : Promise<Node[]> {
 	return Chrome.sessions.getRecent({ })
 	.then(function (sessions) {
 		return sessions
-		.slice(0, parseInt(settings.tabCount || 25))
-		.map(sessionToButton.bind(null, settings));
+		.slice(0, settings.tabCount || 25)
+		.map(session => sessionToButton(settings, session));
 	});
 }
 
-function getDeviceNodes(settings) {
+function getDeviceNodes(settings : Settings) {
 	return Chrome.sessions.getDevices().then(function (devices) {
 		return devices.map(function (device) {
 			if (!settings.timer) {
@@ -287,20 +293,20 @@ function getDeviceNodes(settings) {
 	});
 }
 
-function getHistoryNodes(settings) {
+function getHistoryNodes(settings : Settings) {
 	const timestamp = Date.now();
 	return Chrome.history.search({
 		text:       "", 
 		startTime:  timestamp - 1000 * 3600 * 24 * 30, 
 		endTime:    timestamp,
-		maxResults: parseInt(settings.historyCount)
+		maxResults: settings.historyCount
 	}).then(function (results) {
 		return results.map(function (result) {
-			result.preferSelect = settings.preferSelect;
+			const tmp = { ... result, preferSelect : settings.preferSelect }
 			if (!settings.timer) {
-				result.lastVisitTime = undefined;
+				return new HistoryButton({ ...result, lastVisitTime : undefined });
 			}
-			return new HistoryButton(result);
+			return new HistoryButton(tmp);
 		});
 	});
 }
@@ -317,6 +323,4 @@ Chrome.fetch("defaults.json")
 			Chrome.getI18n(settings.lang),
 			settings
 		])
-	}).then(function (arr) {
-		main.apply(null, arr);
-	});
+	}).then(([...args]) => main(...args));

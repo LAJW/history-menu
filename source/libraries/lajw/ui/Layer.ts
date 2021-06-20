@@ -1,3 +1,4 @@
+import Node from "./Node"
 import Parent from "./Parent"
 import { $ } from "../utils"
 
@@ -11,6 +12,7 @@ export default class Layer extends Parent {
 	constructor(e : {
 			id? : string
 			visible? : boolean
+			children? : Node[]
 		} = {}) {
 		super({ ...e, DOM : template.cloneNode(true) as HTMLElement });
 		this.visible = e.visible === undefined ? true : e.visible;
