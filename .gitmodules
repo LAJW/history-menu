@@ -1,3 +1,0 @@
-[submodule "source/libraries/requirejs"]
-	path = source/libraries/requirejs
-	url = git@github.com:jrburke/requirejs.git
