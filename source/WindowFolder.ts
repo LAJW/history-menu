@@ -17,9 +17,9 @@ interface WindowFolderInfo extends chrome.windows.Window {
 export default class WindowFolder extends Folder {
 	readonly #timer : Node
 	readonly #sessionId : string
-	constructor(wnd : WindowFolderInfo) {
+	constructor(i18n : (key: string) => string, wnd : WindowFolderInfo) {
 		super({
-			title : `Window (Number of tabs: ${wnd.tabs.length})`,
+			title : `${i18n("popup_window")} (${i18n("popup_number_of_tabs")}: ${wnd.tabs.length})`,
 			children : wnd.tabs.map(tab => new TabButton(tab)),
 		});
 		this.#timer = this.DOM.firstChild

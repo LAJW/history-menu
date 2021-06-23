@@ -17,3 +17,5 @@ export interface Settings {
 export interface LocalSettings extends Settings {
 	local : boolean
 }
+
+export type I18n = (key: string) => string

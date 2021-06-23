@@ -21,7 +21,7 @@ import HistoryButton from "./HistoryButton"
 import Root from "./libraries/lajw/ui/Root"
 import DeviceFolder from "./DeviceFolder"
 import Node from "./libraries/lajw/ui/Node"
-import { Settings } from "./Settings"
+import { I18n, Settings } from "./Settings"
 
 let devicesButton : DevicesButton, deviceLayer : Layer;
 
@@ -245,27 +245,27 @@ function main(root : Root, sessions : Node[], devices : DeviceFolder[], history 
 	root.insert(mainButtons);
 }
 
-function sessionToButton(settings : Settings, session : chrome.sessions.Session) {
+function sessionToButton(i18n : I18n, settings : Settings, session : chrome.sessions.Session) {
 	if (session.tab) {
 		return new TabButton({
 			...session.tab,
 			lastModified : settings.timer ? session.lastModified : undefined,
 		})
 	}
-	return new WindowFolder({
+	return new WindowFolder(i18n, {
 		...session.window,
 		lastModified : settings.timer ? session.lastModified : undefined,
 		open : session.window !== undefined ? settings.expand : undefined
 	})
 }
 
-async function getSessionNodes(settings : Settings) : Promise<Node[]> {
+async function getSessionNodes(i18n : I18n, settings : Settings) : Promise<Node[]> {
 	return (await Chrome.sessions.getRecent({ }))
 		.slice(0, settings.tabCount || 25)
-		.map(session => sessionToButton(settings, session));
+		.map(session => sessionToButton(i18n, settings, session));
 }
 
-async function getDeviceNodes(settings : Settings) {
+async function getDeviceNodes(i18n : I18n, settings : Settings) {
 	const devices = await Chrome.sessions.getDevices();
 	return devices.map(device => {
 		if (!settings.timer) {
@@ -273,7 +273,7 @@ async function getDeviceNodes(settings : Settings) {
 				session.lastModified = undefined;
 			});
 		}
-		return new DeviceFolder(device)
+		return new DeviceFolder(i18n, device)
 	});
 }
 
@@ -294,15 +294,18 @@ async function getHistoryNodes(settings : Settings) {
 	});
 }
 
-Chrome.fetch("defaults.json")
-	.then(JSON.parse)
-	.then(Chrome.settings.getReadOnly)
-	.then(settings => Promise.all([
+(async () => {
+	const settings = await Chrome.fetch("defaults.json")
+		.then(JSON.parse)
+		.then(Chrome.settings.getReadOnly)
+	const i18n = await Chrome.getI18n(settings.lang);
+	const [...args] = await Promise.all([
 		Root.ready(),
-		getSessionNodes(settings),
-		getDeviceNodes(settings),
+		getSessionNodes(i18n, settings),
+		getDeviceNodes(i18n, settings),
 		getHistoryNodes(settings),
-		Chrome.getI18n(settings.lang),
+		i18n,
 		settings
 	])
-	).then(([...args]) => main(...args));
+	main(...args);
+})();
