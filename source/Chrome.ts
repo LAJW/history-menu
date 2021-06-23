@@ -47,23 +47,16 @@ async getI18n(locale? : string) : Promise<(key : string) => string> {
 	// custom set to english - load only english
 	if (locale == "en") {
 		const json = await Chrome.fetch("_locales/en/messages.json")
-		let locale : { [key : string] : { message : string } } = JSON.parse(json);
-		return function (messageKey : string) : string {
-			let data = locale[messageKey];
-			return data ? data.message : "";
-		}
+		const locale : { [key : string] : { message : string } } = JSON.parse(json);
+		return (messageKey : string) => locale[messageKey]?.message ?? "";
 	}
 	// custom set to non-english, english fallback
-	const locales = await Promise.all([
-		Chrome.fetch("_locales/" + locale + "/messages.json"),
+	const [curLocale, enLocale] = (await Promise.all([
+		Chrome.fetch(`_locales/${locale}/messages.json`),
 		Chrome.fetch("_locales/en/messages.json")
-	])
-	const curLocale = JSON.parse(locales[0]);
-	const enLocale = JSON.parse(locales[1]);
-	return function (messageKey : string) : string {
-		let data = curLocale[messageKey] || enLocale[messageKey];
-		return data ? data.message : "";
-	}
+	])).map(json => JSON.parse(json))
+	return (messageKey : string) =>
+		(curLocale[messageKey] ?? enLocale[messageKey])?.message ?? "";
 },
 
 /**
@@ -72,7 +65,7 @@ async getI18n(locale? : string) : Promise<(key : string) => string> {
  * @return String: Returns \c "Windows" on Windows platforms and \c "Ubuntu" on
  * Linux Platforms. Returns empty string otherwise.
  */
-getPlatform: function() {
+getPlatform() {
 	if (navigator.appVersion.indexOf("Win") != -1)
 		return "Windows";
 	else if (navigator.appVersion.indexOf("Linux") != -1)
@@ -87,21 +80,17 @@ getPlatform: function() {
  * @param url String: path to the fetched file
  * @return: Promise Function returns Promise of string contents of the file
  */
-fetch: function(url : string) : Promise<string> {
-	return new Promise(function (resolve, reject) {
-		let xhr = new XMLHttpRequest();
-		xhr.open("GET", url);
-		xhr.onload = function () {
-			if (this.status >= 200 && this.status < 300)
-				resolve(xhr.response);
-			else reject(xhr.statusText);
-		}
-		xhr.onerror = function () {
-			reject(xhr.statusText);
-		}
-		xhr.send();
-	});
-},
+fetch : (url : string) : Promise<string> => new Promise((resolve, reject) => {
+	let xhr = new XMLHttpRequest();
+	xhr.open("GET", url);
+	xhr.onload = function () {
+		this.status >= 200 && this.status < 300
+			? resolve(xhr.response)
+			: reject(xhr.statusText);
+	}
+	xhr.onerror = () => { reject(xhr.statusText) }
+	xhr.send();
+}),
 
 history: {
 
@@ -160,17 +149,19 @@ sessions: {
 	 * @return Promise: Returns promise that will be resolved after session gets
 	 * restored.
 	 */
-	restore: function (sessionId : string, inBackground? : boolean) {
-		return new Promise<void>(function (resolve) {
+	restore(sessionId : string, inBackground? : boolean) {
+		return new Promise<void>(resolve => {
 			if (inBackground) {
-				chrome.tabs.getCurrent(function (tab) {
+				chrome.tabs.getCurrent(tab => {
 					if (tab) {
-						chrome.sessions.restore(sessionId, function () {
+						chrome.sessions.restore(sessionId, () => {
 							chrome.tabs.update(tab.id, {active: true}, () => resolve());
 						});
 					}
 				})
-			} else chrome.sessions.restore(sessionId);
+			} else {
+				chrome.sessions.restore(sessionId, () => resolve()); // resolve just in case
+			}
 		});
 	}
 }, // namespace Chrome.sessions
@@ -235,25 +226,19 @@ settings: {
 	 * settings that will be used as template if no settings are set yet.
 	 * @return Promise: Function returns promise of settings object literal
 	 */
-	getReadOnly(defaultSettings : Settings = {}) : Promise<Settings> {
-		return Promise.all([
+	async getReadOnly(defaultSettings : Settings = {}) : Promise<Settings> {
+		const [ local, sync ] : [ LocalSettings, Settings ] = await Promise.all([
 			Chrome.storage.local.get(),
 			Chrome.storage.sync.get()
-		]).then(function (storages) {
-			let local = storages[0] as LocalSettings;
-			let sync = storages[1] as Settings;
-			if (local.local)
-				return local;
-			else return sync;
-		}).then(function (settings) {
-			return { ...defaultSettings, ...settings }
-		});
+		])
+		const settings = local.local ? local : sync;
+		return { ...defaultSettings, ...settings }
 	}, 
 
 	/**
 	 * @brief Placeholder Function
 	 */
-	getReadWrite: function () {
+	getReadWrite() {
 		throw new Error("Called Placeholder Function");
 		
 	}
@@ -307,7 +292,7 @@ tabs: {
 	 * @param inBackground Boolean: Optional. Create background tab.
 	 */
 	// open url or if tab with URL already exists, select it instead
-	openOrSelect: async function (url : string, inBackground : boolean) {
+	async openOrSelect(url : string, inBackground : boolean) {
 		let colon = url.indexOf(":");
 		if (colon >= 0) {
 			// external URL (has comma)
@@ -316,8 +301,7 @@ tabs: {
 			if (tabs.length) {
 				if (inBackground)
 					return Chrome.tabs.highlight({
-						tabs:
-							tabs.map(function (tab) { return tab.index; })
+						tabs: tabs.map(tab => tab.index)
 					});		
 				else return Chrome.tabs.update(
 					tabs[0].id, 

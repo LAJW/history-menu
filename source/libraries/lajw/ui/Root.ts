@@ -35,7 +35,7 @@ export default class Root extends Parent {
 		this.#height = value;
 	}
 	static ready() : Promise<Root> {
-		return new Promise(function (resolve) {
+		return new Promise(resolve => {
 			function callback() {
 				resolve(root = root || new Root);
 			}

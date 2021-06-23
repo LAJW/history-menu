@@ -2,8 +2,6 @@ import Chrome from "./Chrome"
 
 Chrome.settings.getReadOnly({
 	icon: "granite"
-}).then(function (settings) {
-	chrome.browserAction.setIcon({
-		path: "icons/history-19-" + settings.icon + ".png"
-	});
-});
+}).then(({icon}) => chrome.browserAction.setIcon({
+	path: `icons/history-19-${icon}.png`
+}));

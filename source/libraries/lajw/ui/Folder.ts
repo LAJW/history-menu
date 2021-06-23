@@ -64,11 +64,11 @@ export default class Folder extends Parent {
 	}
 	get height() {
 		let height = 23; // HACK
-		if (this.open)
-			return height + (this.children.reduce(function (prev, child) {
-				return prev + child.height;
-			}, 0) || height)
-		else return height;
+		if (this.open) {
+			return height + (this.children.reduce((prev, child) => prev + child.height, 0)) || height;
+		} else {
+			return height;
+		}
 	}
 	// bool open - is this folder open
 	get open() {

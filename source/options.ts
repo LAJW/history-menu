@@ -60,11 +60,11 @@ async function getSettingsRW(defaultSettings : Settings) {
 			continue
 		}
 		Object.defineProperty(settings, i_2, {
-			set: function (value_2) {
+			set(value_2) {
 				map[i_2] = value_2
 				storage.set({[i_2]: value_2})
 			},
-			get: function () {
+			get() {
 				return map[i_2]
 			},
 			enumerable: true
@@ -72,10 +72,10 @@ async function getSettingsRW(defaultSettings : Settings) {
 	}
 	const reset = () => storage.set(defaultSettings)
 	Object.defineProperty(settings, "local", {
-		get: function () {
+		get() {
 			return local.local
 		},
-		set: function (value_4) {
+		set(value_4) {
 			chrome.storage.local.set(sync)
 			local.local = value_4
 			chrome.storage.local.set({ local: value_4 })
@@ -104,7 +104,7 @@ async function main() {
 				"green":   i18n("green")
 			},
 			selected: settings.icon,
-			change:   function () {
+			change() {
 				settings.icon = this.selected;
 				chrome.browserAction.setIcon({
 					path: "icons/history-19-" + this.selected + ".png"
@@ -169,7 +169,7 @@ async function main() {
 				"ru": "Русский",
 			},
 			selected: settings.lang,
-			change:   function () {
+			change() {
 				settings.lang = this.selected;
 				// reload page
 				window.location = window.location;
@@ -184,7 +184,7 @@ async function main() {
 				"Other":   "Other"
 			},
 			selected: settings.theme,
-			change:   function () {
+			change() {
 				settings.theme = this.selected;
 				// reload page
 				window.location = window.location;
@@ -205,7 +205,7 @@ async function main() {
 		new Checkbox({
 			title:   i18n("options_sync"),
 			checked: !settings.local,
-			change:  function (value) {
+			change(value) {
 				settings.local = !value;
 				// reload page
 				window.location = window.location;
@@ -213,7 +213,7 @@ async function main() {
 		}),
 		new ClassicButton ({
 			title: i18n("options_reset"),
-			click: function () {
+			click() {
 				reset();
 				// reload page
 				window.location = window.location;
@@ -221,7 +221,7 @@ async function main() {
 		}),
 		new ClassicButton ({
 			title: i18n("options_about"),
-			click: function () {
+			click() {
 				reset();
 				window.location.href = "http://layv.net/history-menu";
 			}

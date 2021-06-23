@@ -81,7 +81,7 @@ const keyCode = {
 	enter:     13
 };
 
-window.addEventListener("keydown", function (e) {
+window.addEventListener("keydown", e => {
 	if ((e.keyCode == keyCode.arrowDown 
 			|| e.keyCode == keyCode.tab && !e.shiftKey)
 		&& selectedResult + 1 <
@@ -216,18 +216,13 @@ function main(root : Root, sessions : Node[], devices : DeviceFolder[], history 
 				title:   "",
 				tooltip: i18n("popup_history_manager"),
 				icon:    "icons/history-19.png",
-				click:   function (e) {
-					Chrome.tabs.openOrSelect("chrome://history/", false);
-				}
+				click:   () => Chrome.tabs.openOrSelect("chrome://history/", false),
 			}),
 			new ActionButton({
 				title:   "",
 				tooltip: i18n("popup_options"),
 				icon:    "icons/options.png",
-				click:   function (e) {
-					Chrome.tabs.openOrSelect(`chrome://extensions/?options=${chrome.runtime.id}`,
-						false);
-				}
+				click:   () => Chrome.tabs.openOrSelect(`chrome://extensions/?options=${chrome.runtime.id}`, false)
 			})
 		]
 	});
@@ -264,56 +259,50 @@ function sessionToButton(settings : Settings, session : chrome.sessions.Session)
 	})
 }
 
-function getSessionNodes(settings : Settings) : Promise<Node[]> {
-	return Chrome.sessions.getRecent({ })
-	.then(function (sessions) {
-		return sessions
+async function getSessionNodes(settings : Settings) : Promise<Node[]> {
+	return (await Chrome.sessions.getRecent({ }))
 		.slice(0, settings.tabCount || 25)
 		.map(session => sessionToButton(settings, session));
+}
+
+async function getDeviceNodes(settings : Settings) {
+	const devices = await Chrome.sessions.getDevices();
+	return devices.map(device => {
+		if (!settings.timer) {
+			device.sessions.forEach(session => {
+				session.lastModified = undefined;
+			});
+		}
+		return new DeviceFolder(device)
 	});
 }
 
-function getDeviceNodes(settings : Settings) {
-	return Chrome.sessions.getDevices().then(function (devices) {
-		return devices.map(function (device) {
-			if (!settings.timer) {
-				device.sessions.forEach(function (session) {
-					session.lastModified = undefined;
-				});
-			}
-			return new DeviceFolder(device)
-		});
-	});
-}
-
-function getHistoryNodes(settings : Settings) {
+async function getHistoryNodes(settings : Settings) {
 	const timestamp = Date.now();
-	return Chrome.history.search({
+	const results = await Chrome.history.search({
 		text:       "", 
 		startTime:  timestamp - 1000 * 3600 * 24 * 30, 
 		endTime:    timestamp,
 		maxResults: settings.historyCount
-	}).then(function (results) {
-		return results.map(function (result) {
-			const tmp = { ... result, preferSelect : settings.preferSelect }
-			if (!settings.timer) {
-				return new HistoryButton({ ...result, lastVisitTime : undefined });
-			}
-			return new HistoryButton(tmp);
-		});
+	})
+	return results.map(result => {
+		const tmp = { ... result, preferSelect : settings.preferSelect }
+		if (!settings.timer) {
+			return new HistoryButton({ ...result, lastVisitTime : undefined });
+		}
+		return new HistoryButton(tmp);
 	});
 }
 
 Chrome.fetch("defaults.json")
 	.then(JSON.parse)
 	.then(Chrome.settings.getReadOnly)
-	.then(function (settings) {
-		return Promise.all([
-			Root.ready(),
-			getSessionNodes(settings),
-			getDeviceNodes(settings),
-			getHistoryNodes(settings),
-			Chrome.getI18n(settings.lang),
-			settings
-		])
-	}).then(([...args]) => main(...args));
+	.then(settings => Promise.all([
+		Root.ready(),
+		getSessionNodes(settings),
+		getDeviceNodes(settings),
+		getHistoryNodes(settings),
+		Chrome.getI18n(settings.lang),
+		settings
+	])
+	).then(([...args]) => main(...args));

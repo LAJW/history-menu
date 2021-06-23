@@ -5,9 +5,10 @@ import { $ } from "../utils"
 // input node
 let lockon : Input;
 
-window.addEventListener("keydown", function (e) {
-	if (lockon)
+window.addEventListener("keydown", () => {
+	if (lockon) {
 		lockon._input.focus();
+	}
 });
 
 const template = $({
