@@ -7,6 +7,7 @@ import Select from "./libraries/lajw/ui/Select"
 import { LocalSettings, Settings } from "./Settings"
 import Slider from "./Slider"
 import { $ } from "./libraries/lajw/utils"
+import Textarea from "./libraries/lajw/ui/Textarea"
 
 // template for the Classic Button
 const classicButtonTemplate = $({
@@ -56,11 +57,13 @@ async function getSettingsRW(defaultSettings : Settings) {
 	}
 	const settings : Settings = {}
 	for (const i_2 in map) {
+		console.log(i_2)
 		if (i_2 == "local") {
 			continue
 		}
 		Object.defineProperty(settings, i_2, {
 			set(value_2) {
+				console.log(i_2, value_2)
 				map[i_2] = value_2
 				storage.set({[i_2]: value_2})
 			},
@@ -200,6 +203,10 @@ async function main() {
 			title:   i18n("options_prefer_select"),
 			checked: settings.preferSelect,
 			change:  x => settings.preferSelect = x,
+		}),
+		new Textarea({
+			value: settings.filter,
+			change: x => settings.filter = x,
 		}),
 		new Header({title: i18n("options_other")}),
 		new Checkbox({

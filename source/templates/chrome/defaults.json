@@ -10,5 +10,6 @@
 	"expand": true,
 	"preferSelect": true,
 	"tabsFirst": true,
-	"theme": ""
+	"theme": "",
+	"filter": "translate.google.com"
 }

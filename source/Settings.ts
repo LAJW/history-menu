@@ -12,6 +12,7 @@ export interface Settings {
 	preferSelect?: boolean
 	tabsFirst?: boolean
 	theme?: string
+	filter?: string
 }
 
 export interface LocalSettings extends Settings {

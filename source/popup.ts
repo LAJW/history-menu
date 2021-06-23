@@ -279,19 +279,29 @@ async function getDeviceNodes(i18n : I18n, settings : Settings) {
 
 async function getHistoryNodes(settings : Settings) {
 	const timestamp = Date.now();
-	const results = await Chrome.history.search({
-		text:       "", 
-		startTime:  timestamp - 1000 * 3600 * 24 * 30, 
-		endTime:    timestamp,
-		maxResults: settings.historyCount | 0
-	})
-	return results.map(result => {
-		const tmp = { ... result, preferSelect : settings.preferSelect }
-		if (!settings.timer) {
-			return new HistoryButton({ ...result, lastVisitTime : undefined });
+	const blacklist = settings.filter.split("\n")
+	let results : chrome.history.HistoryItem[]
+	for (let i = 1; i < 10; ++i) {
+		const preFilter = await Chrome.history.search({
+			text:       "", 
+			startTime:  timestamp - 1000 * 3600 * 24 * 30, 
+			endTime:    timestamp,
+			maxResults: (settings.historyCount | 20) + (20 * i)
+		})
+		results = preFilter.filter(x => !blacklist.some(line => x.url.includes(line)))
+		if (preFilter.length === results.length || results.length >= settings.length) {
+			break;
 		}
-		return new HistoryButton(tmp);
-	});
+	}
+	return results
+		.slice(0, settings.historyCount)
+		.map(result => {
+			const tmp = { ... result, preferSelect : settings.preferSelect }
+			if (!settings.timer) {
+				return new HistoryButton({ ...result, lastVisitTime : undefined });
+			}
+			return new HistoryButton(tmp);
+		});
 }
 
 (async () => {
