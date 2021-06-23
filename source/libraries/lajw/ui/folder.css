@@ -11,9 +11,13 @@ body.animate .Folder {
 .Folder.open>.title {
 	background-image: url('./icons/folder-open.png');
 }
+.Folder .menuItem {
+	border-radius: 13px 0px 0px 13px;
+}
 .Folder>.title:hover {
 	background-color: #777;
 	color: white;
+	border-radius: 0px;
 }
 body.Windows .Folder>.title:hover {
 	background-color: rgb(64, 129, 244); 
