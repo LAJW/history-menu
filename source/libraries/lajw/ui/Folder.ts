@@ -26,6 +26,7 @@ export default class Folder extends Parent {
 	#open : boolean
 	constructor(e : {
 			title : string,
+			tooltip : string,
 			open? : boolean,
 			children : UINode[]
 		}) {
@@ -35,6 +36,7 @@ export default class Folder extends Parent {
 			return { DOM, container, children : new Array<UINode>() }
 		})());
 		this.#title = this.DOM.firstChild as HTMLAnchorElement;
+		this.#tooltip = e.tooltip
 		this.#empty = this.DOM.childNodes[1] as HTMLElement;
 		this.title = e.title;
 		this.open = e.open ?? true;
@@ -92,6 +94,8 @@ export default class Folder extends Parent {
 	}
 	set title(value : string) {
 		this.#title.firstChild.nodeValue = value;
+	}
+	set #tooltip(value : string) {
 		this.#title.title = value;
 	}
 }

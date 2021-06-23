@@ -279,7 +279,7 @@ async function getDeviceNodes(i18n : I18n, settings : Settings) {
 
 async function getHistoryNodes(settings : Settings) {
 	const timestamp = Date.now();
-	const blacklist = settings.filter.split("\n")
+	const blacklist = settings.filter.split("\n").filter(line => line.length > 0)
 	let results : chrome.history.HistoryItem[]
 	for (let i = 1; i < 10; ++i) {
 		const preFilter = await Chrome.history.search({

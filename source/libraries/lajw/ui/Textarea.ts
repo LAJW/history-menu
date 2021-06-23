@@ -5,7 +5,15 @@ const template = $({
 	nodeName: "div",
 	className: "Textarea",
 	childNodes: [
-		$({ nodeName: "Textarea" })
+		$({
+			nodeName: "label",
+			childNodes: [$("")]
+		}),
+		$({ nodeName: "Textarea" }),
+		$({
+			nodeName: "div",
+			childNodes: [$("")]
+		}),
 	]
 });
 
@@ -15,11 +23,15 @@ export default class Textarea extends Node {
 	change : (value : string) => void
 
 	constructor(e : {
+		title: string,
+		description: string,
 		value? : string
 		change : (value : string) => void
 	}) {
 		super({ DOM : template.cloneNode(true) as HTMLElement });
-		this.#textarea = this.DOM.firstChild as HTMLTextAreaElement;
+		this.DOM.firstChild.firstChild.nodeValue = e.title;
+		this.DOM.lastChild.firstChild.nodeValue = e.description;
+		this.#textarea = this.DOM.childNodes[1] as HTMLTextAreaElement;
 		this.#textarea.onkeyup = this.#textarea.onchange = () => {
 			if (this.#oldValue !== this.value) {
 				this.#oldValue = this.value;

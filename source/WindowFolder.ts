@@ -14,6 +14,11 @@ interface WindowFolderInfo extends chrome.windows.Window {
 	open? : boolean
 }
 
+function sessionInfo(wnd : WindowFolderInfo) {
+	const info = wnd.tabs.map(tab => " - " + tab.title.substr(0, 16)).join("\n")
+	return `Window:\n${info}`
+}
+
 export default class WindowFolder extends Folder {
 	readonly #timer : Node
 	readonly #sessionId : string
@@ -21,6 +26,7 @@ export default class WindowFolder extends Folder {
 		super({
 			title : `${i18n("popup_window")} (${i18n("popup_number_of_tabs")}: ${wnd.tabs.length})`,
 			children : wnd.tabs.map(tab => new TabButton(tab)),
+			tooltip : sessionInfo(wnd)
 		});
 		this.#timer = this.DOM.firstChild
 			.insertBefore(template.cloneNode(true), this.DOM.firstChild.firstChild)

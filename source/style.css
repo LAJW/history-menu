@@ -146,3 +146,25 @@ a {
 input[type=button] {
 	margin-right : 5px;
 }
+
+.Textarea {
+	border: 1px #bbb solid;
+	border-radius: 3px;
+	padding: 5px;
+}
+
+.Textarea textarea {
+	width : 100%;
+	min-height: 60px;
+	resize: vertical;
+	border-radius: 3px;
+	margin: 5px 0px;
+}
+
+.Textarea div {
+	background-color: rgb(233, 235, 163);
+	color: rgb(95, 91, 36);
+	border: rgb(167, 170, 90) solid 1px;
+	padding: 5px;
+	border-radius: 3px;
+}
