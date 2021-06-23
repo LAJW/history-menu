@@ -9,7 +9,7 @@ const template = $({
 });
 
 export default class Progressbar extends Node {
-	_interval : NodeJS.Timeout
+	#interval? : NodeJS.Timeout
 	constructor() {
 		super({ DOM : template.cloneNode(false) as HTMLElement });
 	}
@@ -19,7 +19,7 @@ export default class Progressbar extends Node {
 		let c = [-0.1, -0.2, -0.3];
 		let then = Date.now();
 		this.DOM.style.width = "inherit";
-		this._interval = setInterval(() => {
+		this.#interval = setInterval(() => {
 			if (!this.parent)
 				this.fadeOut(); // BUG - this shouldn't be neccessary
 			let width = this.DOM.offsetWidth | 0;
@@ -44,7 +44,7 @@ export default class Progressbar extends Node {
 		}, 1);
 	}
 	override fadeOut() {
-		clearInterval(this._interval);
-		this._interval = null;
+		clearInterval(this.#interval);
+		this.#interval = undefined;
 	}
 }

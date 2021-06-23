@@ -21,33 +21,35 @@ const template = $({
 
 // PRIVATE PROPERTIES: _open, #empty, _title, _interval, _hover
 export default class Folder extends Parent {
-	_title : HTMLAnchorElement
-	_empty1 : HTMLElement
-	_open : boolean
+	readonly #empty : HTMLElement
+	#title : HTMLAnchorElement
+	#open : boolean
 	constructor(e : {
 			title : string,
 			open? : boolean,
 			children : UINode[]
 		}) {
-		const DOM = template.cloneNode(true) as HTMLElement;
-		const container = DOM.lastChild as HTMLElement;
-		super({ DOM, container, children : [] });
-		this._title = this.DOM.firstChild as HTMLAnchorElement;
-		this._empty1 = this.DOM.childNodes[1] as HTMLElement;
+		super((() => {
+			const DOM = template.cloneNode(true) as HTMLElement;
+			const container = DOM.lastChild as HTMLElement;
+			return { DOM, container, children : new Array<UINode>() }
+		})());
+		this.#title = this.DOM.firstChild as HTMLAnchorElement;
+		this.#empty = this.DOM.childNodes[1] as HTMLElement;
 		this.title = e.title;
 		this.open = e.open ?? true;
 		this.insert(e.children);
 	}
 	override insert(child : UINode | UINode[], before? : UINode) {
 		super.insert(child, before);
-		this._empty1.classList.add("hidden");
-		this._updateStyle();
+		this.#empty.classList.add("hidden");
+		this.#updateStyle();
 	}
 	override remove(child : UINode) {
 		super.remove(child);
 		if (!this.children.length)
-			this._empty1.classList.remove("hidden");
-		this._updateStyle();
+			this.#empty.classList.remove("hidden");
+		this.#updateStyle();
 		return child
 	}
 	override fadeIn(delay : number) {
@@ -70,10 +72,10 @@ export default class Folder extends Parent {
 	}
 	// bool open - is this folder open
 	get open() {
-		return this._open;
+		return this.#open;
 	}
 	set open(value : boolean) {
-		this._open = value;
+		this.#open = value;
 		this.DOM.classList.toggle("open", value);
 		this.DOM.style.maxHeight = px(this.height);
 		if (this.parent && value && this.parent instanceof Folder) {
@@ -81,15 +83,15 @@ export default class Folder extends Parent {
 		}
 	}
 	// update style after inserting new element
-	_updateStyle () {
+	#updateStyle () {
 		this.open = this.open;
 	}
 	// folder's name
 	get title() {
-		return this._title.firstChild.nodeValue;
+		return this.#title.firstChild.nodeValue;
 	}
 	set title(value : string) {
-		this._title.firstChild.nodeValue = value;
-		this._title.title = value;
+		this.#title.firstChild.nodeValue = value;
+		this.#title.title = value;
 	}
 }

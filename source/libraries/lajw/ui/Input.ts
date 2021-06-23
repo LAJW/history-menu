@@ -25,9 +25,9 @@ const template = $({
 });
 
 export default class Input extends Node {
-	_input : HTMLInputElement
-	_cancel : HTMLElement
-	_oldValue : string
+	readonly _input : HTMLInputElement
+	readonly #cancel : HTMLElement
+	#oldValue : string
 	change : (value : string) => void
 
 	constructor(e : {
@@ -38,13 +38,13 @@ export default class Input extends Node {
 	}) {
 		super({ DOM : template.cloneNode(true) as HTMLElement });
 		this._input = this.DOM.firstChild as HTMLInputElement;
-		this._cancel = this.DOM.lastChild as HTMLElement;
+		this.#cancel = this.DOM.lastChild as HTMLElement;
 		this._input.onkeyup = this._input.onchange = () => {
-			if (this._oldValue == this.value)
+			if (this.#oldValue === this.value)
 				return;
-			this._oldValue = this.value;
+			this.#oldValue = this.value;
 			this.change(this.value);
-			this._toggleClearButton();
+			this.#toggleClearButton();
 		};
 		this.change = function () {};
 		this.value = e.value ?? "";
@@ -54,7 +54,7 @@ export default class Input extends Node {
 	}
 
 	override click(e : MouseEvent) {
-		if (e.target == this._cancel)
+		if (e.target == this.#cancel)
 			this.value = "";
 		this._input.focus();
 	}
@@ -73,7 +73,7 @@ export default class Input extends Node {
 	} 
 	set value(value : string) {
 		this._input.value = value;
-		this._toggleClearButton();
+		this.#toggleClearButton();
 		this.change(value);
 	}
 
@@ -93,8 +93,8 @@ export default class Input extends Node {
 			lockon = undefined;
 	}
 
-	// private void _toggleClearButton(void) - toggle "X" button
-	_toggleClearButton() {
-		this._cancel.classList.toggle("visible", !!this.value);
+	// private void #toggleClearButton(void) - toggle "X" button
+	#toggleClearButton() {
+		this.#cancel.classList.toggle("visible", !!this.value);
 	}
 }

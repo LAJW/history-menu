@@ -3,12 +3,12 @@ import Node from "./Node"
 
 let root : Root; 
 export default class Root extends Parent {
-	_width : number
-	_height : number
+	#width : number
+	#height : number
 	constructor() {
+		super({DOM: document.body, children : []});
 		if (root)
 			throw new Error("Root already exists");
-		super({DOM: document.body, children : []});
 		document.body.addEventListener("click", e => Node.fromDOM(e.target as HTMLElement).click(e))
 		document.body.addEventListener("mouseup", e => Node.fromDOM(e.target as HTMLElement).mouseup(e))
 		document.body.addEventListener("mousedown", e => Node.fromDOM(e.target as HTMLElement).mousedown(e))
@@ -21,18 +21,18 @@ export default class Root extends Parent {
 			this.DOM.classList.add("animate");
 	}
 	get width() {
-		return this._width;
+		return this.#width;
 	}
 	set width(value : number) {
 		this.DOM.style.width = value + "px";
-		this._width = value;
+		this.#width = value;
 	}
 	get height() {
-		return this._height;
+		return this.#height;
 	}
 	set height(value : number) {
 		this.DOM.style.height = value + "px";
-		this._height = value;
+		this.#height = value;
 	}
 	static ready() : Promise<Root> {
 		return new Promise(function (resolve) {

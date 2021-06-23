@@ -1,6 +1,6 @@
 export default class UINode {
 	readonly DOM: HTMLElement
-	_parent : UINode | undefined
+	_parent? : UINode
 
 	constructor(e : { DOM: HTMLElement }) {
 		Object.defineProperty(this, "DOM", { value: e.DOM });

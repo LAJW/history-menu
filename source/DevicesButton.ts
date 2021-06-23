@@ -7,7 +7,7 @@ const arrowTemplate = $({
 });
 
 export default class DevicesButton extends ActionButton {
-	_on : boolean
+	#on : boolean
 	constructor(e : {
 		tooltip: string
 		click : (e : MouseEvent) => void
@@ -17,10 +17,10 @@ export default class DevicesButton extends ActionButton {
 		this.on = false;
 	}
 	set on(value: boolean) {
-		this._on = value;
+		this.#on = value;
 		this.DOM.classList.toggle("on", value);
 	}
 	get on() {
-		return this._on;
+		return this.#on;
 	}
 }

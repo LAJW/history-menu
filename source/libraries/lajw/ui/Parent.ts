@@ -1,7 +1,7 @@
 import Node from "./Node"
 
 export default class Parent extends Node {
-	readonly _children : Node[]
+	readonly #children : Node[]
 	container : HTMLElement
 
 	constructor(e : {
@@ -13,7 +13,7 @@ export default class Parent extends Node {
 		Object.defineProperty(this, "container", 
 			{value: e.container || this.DOM}
 		);
-		this._children = [];
+		this.#children = [];
 		if (e.children.length) {
 			this.insert(e.children);
 		}
@@ -22,66 +22,66 @@ export default class Parent extends Node {
 	insert(first : Node | Node[], second : Node | undefined = undefined) {
 		if (second) {
 			if (first instanceof Array) {
-				return this._insertManyBefore(first, second);
+				return this.#insertManyBefore(first, second);
 			} else {
-				return this._insertBefore(first, second);
+				return this.#insertBefore(first, second);
 			}
 		} else {
 			if (first instanceof Array) {
-				return this._appendMany(first);
+				return this.#appendMany(first);
 			} else {
-				return this._append(first);
+				return this.#append(first);
 			}
 		}
 	}
-	_append(child : Node) { // exception safe
-		this._validateChildCandidate(child);
+	#append(child : Node) { // exception safe
+		this.#validateChildCandidate(child);
 		this.container.appendChild(child.DOM);
-		this._children.push(child);
+		this.#children.push(child);
 		child._parent = this;
 		child.fadeIn(0);
 		return child;
 	}
-	_appendMany(children : Node[]) { // not exception safe
+	#appendMany(children : Node[]) { // not exception safe
 		children.forEach((child, i) => {
-			this._validateChildCandidate(child);
+			this.#validateChildCandidate(child);
 			this.container.appendChild(child.DOM);
-			this._children.push(child);
+			this.#children.push(child);
 			child._parent = this;
 			child.fadeIn(Math.max(Math.min(children.length, 20) - i, 0) * 10);
 		});
 	}
-	_insertBefore(child : Node, before : Node) { // exception safe
-		this._validateChildCandidate(child);
-		this._validateChild(before);
+	#insertBefore(child : Node, before : Node) { // exception safe
+		this.#validateChildCandidate(child);
+		this.#validateChild(before);
 		this.container.insertBefore(child.DOM, before.DOM);
-		this._children.splice(this._children.indexOf(before), 0, child);
+		this.#children.splice(this.#children.indexOf(before), 0, child);
 		child._parent = this;
 		child.fadeIn(0);
 		return child;
 	}
-	_insertManyBefore(children : Node[], before : Node) { // not exception safe
-		this._validateChild(before);
+	#insertManyBefore(children : Node[], before : Node) { // not exception safe
+		this.#validateChild(before);
 		children.forEach((child, i) => {
-			this._validateChildCandidate(child);
+			this.#validateChildCandidate(child);
 			this.container.insertBefore(child.DOM, before.DOM);
-			this._children.splice(this._children.indexOf(before), 0, child);
+			this.#children.splice(this.#children.indexOf(before), 0, child);
 			child._parent = this;
 			child.fadeIn(Math.max(Math.min(children.length, 20) - i, 0) * 10);
 		});
 	}
-	_validateChildCandidate(child : Node) {
+	#validateChildCandidate(child : Node) {
 		if (child.parent) {
 			throw new TypeError("Child already has a parent");
 		}
 	}
-	_validateChild(child : Node) {
+	#validateChild(child : Node) {
 		if (child.parent != this) {
 			throw new TypeError("Before is not a child of this node");
 		}
 	}
-	_empty() {
-		return this._children.length == 0;
+	#empty() {
+		return this.#children.length == 0;
 	}
 	// remove child from child list, return it
 	remove(child : Node) {
@@ -90,18 +90,18 @@ export default class Parent extends Node {
 		} catch (e) {
 			throw new TypeError("Node is not a child of this parent");
 		}
-		this._children.splice(this._children.indexOf(child), 1);
+		this.#children.splice(this.#children.indexOf(child), 1);
 		child._parent = undefined;
 		child.fadeOut(0);
 		return child;
 	}
 	// Array<Node> children - unassignable, unchangeable array of children
 	get children() {
-		return this._children.slice();
+		return this.#children.slice();
 	}
 	set children(value) {
 		this.clear();
-		this._appendMany(value);
+		this.#appendMany(value);
 	}
 	// remove all elemnts from this node
 	clear() {

@@ -8,9 +8,9 @@ const template = $({
 });
 
 export default class TimerButton extends Button {
-	_timerNode : HTMLElement
-	_timerInterval : NodeJS.Timeout
-	_timer : number
+	#timerNode : HTMLElement
+	#timerInterval : NodeJS.Timeout
+	#timer : number
 	constructor(e : {
 			icon: string
 			title: string
@@ -18,28 +18,28 @@ export default class TimerButton extends Button {
 			timer: number
 		}) {
 		super(e);
-		this._timerNode = this.DOM.appendChild(template.cloneNode(true)) as HTMLElement;
+		this.#timerNode = this.DOM.appendChild(template.cloneNode(true)) as HTMLElement;
 		this.timer = e.timer;
 	}
 	override fadeIn(e : number) {
 		super.fadeIn(e);
-		this._timerInterval = setInterval(this._updateTimer.bind(this), 500);
+		this.#timerInterval = setInterval(this.updateTimer.bind(this), 500);
 	}
 	override fadeOut(e : number) {
 		super.fadeOut(e);
-		clearInterval(this._timerInterval);
+		clearInterval(this.#timerInterval);
 	}
 	set timer(value : number) {
-		this._timer = value;
-		this._timerNode.classList.toggle("hidden", !value);
-		this._updateTimer();
+		this.#timer = value;
+		this.#timerNode.classList.toggle("hidden", !value);
+		this.updateTimer();
 	}
 	get timer() {
-		return this._timer;
+		return this.#timer;
 	}
-	_updateTimer() {
+	protected updateTimer() {
 		if (this.timer) {
-			this._timerNode.firstChild.nodeValue = relativeTime(this.timer);
+			this.#timerNode.firstChild.nodeValue = relativeTime(this.timer);
 		}
 	}
 }

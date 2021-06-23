@@ -8,7 +8,7 @@ let template = $({
 });
 
 export default class Button extends Node {
-	_icon : string
+	#icon : string
 
 	constructor (e : {
 		icon: string
@@ -31,9 +31,9 @@ export default class Button extends Node {
 	set title(value : string) { 
 		this.DOM.firstChild.nodeValue = value;	
 	}
-	get icon(){ return this._icon }
+	get icon(){ return this.#icon }
 	set icon(value : string) {
-		this._icon = value;
+		this.#icon = value;
 		this.DOM.style.backgroundImage = value ? url(value) : "none";
 	}
 	get tooltip() { return this.DOM.title }

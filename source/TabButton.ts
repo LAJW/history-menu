@@ -6,7 +6,7 @@ interface TabButtonInfo extends chrome.tabs.Tab {
 }
 
 export default class TabButton extends TimerButton {
-	sessionId : string
+	readonly #sessionId : string
 	constructor(tab : TabButtonInfo) {
 		super({
 			icon:   "chrome://favicon/" + tab.url,
@@ -16,12 +16,12 @@ export default class TabButton extends TimerButton {
 				: tab.url,
 			timer:   tab.lastModified * 1000
 		});
-		this.sessionId = tab.sessionId;
+		this.#sessionId = tab.sessionId;
 	}
 	override async click(e : MouseEvent) {
 		if (e.button === 0 || e.button === 1) {
 			e.preventDefault();
-			await Chrome.sessions.restore(this.sessionId, e.button == 1 || e.ctrlKey);
+			await Chrome.sessions.restore(this.#sessionId, e.button == 1 || e.ctrlKey);
 		}
 	}
 }

@@ -14,9 +14,9 @@ let template = $({
 });
 
 export default class Checkbox extends Node {
-	_title : Text
-	_checkbox : HTMLInputElement
-	change : (value : boolean) => void
+	#title : Text
+	readonly #checkbox : HTMLInputElement
+	readonly #change : (value : boolean) => void
 	constructor(e : {
 		title : string
 		checked : boolean
@@ -24,26 +24,26 @@ export default class Checkbox extends Node {
 	}) {
 		super({ DOM : template.cloneNode(true) as HTMLElement });
 		this.DOM.addEventListener("change", () => {
-			this.change(this.checked);
+			this.#change(this.checked);
 		})
-		this._checkbox = this.DOM.firstChild as HTMLInputElement;
-		this._title = this.DOM.lastChild as Text;
-		this.change = function () {}
+		this.#checkbox = this.DOM.firstChild as HTMLInputElement;
+		this.#title = this.DOM.lastChild as Text;
+		this.#change = function () {}
 		this.checked = e.checked;
-		this.change = e.change;
+		this.#change = e.change;
 		this.title = e.title;
 	}
 	get title() {
-		return this._title.nodeValue;
+		return this.#title.nodeValue;
 	}
 	set title(value) {
-		this._title.nodeValue = value;
+		this.#title.nodeValue = value;
 	}
 	get checked() { 
-		return this._checkbox.checked;
+		return this.#checkbox.checked;
 	}
 	set checked(value) {
-		this._checkbox.checked = value;
-		this.change(value);
+		this.#checkbox.checked = value;
+		this.#change(value);
 	}
 }

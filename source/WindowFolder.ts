@@ -15,14 +15,14 @@ interface WindowFolderInfo extends chrome.windows.Window {
 }
 
 export default class WindowFolder extends Folder {
-	_timer : Node
-	sessionId : string
+	readonly #timer : Node
+	readonly #sessionId : string
 	constructor(wnd : WindowFolderInfo) {
 		super({
 			title : `Window (Number of tabs: ${wnd.tabs.length})`,
 			children : wnd.tabs.map(tab => new TabButton(tab)),
 		});
-		this._timer = this.DOM.firstChild
+		this.#timer = this.DOM.firstChild
 			.insertBefore(template.cloneNode(true), this.DOM.firstChild.firstChild)
 			.firstChild;
 		if (wnd.lastModified) {
@@ -31,7 +31,7 @@ export default class WindowFolder extends Folder {
 		if (wnd.open !== undefined) {
 			this.open = wnd.open;
 		}
-		this.sessionId = wnd.sessionId;
+		this.#sessionId = wnd.sessionId;
 	}
 	override mousedown(e : MouseEvent) {
 		e.preventDefault();
@@ -39,16 +39,16 @@ export default class WindowFolder extends Folder {
 	override click(e : MouseEvent) {
 		e.preventDefault();
 		if (e.button == 1 || e.button == 0 && e.ctrlKey) {
-			Chrome.sessions.restore(this.sessionId, true);
+			Chrome.sessions.restore(this.#sessionId, true);
 		} else if (e.button == 0) {
 			super.click(e)
 		}
 	}
 	set timer(value : string) {
-		this._timer.nodeValue = value;
-		(this._timer.parentNode as HTMLElement).classList.toggle("hidden", !value);
+		this.#timer.nodeValue = value;
+		(this.#timer.parentNode as HTMLElement).classList.toggle("hidden", !value);
 	}
 	get timer() {
-		return this._timer.nodeValue;
+		return this.#timer.nodeValue;
 	}
 }
