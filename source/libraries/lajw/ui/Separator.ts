@@ -17,10 +17,10 @@ const template = $({
 
 export default class Separator extends Node {
 	_title : Text
-	constructor(e : { title? : string } = {}) {
+	constructor(e : { title : string }) {
 		super({ ...e, DOM : template.cloneNode(true) as HTMLElement });
 		this._title = this.DOM.firstChild.firstChild as Text;
-		this.title = e.title || "";
+		this.title = e.title;
 	}
 	get title() {
 		return this._title.nodeValue;
