@@ -9,10 +9,10 @@ export default class TabButton extends TimerButton {
 	readonly #sessionId : string
 	constructor(tab : TabButtonInfo) {
 		super({
-			icon:   "chrome://favicon/" + tab.url,
+			icon:   `chrome://favicon/${tab.url}`,
 			title:   tab.title,
 			tooltip: tab.title !== tab.url
-				? tab.title + "\n" + tab.url
+				? `${tab.title}\n${tab.url}`
 				: tab.url,
 			timer:   tab.lastModified * 1000
 		});
