@@ -126,49 +126,47 @@ function onSearch(deviceLayer : Layer, searchLayer : Layer, i18n : (key : string
 	searchLayer.visible = value.length > 0;
 	searchLayer.clear();
 	if (value.length > 0) {
-		searchLayer.insert(new Progressbar);
-		setTimeout(function () {
-			if (!token.valid)
+		const progressbar = new Progressbar
+		searchLayer.insert(progressbar);
+		setTimeout(async () => {
+			if (!token.valid) {
 				return;
-			let promise = Promise.resolve();
+			}
 			for (const sector of timeSectors()) {
-				promise = promise.then(function () {
-					return Chrome.history.search({
-						text:      value,
-						startTime: sector.start,
-						endTime:   sector.end,
-					})
-				}).then(function (results) {
-					if (!results.length || !token.valid) 
-						return
-					const nodes = results.map(function (result) {
+				const results = await Chrome.history.search({
+					text:      value,
+					startTime: sector.start,
+					endTime:   sector.end,
+				})
+				if (results.length && token.valid) {
+					const nodes = results.map(result => {
 						if (!settings.timer) {
 							result.lastVisitTime = null;
 						}
 						return new HistoryButton(result);
 					});
-					searchResults = searchResults.concat(nodes);
-					searchLayer.insert([new Separator({title: i18n(sector.i18n)}), ...nodes]);
-				});
+					searchResults = [ ...searchResults, ...nodes ];
+					searchLayer.insert(new Separator({title: i18n(sector.i18n)}))
+					searchLayer.insert(nodes);
+				}
 			}
-			promise.then(function () {
-				if (!token.valid)
-					return;
-				if (searchResults.length > 0) {
-					searchResults[0].highlighted = true;
-				}
-				searchLayer.remove(searchLayer.children[0]);
-				if (searchLayer.children.length) {
-					searchLayer.insert(new Separator({
-						title: i18n("results_end")
-					}));
-				} else {
-					searchLayer.insert(new Separator({
-						title: i18n("results_nothing_found")
-					}));
-				}
-			});
-		}.bind(this), 500);
+			if (!token.valid) {
+				return;
+			}
+			if (searchResults.length > 0) {
+				searchResults[0].highlighted = true;
+			}
+			searchLayer.remove(progressbar);
+			if (searchLayer.children.length) {
+				searchLayer.insert(new Separator({
+					title: i18n("results_end")
+				}));
+			} else {
+				searchLayer.insert(new Separator({
+					title: i18n("results_nothing_found")
+				}));
+			}
+		}, 500);
 	}
 }
 
