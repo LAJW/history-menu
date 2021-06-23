@@ -8,7 +8,7 @@
  *
  */
 
-import { LocalSettings, Settings } from "./Settings";
+import { I18n, I18nKey, LocalSettings, Settings } from "./Settings";
 
 /**
  * @brief Modernizes Chrome Extension API system function.
@@ -40,7 +40,7 @@ const Chrome = {
  * @param locale String: Optional ID of the locale ex: en, en-gb, de
  * @return Promise: to Locale Map
  */
-async getI18n(locale? : string) : Promise<(key : string) => string> {
+async getI18n(locale? : string) : Promise<I18n> {
 	// default locale - use default chrome locale engine
 	if (!locale)
 		return chrome.i18n.getMessage.bind(chrome.i18n);
@@ -55,7 +55,7 @@ async getI18n(locale? : string) : Promise<(key : string) => string> {
 		Chrome.fetch(`_locales/${locale}/messages.json`),
 		Chrome.fetch("_locales/en/messages.json")
 	])).map(json => JSON.parse(json))
-	return (messageKey : string) =>
+	return (messageKey : I18nKey) =>
 		(curLocale[messageKey] ?? enLocale[messageKey])?.message ?? "";
 },
 
