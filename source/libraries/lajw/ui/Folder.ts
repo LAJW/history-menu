@@ -35,7 +35,7 @@ export default class Folder extends Parent {
 		this._title = this.DOM.firstChild as HTMLAnchorElement;
 		this._empty1 = this.DOM.childNodes[1] as HTMLElement;
 		this.title = e.title;
-		this.open = e.open === undefined ? true : e.open;
+		this.open = e.open ?? true;
 		this.insert(e.children);
 	}
 	override insert(child : UINode | UINode[], before? : UINode) {
