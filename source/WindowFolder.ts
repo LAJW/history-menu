@@ -39,10 +39,10 @@ export default class WindowFolder extends Folder {
 	}
 	override click(e : MouseEvent) {
 		e.preventDefault();
-		if (e.button == 0) {
-			super.click(e)
-		} else if (e.button == 1 || e.ctrlKey) {
+		if (e.button == 1 || e.button == 0 && e.ctrlKey) {
 			Chrome.sessions.restore(this.sessionId, true);
+		} else if (e.button == 0) {
+			super.click(e)
 		}
 	}
 	set timer(value : string) {
