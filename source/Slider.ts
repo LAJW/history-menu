@@ -25,23 +25,23 @@ export default class Slider extends UINode {
 	_interval : NodeJS.Timeout
 	change : (value : number) => void
 	constructor(e : {
-		change? : (value : number) => void
-		title? : string
-		min? : number
-		max? : number
-		step? : number
-		value? : number
-	} = {}) {
+		change : (value : number) => void
+		title : string
+		min : number
+		max : number
+		step : number
+		value : number
+	}) {
 		super({...e, DOM : sliderTemplate.cloneNode(true) as HTMLElement});
 		this._knob    = this.DOM.childNodes[2] as HTMLInputElement;
 		this._title   = this.DOM.childNodes[0];
 		this._display = this.DOM.childNodes[3] as HTMLInputElement;
-		this.change   = e.change || function () {}
+		this.change   = e.change;
 		this.title    = e.title;
-		this.min      = e.min || 0;
-		this.max      = e.max || 100;
-		this.step     = e.step || 1;
-		this.value    = e.value || 50;
+		this.min      = e.min;
+		this.max      = e.max;
+		this.step     = e.step;
+		this.value    = e.value;
 	}
 	set title(value : string) {
 		this._title.nodeValue = value;
