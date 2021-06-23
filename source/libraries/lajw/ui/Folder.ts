@@ -55,7 +55,10 @@ export default class Folder extends Parent {
 		this.DOM.classList.add("fadeIn");
 	}
 	override click (e : MouseEvent) {
-		this.open = !this.open;
+		e.preventDefault()
+		if (e.button == 0) {
+			this.open = !this.open;
+		}
 	}
 	get height() {
 		let height = 23; // HACK
