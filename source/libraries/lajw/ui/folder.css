@@ -6,10 +6,10 @@ body.animate .Folder {
 	overflow: hidden;
 }
 .Folder>.title {
-	background-image: url('folder-closed.png');
+	background-image: url('./icons/folder-closed.png');
 }
 .Folder.open>.title {
-	background-image: url('folder-open.png');
+	background-image: url('./icons/folder-open.png');
 }
 .Folder>.title:hover {
 	background-color: #777;
