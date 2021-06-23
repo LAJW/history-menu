@@ -7,6 +7,10 @@ export default class DeviceFolder extends Folder {
 		const children = device.sessions.map(({window, lastModified}) => new WindowFolder(i18n, {
 			...window, lastModified
 		}));
-		super({ children, title : device.deviceName });
+		super({
+			children,
+			title : device.deviceName,
+			tooltip : device.deviceName
+		});
 	}
 }
