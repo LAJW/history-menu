@@ -18,11 +18,13 @@ export default class WindowFolder extends Folder {
 	_timer : Node
 	sessionId : string
 	constructor(wnd : WindowFolderInfo) {
-		super({ children : wnd.tabs.map(tab => new TabButton(tab))});
+		super({
+			title : `Window (Number of tabs: ${wnd.tabs.length})`,
+			children : wnd.tabs.map(tab => new TabButton(tab)),
+		});
 		this._timer = this.DOM.firstChild
 			.insertBefore(template.cloneNode(true), this.DOM.firstChild.firstChild)
 			.firstChild;
-		this.title  = "Window (Number of tabs: " + wnd.tabs.length + ")";
 		if (wnd.lastModified) {
 			this.timer = relativeTime(wnd.lastModified * 1000);
 		}

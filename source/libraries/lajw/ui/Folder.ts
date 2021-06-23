@@ -25,7 +25,7 @@ export default class Folder extends Parent {
 	_empty1 : HTMLElement
 	_open : boolean
 	constructor(e : {
-			title? : string,
+			title : string,
 			open? : boolean,
 			children : UINode[]
 		}) {
@@ -34,7 +34,7 @@ export default class Folder extends Parent {
 		super({ DOM, container, children : [] });
 		this._title = this.DOM.firstChild as HTMLAnchorElement;
 		this._empty1 = this.DOM.childNodes[1] as HTMLElement;
-		this.title = e.title || "";
+		this.title = e.title;
 		this.open = e.open === undefined ? true : e.open;
 		this.insert(e.children);
 	}
