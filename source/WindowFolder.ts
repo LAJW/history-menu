@@ -18,7 +18,7 @@ export default class WindowFolder extends Folder {
 	_timer : Node
 	sessionId : string
 	constructor(wnd : WindowFolderInfo) {
-		super();
+		super({ children : [] });
 		this._timer = this.DOM.firstChild
 			.appendChild(template.cloneNode(true))
 			.firstChild;

@@ -27,19 +27,16 @@ export default class Folder extends Parent {
 	constructor(e : {
 			title? : string,
 			open? : boolean,
-			children? : UINode[]
-		} = {}) {
+			children : UINode[]
+		}) {
 		const DOM = template.cloneNode(true) as HTMLElement;
 		const container = DOM.lastChild as HTMLElement;
-		const children = e.children
-		e.children = undefined;
-		super({ DOM, container, children });
+		super({ DOM, container, children : [] });
 		this._title = this.DOM.firstChild as HTMLAnchorElement;
 		this._empty1 = this.DOM.childNodes[1] as HTMLElement;
 		this.title = e.title || "";
 		this.open = e.open === undefined ? true : e.open;
-		if (children) 
-			this.insert(children);
+		this.insert(e.children);
 	}
 	override insert(child : UINode | UINode[], before? : UINode) {
 		super.insert(child, before);

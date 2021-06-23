@@ -7,14 +7,14 @@ export default class Parent extends Node {
 	constructor(e : {
 		DOM : HTMLElement
 		container? : HTMLElement
-		children? : Node[]
+		children : Node[]
 	}) {
 		super(e);
 		Object.defineProperty(this, "container", 
 			{value: e.container || this.DOM}
 		);
 		this._children = [];
-		if (e.children) {
+		if (e.children.length) {
 			this.insert(e.children);
 		}
 	}
