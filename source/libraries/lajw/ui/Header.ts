@@ -8,9 +8,9 @@ const template = $({
 });
 
 export default class Header extends Node {
-	constructor(e : { title? : string } = {}) {
+	constructor(e : { title : string }) {
 		super({DOM : template.cloneNode(true) as HTMLElement});
-		this.title = e.title || "";
+		this.title = e.title;
 	}
 	// String title - header's text
 	get title() {
