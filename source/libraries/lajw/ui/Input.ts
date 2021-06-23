@@ -31,12 +31,11 @@ export default class Input extends Node {
 	change : (value : string) => void
 
 	constructor(e : {
-		id? : string
 		value? : string
-		placeholder? : string
-		lockon? : boolean
-		change? : (value : string) => void
-	} = {}) {
+		placeholder : string
+		lockon : boolean
+		change : (value : string) => void
+	}) {
 		super({ DOM : template.cloneNode(true) as HTMLElement });
 		this._input = this.DOM.firstChild as HTMLInputElement;
 		this._cancel = this.DOM.lastChild as HTMLElement;
@@ -48,10 +47,10 @@ export default class Input extends Node {
 			this._toggleClearButton();
 		};
 		this.change = function () {};
-		this.value = e.value || "";
-		this.change = e.change || function () {};
-		this.placeholder = e.placeholder || "";
-		this.lockon = e.lockon || false;
+		this.value = e.value ?? "";
+		this.change = e.change;
+		this.placeholder = e.placeholder;
+		this.lockon = e.lockon;
 	}
 
 	override click(e : MouseEvent) {
