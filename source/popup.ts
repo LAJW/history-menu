@@ -261,7 +261,7 @@ function sessionToButton(i18n : I18n, settings : Settings, session : chrome.sess
 
 async function getSessionNodes(i18n : I18n, settings : Settings) : Promise<Node[]> {
 	return (await Chrome.sessions.getRecent({ }))
-		.slice(0, settings.tabCount || 25)
+		.slice(0, (settings.tabCount | 0) || 25)
 		.map(session => sessionToButton(i18n, settings, session));
 }
 
@@ -283,7 +283,7 @@ async function getHistoryNodes(settings : Settings) {
 		text:       "", 
 		startTime:  timestamp - 1000 * 3600 * 24 * 30, 
 		endTime:    timestamp,
-		maxResults: settings.historyCount
+		maxResults: settings.historyCount | 0
 	})
 	return results.map(result => {
 		const tmp = { ... result, preferSelect : settings.preferSelect }
