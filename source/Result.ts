@@ -3,6 +3,9 @@ export interface Result<OkState, FailState> {
 	bind : <T>(func: (value: OkState) => Result<T, FailState>) => Result<T, FailState>;
 	map<T>(func: (value: OkState) => T) : Result<T, FailState>;
 	mapFail<T>(func: (fail: FailState) => T) : Result<OkState, T>;
+	isOk : boolean
+	ok : OkState
+	fail : FailState
 }
 
 export class Ok<OkState, FailState> implements Result<OkState, FailState> {
@@ -22,6 +25,18 @@ export class Ok<OkState, FailState> implements Result<OkState, FailState> {
 	mapFail<T>(_: (value: FailState) => T) : Result<OkState, T> {
 		return new Ok<OkState, T>(this.#value);
 	}
+	toString() {
+		return `Ok { ${this.#value.toString()} }`;
+	}
+	get ok() {
+		return this.#value;
+	}
+	get fail() : FailState {
+		throw new Error("Accessing error of successful result");
+	}
+	get isOk() {
+		return true;
+	}
 }
 
 export class Fail<OkState, FailState> implements Result<OkState, FailState> {
@@ -40,5 +55,17 @@ export class Fail<OkState, FailState> implements Result<OkState, FailState> {
 	}
 	mapFail<T>(fail: (value: FailState) => T) : Result<OkState, T> {
 		return new Fail<OkState, T>(fail(this.#fail));
+	}
+	toString() {
+		return `Fail { ${this.#fail.toString()} }`;
+	}
+	get ok() : OkState {
+		throw new Error("Accessing value of failed result");
+	}
+	get fail() : FailState {
+		return this.#fail;
+	}
+	get isOk() {
+		return false;
 	}
 }
