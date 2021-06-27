@@ -205,7 +205,17 @@ async function main() {
 		}),
 		new Textarea({
 			title: `${i18n("options_blacklist")}`,
-			description: `${i18n("example")}:\ntranslate.google.com/*\ngoogle.com/*&search=*`,
+			description: `${i18n("example")}:
+<pre>
+# Don't show google translate in recent history
+# (it adds a new entry on every keystroke)
+https://translate.google.com/*
+
+# Don't show google search history
+https://google.com/*&search=*
+
+# Comment by putting "#" after space or on new line
+</pre>`,
 			value: settings.filter,
 			change: x => settings.filter = x,
 			validate: x => {
