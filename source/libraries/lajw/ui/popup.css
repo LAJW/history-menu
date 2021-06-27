@@ -3,6 +3,9 @@ body {
 	padding:0px;
 	margin:0px;
 	padding-bottom:-20px;
+}
+
+.preventSelect {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	user-select: none;
