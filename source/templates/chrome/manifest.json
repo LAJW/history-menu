@@ -1,5 +1,5 @@
 {
-	"name": "Wrona History Menu",
+	"name": "Recent Tabs and History (Wrona History Menu)",
 	"manifest_version": 2,
 	"content_security_policy": "script-src 'self'; object-src 'self'",
 	"author": "Łukasz A.J. Wrona (http://layv.net/)",
