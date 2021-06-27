@@ -22,6 +22,7 @@ import Root from "./libraries/lajw/ui/Root"
 import DeviceFolder from "./DeviceFolder"
 import Node from "./libraries/lajw/ui/Node"
 import { I18n, Settings } from "./Settings"
+import { parseGlobs } from "./utils"
 
 let devicesButton : DevicesButton, deviceLayer : Layer;
 
@@ -279,7 +280,7 @@ async function getDeviceNodes(i18n : I18n, settings : Settings) {
 
 async function getHistoryNodes(settings : Settings) {
 	const timestamp = Date.now();
-	const blacklist = settings.filter.split("\n").filter(line => line.length > 0)
+	const blacklist = parseGlobs(settings.filter.split("\n")).parsers;
 	let results : chrome.history.HistoryItem[]
 	for (let i = 1; i < 10; ++i) {
 		const preFilter = await Chrome.history.search({
@@ -288,7 +289,7 @@ async function getHistoryNodes(settings : Settings) {
 			endTime:    timestamp,
 			maxResults: (settings.historyCount | 20) + (20 * i)
 		})
-		results = preFilter.filter(x => !blacklist.some(line => x.url.includes(line)))
+		results = preFilter.filter(x => !blacklist.some(match => match(x.url)))
 		if (preFilter.length === results.length || results.length >= settings.length) {
 			break;
 		}
