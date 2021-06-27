@@ -58,13 +58,11 @@ async function getSettingsRW(defaultSettings : Settings) {
 	}
 	const settings : Settings = {}
 	for (const i_2 in map) {
-		console.log(i_2)
 		if (i_2 == "local") {
 			continue
 		}
 		Object.defineProperty(settings, i_2, {
 			set(value_2) {
-				console.log(i_2, value_2)
 				map[i_2] = value_2
 				storage.set({[i_2]: value_2})
 			},
