@@ -8,6 +8,7 @@ import { LocalSettings, Settings } from "./Settings"
 import Slider from "./Slider"
 import { $ } from "./libraries/lajw/utils"
 import Textarea from "./libraries/lajw/ui/Textarea"
+import { parseGlobs } from "./utils"
 
 // template for the Classic Button
 const classicButtonTemplate = $({
@@ -209,6 +210,14 @@ async function main() {
 			description: "Ex:\ntranslate.google.com/*\ngoogle.com/*&search=*",
 			value: settings.filter,
 			change: x => settings.filter = x,
+			validate: x => {
+				const { errors } = parseGlobs(x.split("\n"));
+				if (errors.length > 0) {
+					return errors.join("\n");
+				} else {
+					return undefined;
+				}
+			},
 		}),
 		new Header({title: i18n("options_other")}),
 		new Checkbox({
