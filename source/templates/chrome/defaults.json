@@ -11,5 +11,5 @@
 	"preferSelect": true,
 	"tabsFirst": true,
 	"theme": "",
-	"filter": "translate.google.com"
+	"filter": "https://translate.google.com/*"
 }
