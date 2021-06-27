@@ -1,6 +1,6 @@
 {
 	"description": {
-		"message": "Znajdź i przywróć zamknięte karty, okna i historię."
+		"message": "Przywróć, usuń i filtruj zamknięte karty, okna i historię włączając te z innych urządzeń."
 	},
 	"popup_history_manager": {
 		"message": "Wyświetl całą historię"

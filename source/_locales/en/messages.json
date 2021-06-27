@@ -1,6 +1,6 @@
 {
 	"description": {
-		"message": "Find and restore recently closed tabs, windows and history.",
+		"message": "Restore, filter or remove recently closed tabs, windows and history including those from other devices.",
 		"description": "Short description of extension's purpose displayed in browser's extension manager"
 	},
 	"popup_history_manager": {
