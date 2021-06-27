@@ -62,6 +62,24 @@
 	"options_display": {
 		"message": "表示"
 	},
+	"options_behavior": {
+		"message": "動作"
+	},
+	"options_other": {
+		"message": "他の"
+	},
+	"options_height": {
+		"message": "ポップアップの身長"
+	},
+	"options_width": {
+		"message": "ポップアップの幅"
+	},
+	"options_tabs_first": {
+		"message": "履歴の前にタブ"
+	},
+	"options_sync": {
+		"message": "同期"
+	},
 	"icon_color": {
 		"message": "アイコンの色"
 	},
@@ -92,10 +110,22 @@
 	"options_expand_folders": {
 		"message": "閉じたウインドウを開く"
 	},
+	"options_prefer_select": {
+		"message": "タブを選択し、開かない"
+	},
+	"options_lang": {
+		"message": "言語"
+	},
+	"options_theme": {
+		"message": "テーマ"
+	},
 	"options_animate": {
 		"message": "アニメーション"
 	},
 	"options_about": {
 		"message": "バージョン情報"
+	},
+	"options_reset": {
+		"message": "リセット"
 	}
 }
