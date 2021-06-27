@@ -48,9 +48,6 @@ export default class HistoryButton extends TimerButton {
 			this.#lastModified = item.lastVisitTime;
 		}
 		this.#remove      = this.DOM.appendChild(removeButton.cloneNode(true));
-	}
-	override fadeIn(e : number) {
-		super.fadeIn(e);
 		if (this.#lastModified) {
 			this.updateTimer();
 			this.#interval = setInterval(this.updateTimer.bind(this), 500);

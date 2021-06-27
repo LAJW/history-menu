@@ -12,8 +12,6 @@ export default class Progressbar extends Node {
 	#interval? : NodeJS.Timeout
 	constructor() {
 		super({ DOM : template.cloneNode(false) as HTMLElement });
-	}
-	override fadeIn() {
 		const canvas = this.DOM as HTMLCanvasElement
 		let ctx = canvas.getContext("2d");
 		let c = [-0.1, -0.2, -0.3];

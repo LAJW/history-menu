@@ -42,6 +42,14 @@ export default class Slider extends UINode {
 		this.max      = e.max;
 		this.step     = e.step;
 		this.value    = e.value;
+		let oldValue   = this.value;
+		this.#interval = setInterval(() => {
+			if (this.value != oldValue) {
+				oldValue            = this.value;
+				this.#display.value = this.value.toString();
+				this.#change(this.value);
+			}
+		}, 16);
 	}
 	set title(value : string) {
 		this.#title.nodeValue = value;
@@ -73,16 +81,6 @@ export default class Slider extends UINode {
 	}
 	get step() {
 		return parseInt(this.#knob.step);
-	}
-	override fadeIn() {
-		let oldValue   = this.value;
-		this.#interval = setInterval(() => {
-			if (this.value != oldValue) {
-				oldValue            = this.value;
-				this.#display.value = this.value.toString();
-				this.#change(this.value);
-			}
-		}, 16);
 	}
 	override fadeOut() {
 		clearInterval(this.#interval);

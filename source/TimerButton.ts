@@ -20,9 +20,6 @@ export default class TimerButton extends Button {
 		super(e);
 		this.#timerNode = this.DOM.appendChild(template.cloneNode(true)) as HTMLElement;
 		this.timer = e.timer;
-	}
-	override fadeIn(e : number) {
-		super.fadeIn(e);
 		this.#timerInterval = setInterval(this.updateTimer.bind(this), 500);
 	}
 	override fadeOut(e : number) {
