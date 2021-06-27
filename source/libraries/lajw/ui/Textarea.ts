@@ -39,7 +39,7 @@ export default class Textarea extends Node {
 	}) {
 		super({ DOM : template.cloneNode(true) as HTMLElement });
 		this.DOM.firstChild.firstChild.nodeValue = e.title;
-		(this.DOM.childNodes[3] as HTMLDivElement).innerHTML = e.description.replace("\n", "<br>");
+		(this.DOM.childNodes[3] as HTMLDivElement).innerHTML = e.description;
 		this.#errorBox = this.DOM.childNodes[2] as HTMLDivElement;
 		this.#textarea = this.DOM.childNodes[1] as HTMLTextAreaElement;
 		this.#textarea.onkeyup = this.#textarea.onchange = () => {
