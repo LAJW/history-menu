@@ -16,14 +16,14 @@ body.animate .Folder {
 }
 .Folder>.title:hover {
 	background-color: #777;
-	color: white;
 	border-radius: 0px;
 }
 body.Windows .Folder>.title:hover {
-	background-color: rgb(64, 129, 244); 
+	background-color: #e8e8e9; 
 }
 body.Ubuntu .Folder>.title:hover {
 	background-color: #E36C43;
+	color: white;
 }
 .Folder>.empty {
 	color: grey;

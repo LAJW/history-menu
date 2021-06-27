@@ -1,14 +1,13 @@
 a.Button:link, a.Button:visited {
-	color: rgb(48, 57, 66);
+	color: black;
 }
 
 a.Button:hover, a.Button.highlighted {
-	color: white;
 	background-color: #555;
 }
 
 body.Windows a.Button:hover, body.Windows a.Button.highlighted {
-	background-color: rgb(64, 129, 244);
+	background-color: #e8e8e9;
 }
 
 body.Ubuntu a.Button:hover, body.Windows a.Button.highlighted {
