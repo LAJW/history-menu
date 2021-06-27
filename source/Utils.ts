@@ -32,10 +32,13 @@ export function escapedSplit (string : string) : Result<string[], string> {
 
 export function stripComments(line : string) : Result<string, string> {
 	const parts = line.split(" ");
-	if (parts.length > 1 && !parts[1].startsWith("#")) {
+	if (parts[0].startsWith("#")) {
+		return new Ok("");
+	} else if (parts.length > 1 && !parts[1].startsWith("#")) {
 		return new Fail("Comments should start with #");
+	} else {
+		return new Ok(parts[0]);
 	}
-	return new Ok(parts[0]);
 }
 
 export function glob(parts : string[], haystack : string) {
@@ -83,7 +86,7 @@ export function parseGlobs(lines : string[]) {
 	const errors : string[] = [];
 	for (const [lineIndex, line] of enumerate(lines)) {
 		const trimmed = line.trim();
-		if (trimmed !== "") {
+		if (trimmed !== "" && !trimmed.startsWith("#")) {
 			parseGlob(trimmed).match(
 				parser => parsers.push(parser),
 				error => errors.push(`Line ${lineIndex + 1}: ${error}`));
