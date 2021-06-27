@@ -204,8 +204,8 @@ async function main() {
 			change:  x => settings.preferSelect = x,
 		}),
 		new Textarea({
-			title: `${i18n("popup_recent_history")}: Blacklist`,
-			description: "Ex:\ntranslate.google.com/*\ngoogle.com/*&search=*",
+			title: `${i18n("options_blacklist")}`,
+			description: `${i18n("example")}:\ntranslate.google.com/*\ngoogle.com/*&search=*`,
 			value: settings.filter,
 			change: x => settings.filter = x,
 			validate: x => {

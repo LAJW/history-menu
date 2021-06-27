@@ -170,5 +170,11 @@
 	"options_about": {
 		"message": "About",
 		"description": "Label of a button opening extension's homepage"
+	},
+	"options_blacklist": {
+		"message": "Recently visited black list"
+	},
+	"example": {
+		"message": "Example"
 	}
 }

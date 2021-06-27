@@ -50,7 +50,7 @@
 	"results_this_month": {
 		"message": "Wcześniej w tym miesiącu"
 	},
-	"results_this_month": {
+	"results_last_month": {
 		"message": "W ubiegłym miesiącu"
 	},
 	"results_nothing_found": {
@@ -127,5 +127,11 @@
 	},
 	"options_about": {
 		"message": "Informacje"
+	},
+	"options_blacklist": {
+		"message": "Ostatnio przeglądane: czarna lista"
+	},
+	"example": {
+		"message": "Przykład"
 	}
 }

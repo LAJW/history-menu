@@ -127,5 +127,11 @@
 	},
 	"options_reset": {
 		"message": "リセット"
+	},
+	"options_blacklist": {
+		"message": "最近の履歴のブラックリスト"
+	},
+	"example": {
+		"message": "例"
 	}
 }

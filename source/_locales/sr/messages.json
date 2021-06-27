@@ -127,5 +127,11 @@
 	},
 	"options_about": {
 		"message": "Информације"
+	},
+    "options_blacklist": {
+       "message": "Недавно посећено: црна листа"
+    },
+    "example": {
+      "message": "Пример"
 	}
 }

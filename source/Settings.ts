@@ -65,3 +65,5 @@ export type I18nKey =
 	| "options_theme"
 	| "options_animate"
 	| "options_about"
+	| "options_blacklist"
+	| "example"
