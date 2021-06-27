@@ -212,7 +212,7 @@ async function main() {
 https://translate.google.com/*
 
 # Don't show google search history
-https://google.com/*&search=*
+https://www.google.com/search?*
 
 # Comment by putting "#" after space or on new line
 </pre>`,
