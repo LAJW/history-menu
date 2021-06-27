@@ -3,17 +3,20 @@ import Node from "./Node"
 export default class Parent extends Node {
 	readonly #children : Node[]
 	container : HTMLElement
+	readonly #fadeInEnabled : boolean
 
 	constructor(e : {
 		DOM : HTMLElement
 		container? : HTMLElement
 		children : Node[]
+		fadeInEnabled : boolean
 	}) {
 		super(e);
 		Object.defineProperty(this, "container", 
 			{value: e.container || this.DOM}
 		);
 		this.#children = [];
+		this.#fadeInEnabled = e.fadeInEnabled;
 		if (e.children.length) {
 			this.insert(e.children);
 		}
@@ -39,7 +42,9 @@ export default class Parent extends Node {
 		this.container.appendChild(child.DOM);
 		this.#children.push(child);
 		child._parent = this;
-		child.fadeIn(0);
+		if (this.#fadeInEnabled) {
+			child.fadeIn(0);
+		}
 		return child;
 	}
 	#appendMany(children : Node[]) { // not exception safe
@@ -48,7 +53,9 @@ export default class Parent extends Node {
 			this.container.appendChild(child.DOM);
 			this.#children.push(child);
 			child._parent = this;
-			child.fadeIn(Math.max(Math.min(children.length, 20) - i, 0) * 10);
+			if (this.#fadeInEnabled) {
+				child.fadeIn(Math.max(Math.min(children.length, 20) - i, 0) * 10);
+			}
 		});
 	}
 	#insertBefore(child : Node, before : Node) { // exception safe
@@ -57,7 +64,9 @@ export default class Parent extends Node {
 		this.container.insertBefore(child.DOM, before.DOM);
 		this.#children.splice(this.#children.indexOf(before), 0, child);
 		child._parent = this;
-		child.fadeIn(0);
+		if (this.#fadeInEnabled) {
+			child.fadeIn(0);
+		}
 		return child;
 	}
 	#insertManyBefore(children : Node[], before : Node) { // not exception safe

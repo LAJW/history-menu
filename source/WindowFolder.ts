@@ -10,6 +10,7 @@ const template = $({
 });
 
 interface WindowFolderInfo extends chrome.windows.Window {
+	fadeInEnabled : boolean
 	lastModified : number
 	open? : boolean
 }
@@ -26,7 +27,8 @@ export default class WindowFolder extends Folder {
 		super({
 			title : `${i18n("popup_window")} (${i18n("popup_number_of_tabs")}: ${wnd.tabs.length})`,
 			children : wnd.tabs.map(tab => new TabButton(tab)),
-			tooltip : sessionInfo(wnd)
+			tooltip : sessionInfo(wnd),
+			fadeInEnabled : wnd.fadeInEnabled,
 		});
 		this.#timer = this.DOM.firstChild
 			.insertBefore(template.cloneNode(true), this.DOM.firstChild.firstChild)

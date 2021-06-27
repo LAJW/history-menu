@@ -191,7 +191,8 @@ function getMainLayer(sessions : Node[], history : Node[], i18n : (key : string)
 		}));
 	}
 	return new Layer({
-		children: children
+		children: children,
+		fadeInEnabled: false,
 	});
 }
 
@@ -204,7 +205,8 @@ function main(root : Root, sessions : Node[], devices : DeviceFolder[], history 
 		visible:  false,
 		children: [new Separator({
 			title: i18n("popup_search_history")
-		})]
+		})],
+		fadeInEnabled: true,
 	})) as Layer;
 	const mainButtons = new MultiButton({
 		children: [
@@ -230,7 +232,8 @@ function main(root : Root, sessions : Node[], devices : DeviceFolder[], history 
 	if (devices.length > 0) {
 		deviceLayer = new Layer({
 			visible:  false,
-			children: devices
+			children: devices,
+			fadeInEnabled: false,
 		});
 		devicesButton = new DevicesButton({
 			tooltip: i18n("popup_other_devices"),
@@ -256,7 +259,8 @@ function sessionToButton(i18n : I18n, settings : Settings, session : chrome.sess
 	return new WindowFolder(i18n, {
 		...session.window,
 		lastModified : settings.timer ? session.lastModified : undefined,
-		open : session.window !== undefined ? settings.expand : undefined
+		open : session.window !== undefined ? settings.expand : undefined,
+		fadeInEnabled : false,
 	})
 }
 

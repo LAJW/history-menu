@@ -9,8 +9,12 @@ const template = $({
 
 export default class Layer extends Parent {
 	#visible : boolean
-	constructor({visible, children} : { visible? : boolean, children : Node[] }) {
-		super({ children, DOM : template.cloneNode(true) as HTMLElement });
+	constructor({visible, children, fadeInEnabled} : {
+			visible? : boolean
+			children : Node[]
+			fadeInEnabled : boolean
+		}) {
+		super({ children, fadeInEnabled, DOM : template.cloneNode(true) as HTMLElement });
 		this.visible = visible ?? true;
 	}
 	// bool visible - is this layer visible

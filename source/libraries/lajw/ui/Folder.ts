@@ -28,12 +28,13 @@ export default class Folder extends Parent {
 			title : string,
 			tooltip : string,
 			open? : boolean,
-			children : UINode[]
+			children : UINode[],
+			fadeInEnabled : boolean
 		}) {
 		super((() => {
 			const DOM = template.cloneNode(true) as HTMLElement;
 			const container = DOM.lastChild as HTMLElement;
-			return { DOM, container, children : new Array<UINode>() }
+			return { DOM, container, children : new Array<UINode>(), fadeInEnabled : e.fadeInEnabled }
 		})());
 		this.#title = this.DOM.firstChild as HTMLAnchorElement;
 		this.#tooltip = e.tooltip

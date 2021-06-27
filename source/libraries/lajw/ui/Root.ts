@@ -6,7 +6,7 @@ export default class Root extends Parent {
 	#width : number
 	#height : number
 	constructor() {
-		super({DOM: document.body, children : []});
+		super({DOM: document.body, children : [], fadeInEnabled: false});
 		if (root)
 			throw new Error("Root already exists");
 		document.body.addEventListener("click", e => Node.fromDOM(e.target as HTMLElement).click(e))
