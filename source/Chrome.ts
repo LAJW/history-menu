@@ -152,7 +152,8 @@ sessions: {
 	restore(sessionId : string, inBackground? : boolean) {
 		return new Promise<void>(resolve => {
 			if (inBackground) {
-				chrome.tabs.getCurrent(tab => {
+				chrome.tabs.query(({active : true}), tabs => {
+					const tab = tabs[0]
 					if (tab) {
 						chrome.sessions.restore(sessionId, () => {
 							chrome.tabs.update(tab.id, {active: true}, () => resolve());
