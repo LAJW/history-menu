@@ -3,6 +3,7 @@ import Chrome from "./Chrome"
 import { $, trimURL } from "./libraries/lajw/utils"
 import Parent from "./libraries/lajw/ui/Parent";
 import { I18n } from "./Settings";
+import { removeProtocol } from "./Utils";
 
 const removeButton = $({
 	nodeName: "A",
@@ -25,12 +26,12 @@ function sanitize(item : {
 		icon : "chrome://favicon/" + item.url,
 	}
 	if (!item.title) {
-		return { ...rewired, title : trimURL(item.url), tooltip : item.url }
+		return { ...rewired, title : trimURL(removeProtocol(item.url)), tooltip : removeProtocol(item.url) }
 	} else {
 		const tooltip =
 			(item.originalTitle && item.originalTitle != item.title)
-			? `${item.title} (${item.originalTitle})\n${item.url}` 
-			: `${item.title}\n${item.url}`;
+			? `${item.title} (${item.originalTitle})\n${removeProtocol(item.url)}` 
+			: `${item.title}\n${removeProtocol(item.url)}`;
 		return { ...rewired, title : item.title, tooltip }
 	}
 }
