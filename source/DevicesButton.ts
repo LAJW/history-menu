@@ -1,5 +1,5 @@
 import ActionButton from "./ActionButton"
-import { $ } from "./libraries/lajw/utils";
+import { $ } from "./Utils";
 
 const arrowTemplate = $({
 	nodeName:  "DIV",

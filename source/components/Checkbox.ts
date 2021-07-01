@@ -1,5 +1,5 @@
 import Node from "./Node"
-import { $ } from "../utils"
+import { $ } from "../Utils"
 
 let template = $({
 	nodeName: "label",

@@ -1,9 +1,8 @@
 import TimerButton from "./TimerButton"
 import Chrome from "./Chrome"
-import { $, trimURL } from "./libraries/lajw/utils"
-import Parent from "./libraries/lajw/ui/Parent";
+import Parent from "./components/Parent";
 import { I18n } from "./Settings";
-import { removeProtocol } from "./Utils";
+import { removeProtocol, $, trimURL } from "./Utils";
 
 const removeButton = $({
 	nodeName: "A",

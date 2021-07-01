@@ -19,11 +19,11 @@ module.exports = {
     options    : [ "./source/options.ts" ],
     background : [ "./source/background.ts" ],
     style      : [
-      "./source/libraries/lajw/ui/popup.css",
-      "./source/libraries/lajw/ui/button.css",
-      "./source/libraries/lajw/ui/input.css",
-      "./source/libraries/lajw/ui/folder.css",
-      "./source/libraries/lajw/ui/separator.css",
+      "./source/components/popup.css",
+      "./source/components/button.css",
+      "./source/components/input.css",
+      "./source/components/folder.css",
+      "./source/components/separator.css",
       "./source/style.css",
     ]
   },

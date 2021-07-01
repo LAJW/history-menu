@@ -1,4 +1,4 @@
-import Folder from "./libraries/lajw/ui/Folder"
+import Folder from "./components/Folder"
 import { I18n } from "./Settings";
 import WindowFolder from "./WindowFolder"
 

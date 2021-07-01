@@ -1,14 +1,13 @@
 import Chrome from "./Chrome"
-import Checkbox from "./libraries/lajw/ui/Checkbox"
-import Header from "./libraries/lajw/ui/Header"
-import Node from "./libraries/lajw/ui/Node"
-import Root from "./libraries/lajw/ui/Root"
-import Select from "./libraries/lajw/ui/Select"
+import Checkbox from "./components/Checkbox"
+import Header from "./components/Header"
+import Node from "./components/Node"
+import Root from "./components/Root"
+import Select from "./components/Select"
 import { LocalSettings, Settings } from "./Settings"
 import Slider from "./Slider"
-import { $ } from "./libraries/lajw/utils"
-import Textarea from "./libraries/lajw/ui/Textarea"
-import { parseGlobs } from "./utils"
+import { $, parseGlobs } from "./Utils"
+import Textarea from "./components/Textarea"
 
 // template for the Classic Button
 const classicButtonTemplate = $({

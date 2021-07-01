@@ -1,6 +1,6 @@
 import Node from "./Node"
 import Parent from "./Parent"
-import { $ } from "../utils"
+import { $ } from "../Utils"
 
 const template = $({
 	nodeName: "DIV",

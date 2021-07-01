@@ -1,4 +1,4 @@
-import Button from "./libraries/lajw/ui/Button"
+import Button from "./components/Button"
 
 export default class ActionButton extends Button {
 	constructor (e : {

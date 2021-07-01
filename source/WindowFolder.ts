@@ -1,7 +1,7 @@
 import Chrome from "./Chrome"
-import Folder from "./libraries/lajw/ui/Folder"
+import Folder from "./components/Folder"
 import TabButton from "./TabButton"
-import { $, relativeTime } from "./libraries/lajw/utils"
+import { $, relativeTime } from "./Utils"
 
 const template = $({
 	nodeName:  "DIV",

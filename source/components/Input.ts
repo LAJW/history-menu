@@ -1,5 +1,5 @@
 import Node from "./Node"
-import { $ } from "../utils"
+import { $ } from "../Utils"
 
 // locked on Input - when you type sometihng, automatically focus this
 // input node

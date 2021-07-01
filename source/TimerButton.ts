@@ -1,5 +1,5 @@
-import Button from "./libraries/lajw/ui/Button"
-import { $, relativeTime } from "./libraries/lajw/utils";
+import Button from "./components/Button"
+import { $, relativeTime } from "./Utils";
 
 const template = $({
 	nodeName: "DIV",

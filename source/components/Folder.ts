@@ -1,6 +1,6 @@
 import UINode from "./Node"
 import Parent from "./Parent"
-import { $, px } from "../utils"
+import { $, px } from "../Utils"
 
 const template = $({
 	nodeName: "DIV",
