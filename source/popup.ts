@@ -196,7 +196,7 @@ function getMainLayer(sessions : Node[], history : Node[], i18n : (key : string)
 	});
 }
 
-function main(root : Root, sessions : Node[], devices : DeviceFolder[], history : HistoryButton[], i18n : (key : string) => string, settings : Settings) {
+function main(root : Root, sessions : Node[], devices : DeviceFolder[], history : HistoryButton[], bookmarks : chrome.bookmarks.BookmarkTreeNode[], i18n : (key : string) => string, settings : Settings) {
 	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate);
 	root.width  = settings.width || 0;
 	root.height = settings.height || 0;
@@ -319,6 +319,7 @@ async function getHistoryNodes(settings : Settings) {
 		getSessionNodes(i18n, settings),
 		getDeviceNodes(i18n, settings),
 		getHistoryNodes(settings),
+		Chrome.bookmarks.getTree(),
 		i18n,
 		settings
 	])
