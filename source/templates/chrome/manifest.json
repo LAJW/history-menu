@@ -10,7 +10,8 @@
 		"history",
 		"sessions",
 		"chrome://favicon/",
-		"storage"
+		"storage",
+		"bookmarks"
 	],
 	"icons": {
 		"128": "icons/history-128.png"
