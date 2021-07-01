@@ -10,6 +10,7 @@ const removeButton = $({
 
 function sanitize(item : {
 	title?: string
+	originalTitle?: string
 	url?: string
 	lastVisitTime?: number
 }) {
@@ -25,12 +26,17 @@ function sanitize(item : {
 	if (!item.title) {
 		return { ...rewired, title : trimURL(item.url), tooltip : item.url }
 	} else {
-		return { ...rewired, title : item.title, tooltip : item.title + "\n" + item.url }
+		const tooltip =
+			(item.originalTitle && item.originalTitle != item.title)
+			? `${item.title} (${item.originalTitle})\n${item.url}` 
+			: `${item.title}\n${item.url}`;
+		return { ...rewired, title : item.title, tooltip }
 	}
 }
 
 interface HistoryButtonInfo extends chrome.history.HistoryItem {
 	preferSelect? : boolean
+	originalTitle? : string
 	aux? : string
 }
 

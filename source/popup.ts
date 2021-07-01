@@ -384,6 +384,7 @@ async function getHistoryNodes(settings : Settings, titleMap : Map<string, strin
 				title,
 				lastVisitTime : settings.timer ? item.lastVisitTime : undefined,
 				preferSelect : settings.preferSelect,
+				originalTitle : aux.title,
 				aux : aux.aux
 			})
 		})
