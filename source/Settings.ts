@@ -67,3 +67,4 @@ export type I18nKey =
 	| "options_about"
 	| "options_blacklist"
 	| "example"
+	| "remove"

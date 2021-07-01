@@ -146,7 +146,7 @@ function onSearch(deviceLayer : Layer, searchLayer : Layer, i18n : (key : string
 						if (!settings.timer) {
 							result.lastVisitTime = null;
 						}
-						return new HistoryButton({ ...result });
+						return new HistoryButton(i18n, { ...result });
 					});
 					searchResults = [ ...searchResults, ...nodes ];
 					searchLayer.insert(new Separator({title: i18n(sector.i18n)}))
@@ -356,7 +356,7 @@ function processTitle(item : { url? : string, title? : string }) {
 	return item.title;
 }
 
-async function getHistoryNodes(settings : Settings, titleMap : Map<string, string>) {
+async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<string, string>) {
 	const timestamp = Date.now();
 	const blacklist = parseGlobs(settings.filter.split("\n")).parsers;
 	let results : chrome.history.HistoryItem[]
@@ -384,7 +384,7 @@ async function getHistoryNodes(settings : Settings, titleMap : Map<string, strin
 					title = titleMap.get(stripHash(item.url.toLowerCase())) ?? processTitle(item);
 				}
 			}
-			return new HistoryButton({
+			return new HistoryButton(i18n, {
 				...item,
 				title,
 				lastVisitTime : settings.timer ? item.lastVisitTime : undefined,
@@ -406,7 +406,7 @@ async function getHistoryNodes(settings : Settings, titleMap : Map<string, strin
 		Root.ready(),
 		getSessionNodes(i18n, settings, titleMap),
 		getDeviceNodes(i18n, settings),
-		getHistoryNodes(settings, titleMap),
+		getHistoryNodes(i18n, settings, titleMap),
 		bookmarks,
 		i18n,
 		settings

@@ -55,28 +55,33 @@ a {
 	box-shadow:    0px 0px 3px rgba(0, 0, 0, 0.5);
 }
 
+.History:hover>.Timer {
+	opacity: 0;
+}
+
 .hidden {
 	display: none;
 }
 
 .Remove {
-	background: url('icons/x-white.png') #E36C43 no-repeat center center;
-	width:      23px;
-	height:     19px;
+	background: url('icons/x-white.png') #555 no-repeat center center;
+	width:      18px;
+	height:     18px;
 	position:   absolute;
-	left:       2px;
+	right:      3px;
 	top:        2px;
 	display:    block;
 	opacity:    0;
+	border:        white 1px solid;
+	box-shadow:    0px 0px 3px rgba(0, 0, 0, 0.5);
 }
 
-.animate .Remove {
-	transition: 0.15s;
+.History:hover .Remove {
+	opacity:    1;
 }
 
 .Remove:hover {
-	transition: 0s;
-	opacity:    1;
+	background-color: #E36C43;
 }
 
 .Arrow {

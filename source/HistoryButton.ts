@@ -2,9 +2,10 @@ import TimerButton from "./TimerButton"
 import Chrome from "./Chrome"
 import { $, trimURL } from "./libraries/lajw/utils"
 import Parent from "./libraries/lajw/ui/Parent";
+import { I18n } from "./Settings";
 
 const removeButton = $({
-	nodeName: "DIV",
+	nodeName: "A",
 	className: "Remove"
 });
 
@@ -43,11 +44,11 @@ interface HistoryButtonInfo extends chrome.history.HistoryItem {
 export default class HistoryButton extends TimerButton {
 	preferSelect: boolean
 	#lastModified: number
-	#remove: Node
+	#remove: HTMLElement
 	#interval: NodeJS.Timeout
 	#highlighted: boolean
 	#aux: HTMLElement
-	constructor(item : HistoryButtonInfo) {
+	constructor(i18n : I18n, item : HistoryButtonInfo) {
 		super(sanitize(item));
 		this.DOM.classList.add("History");
 		this.url          = item.url ?? "";
@@ -55,7 +56,8 @@ export default class HistoryButton extends TimerButton {
 		if (item.lastVisitTime) {
 			this.#lastModified = item.lastVisitTime;
 		}
-		this.#remove = this.DOM.appendChild(removeButton.cloneNode(true));
+		this.#remove = this.DOM.appendChild(removeButton.cloneNode(true)) as HTMLAnchorElement;
+		this.#remove.title = i18n("remove");
 		this.#aux = this.DOM.appendChild(document.createElement("i"));
 		if (item.aux) {
 			this.#aux.style.color = "#aaa";
