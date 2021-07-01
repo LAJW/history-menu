@@ -176,5 +176,8 @@
    },
    "example": {
       "message": "Пример"
+   },
+	"remove": {
+		"message": "Удалить"
    }
 }

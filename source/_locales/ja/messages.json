@@ -133,5 +133,8 @@
 	},
 	"example": {
 		"message": "例"
+	},
+	"remove": {
+		"message": "削除"
 	}
 }

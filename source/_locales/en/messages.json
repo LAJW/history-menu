@@ -176,5 +176,9 @@
 	},
 	"example": {
 		"message": "Example"
+	},
+	"remove": {
+		"message": "Remove",
+		"description": "Tooltip under [delete history item] button"
 	}
 }

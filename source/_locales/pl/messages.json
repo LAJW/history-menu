@@ -133,5 +133,8 @@
 	},
 	"example": {
 		"message": "Przykład"
+	},
+	"remove": {
+		"message": "Usuń"
 	}
 }
