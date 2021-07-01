@@ -3,7 +3,7 @@ a.Button:link, a.Button:visited {
 }
 
 a.Button:hover, a.Button.highlighted {
-	background-color: #555;
+	background-color: #e8e8e9;
 }
 
 body.Windows a.Button:hover, body.Windows a.Button.highlighted {

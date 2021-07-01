@@ -15,7 +15,7 @@ body.animate .Folder {
 	border-radius: 13px 0px 0px 13px;
 }
 .Folder>.title:hover {
-	background-color: #777;
+	background-color: #e8e8e9;
 	border-radius: 0px;
 }
 body.Windows .Folder>.title:hover {
