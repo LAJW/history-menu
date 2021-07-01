@@ -50,7 +50,7 @@ a {
 	line-height:   7pt;
 	padding:       3px 6px;
 	font-size:     8pt;
-	border-radius: 3px;
+	border-radius: 19px;
 	border:        white 1px solid;
 	box-shadow:    0px 0px 3px rgba(0, 0, 0, 0.5);
 }
@@ -72,6 +72,7 @@ a {
 	top:        2px;
 	display:    block;
 	opacity:    0;
+	border-radius: 10px;
 	border:        white 1px solid;
 	box-shadow:    0px 0px 3px rgba(0, 0, 0, 0.5);
 }
