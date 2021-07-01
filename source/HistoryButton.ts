@@ -75,22 +75,22 @@ export default class HistoryButton extends TimerButton {
 	override async click(e : MouseEvent) {
 		if (e.button === 0 || e.button === 1) {
 			e.preventDefault();
+			const inBackground = e.button === 1 || e.ctrlKey;
 			if (e.target == this.#remove) {
 				if (e.button === 0) {
 					Chrome.history.deleteUrl({ url: this.url });
 					(this.parent as Parent).remove(this);
 				}
 			} else if (this.preferSelect) {
-				await Chrome.tabs.openOrSelect(this.url, e.button === 1 || e.ctrlKey);
-				if (e.button === 0) {
+				await Chrome.tabs.openOrSelect(this.url, inBackground);
+				if (!inBackground) {
 					window.close();
 				}
 			} else {
-				await Chrome.tabs.create({
-					url:    this.url, 
-					active: !(e.button === 1 || e.ctrlKey)
-				})
-				window.close()
+				await Chrome.tabs.openInCurrentTab(this.url, inBackground);
+				if (!inBackground) {
+					window.close()
+				}
 			}
 		}
 	}

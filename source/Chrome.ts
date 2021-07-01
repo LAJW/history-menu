@@ -281,6 +281,19 @@ tabs: {
 	 */
 	highlight: (info : chrome.tabs.HighlightInfo) => new Promise<chrome.windows.Window>(resolve => chrome.tabs.highlight(info, resolve)),
 
+	async openInCurrentTab(url : string, inBackground : boolean) {
+		if (!inBackground) {
+			const [ active ] = await new Promise<chrome.tabs.Tab[]>(resolve => chrome.tabs.query({ active : true }, x => resolve(x)));
+			if (active) {
+				return await new Promise(resolve => chrome.tabs.update(active.id, {url : url}, x => resolve(x)))
+			}
+		}
+		return Chrome.tabs.create({
+			url: url,
+			active: !inBackground
+		});
+	},
+
 	/**
 	 * @brief Creates new tab in current active window, specified by supplied 
 	 * URL without closing extension popup. Optionally creates it in background.
@@ -308,19 +321,13 @@ tabs: {
 					{ active: true }
 				);
 			} else {
-				return Chrome.tabs.create({
-					url: url,
-					active: !inBackground
-				});
+				return Chrome.tabs.openInCurrentTab(url, inBackground);
 			}
 		} else {
 			// extension-local URL
-			return Chrome.tabs.create({
-				url: url,
-				active: !inBackground
-			});
+			return Chrome.tabs.openInCurrentTab(url, inBackground);
 		}
-	}
+	},
 }, // namespace Chrome.tabs
 bookmarks : {
 	getTree : () => new Promise<chrome.bookmarks.BookmarkTreeNode[]>(resolve => chrome.bookmarks.getTree(resolve))

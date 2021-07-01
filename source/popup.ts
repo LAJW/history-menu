@@ -260,13 +260,23 @@ function main(root : Root, sessions : Node[], devices : DeviceFolder[], history 
 				title:   "",
 				tooltip: i18n("popup_history_manager"),
 				icon:    "icons/history-19.png",
-				click:   () => Chrome.tabs.openOrSelect("chrome://history/", false),
+				click:   async e => {
+					await Chrome.tabs.openOrSelect("chrome://history/", false)
+					if (!(e.button == 1 || e.ctrlKey)) {
+						window.close();
+					}
+				},
 			}),
 			new ActionButton({
 				title:   "",
 				tooltip: i18n("popup_options"),
 				icon:    "icons/options.png",
-				click:   () => Chrome.tabs.openOrSelect(`chrome://extensions/?options=${chrome.runtime.id}`, false)
+				click:   async e => {
+					await Chrome.tabs.openOrSelect(`chrome://extensions/?options=${chrome.runtime.id}`, false)
+					if (!(e.button == 1 || e.ctrlKey)) {
+						window.close();
+					}
+				}
 			})
 		]
 	});
