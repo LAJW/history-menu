@@ -94,3 +94,36 @@ export function parseGlobs(lines : string[]) {
 	}
 	return { parsers, errors }
 }
+
+export function countBy<T, V>(items : Iterable<T>, func : (value: T) => V) {
+	const counts = new Map();
+	for (const item of items) {
+		const id = func(item);
+		counts.set(item, (counts.get(id) ?? 0) + 1);
+	}
+	return counts;
+}
+
+const prefixes = [
+	"https://www.",
+	"http://www.",
+	"https://",
+	"http://",
+]
+
+export function removeProtocol(url : string) {
+	const prefix = prefixes.find(prefix => url.startsWith(prefix));
+	if (prefix !== undefined) {
+		return url.substr(prefix.length);
+	}
+	return url;
+}
+
+export function removeDomain(url : string) {
+	const protocolIndex = url.indexOf("//");
+	if (protocolIndex < 0) {
+		return url;
+	}
+	const domainIndex = url.indexOf("/", protocolIndex + 2);
+	return url.substring(domainIndex + 1);
+}
