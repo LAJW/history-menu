@@ -308,7 +308,7 @@ function sessionToButton(i18n : I18n, settings : Settings, session : chrome.sess
 
 async function getSessionNodes(i18n : I18n, settings : Settings, titleMap: Map<string, string>) : Promise<Node[]> {
 	return (await Chrome.sessions.getRecent({ }))
-		.slice(0, (settings.tabCount | 0) || 25)
+		.slice(0, settings.tabCount | 0)
 		.map(session => sessionToButton(i18n, settings, session, titleMap));
 }
 
