@@ -172,7 +172,7 @@
 		"description": "Label of a button opening extension's homepage"
 	},
 	"options_blacklist": {
-		"message": "Recently visited black list"
+		"message": "Recently visited blacklist"
 	},
 	"example": {
 		"message": "Example"
