@@ -13,6 +13,7 @@ export interface Settings {
 	tabsFirst?: boolean
 	theme?: string
 	filter?: string
+	trimTitles?: boolean
 }
 
 export interface LocalSettings extends Settings {

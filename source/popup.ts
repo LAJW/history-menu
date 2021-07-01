@@ -303,7 +303,7 @@ function sessionToButton(i18n : I18n, settings : Settings, session : chrome.sess
 	if (session.tab) {
 		return new TabButton({
 			...session.tab,
-			title : titleMap.get(session.tab.url.toLowerCase()) ?? processTitle(session.tab),
+			title : titleMap.get(session.tab.url.toLowerCase()) ?? processTitle(settings, session.tab),
 			lastModified : settings.timer ? session.lastModified : undefined,
 		})
 	}
@@ -361,8 +361,24 @@ function auxiliaryTitle(titleGroups : Map<string, chrome.history.HistoryItem[]>,
 	}
 }
 
-function processTitle(item : { url? : string, title? : string }) {
-	return item.title;
+function processTitle(settings : Settings, item : { url? : string, title? : string }) {
+	if (settings.trimTitles) {
+		const domainParts = item.url.split("/")[2].split(".");
+		const titleParts = item.title.split(/[-\/—|]/g);
+		if (titleParts.length == 1) {
+			return item.title;
+		} else {
+			if (titleParts[0].trim().toLowerCase().split(/[ .]/g).every(part => domainParts.includes(part))) {
+				return titleParts.slice(1).join("-");
+			} else if (titleParts[titleParts.length - 1].trim().toLowerCase().split(/[ .]/g).every(part => domainParts.includes(part))) {
+				return titleParts.slice(0, titleParts.length - 1).join("-");
+			} else {
+				return item.title;
+			}
+		}
+	} else {
+		return item.title;
+	}
 }
 
 async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<string, string>) {
@@ -392,7 +408,7 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 			let title = titleMap.get(item.url.toLowerCase())
 			if (!title) {
 				if (!item.title || item.title === "" || titleGroups.get(item.title).length > 0) {
-					title = titleMap.get(stripHash(item.url.toLowerCase())) ?? processTitle(item);
+					title = titleMap.get(stripHash(item.url.toLowerCase())) ?? processTitle(settings, item);
 				}
 			}
 			return new HistoryButton(i18n, {
