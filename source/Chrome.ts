@@ -321,7 +321,10 @@ tabs: {
 			});
 		}
 	}
-} // namespace Chrome.tabs
+}, // namespace Chrome.tabs
+bookmarks : {
+	getTree : () => new Promise<chrome.bookmarks.BookmarkTreeNode[]>(resolve => chrome.bookmarks.getTree(resolve))
+}
 } // namespace Chrome
 
 export default Chrome
