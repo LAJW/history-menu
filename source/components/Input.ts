@@ -40,6 +40,13 @@ export default class Input extends Node {
 		super({ DOM : template.cloneNode(true) as HTMLElement });
 		this._input = this.DOM.firstChild as HTMLInputElement;
 		this.#cancel = this.DOM.lastChild as HTMLElement;
+		this._input.onkeydown = e => {
+			if (this.value !== "" && e.key === "Escape") {
+				e.preventDefault();
+				this.value = "";
+				this.change(this.value);
+			}
+		}
 		this._input.onkeyup = this._input.onchange = () => {
 			if (this.#oldValue === this.value)
 				return;
