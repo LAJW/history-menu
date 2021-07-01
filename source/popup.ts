@@ -377,7 +377,9 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 			endTime:    timestamp,
 			maxResults: (settings.historyCount | 20) + (20 * i)
 		})
-		results = preFilter.filter(x => !blacklist.some(match => match(x.url)))
+		results = preFilter.filter((x, index) =>
+			(!blacklist.some(match => match(x.url)))
+			&& (index === 0 || (preFilter[index - 1].lastVisitTime !== x.lastVisitTime)));
 		if (preFilter.length === results.length || results.length >= settings.length) {
 			break;
 		}
