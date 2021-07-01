@@ -112,7 +112,7 @@ window.addEventListener("keydown", e => {
 			// TODO: Outstanding, events might have to be rewired
 			searchResults[selectedResult].click({
 				preventDefault: () => e.preventDefault,
-				button: e.shiftKey ? 0 : 1
+				button: (e.ctrlKey || e.shiftKey) ? 1 : 0
 			});
 		}
 	}
