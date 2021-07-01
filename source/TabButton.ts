@@ -17,6 +17,7 @@ export default class TabButton extends TimerButton {
 			timer:   tab.lastModified * 1000
 		});
 		this.#sessionId = tab.sessionId;
+		(this.DOM as HTMLAnchorElement).href = tab.url;
 	}
 	override async click(e : MouseEvent) {
 		if (e.button === 0 || e.button === 1) {
