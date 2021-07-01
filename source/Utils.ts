@@ -95,13 +95,18 @@ export function parseGlobs(lines : string[]) {
 	return { parsers, errors }
 }
 
-export function countBy<T, V>(items : Iterable<T>, func : (value: T) => V) {
-	const counts = new Map();
+export function groupBy<T, V>(items : Iterable<T>, func : (value: T) => V) {
+	const groups = new Map<V, T[]>();
 	for (const item of items) {
 		const id = func(item);
-		counts.set(item, (counts.get(id) ?? 0) + 1);
+		let group = groups.get(id);
+		if (!group) {
+			group = [];
+			groups.set(id, group);
+		}
+		group.push(item);
 	}
-	return counts;
+	return groups;
 }
 
 const prefixes = [

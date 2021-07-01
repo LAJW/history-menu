@@ -22,7 +22,9 @@ import Root from "./libraries/lajw/ui/Root"
 import DeviceFolder from "./DeviceFolder"
 import Node from "./libraries/lajw/ui/Node"
 import { I18n, Settings } from "./Settings"
-import { parseGlobs } from "./utils"
+import { groupBy, parseGlobs, removeDomain } from "./utils"
+import { isTemplateExpression } from "typescript"
+import { url } from "./libraries/lajw/utils"
 
 let devicesButton : DevicesButton, deviceLayer : Layer;
 
@@ -144,7 +146,7 @@ function onSearch(deviceLayer : Layer, searchLayer : Layer, i18n : (key : string
 						if (!settings.timer) {
 							result.lastVisitTime = null;
 						}
-						return new HistoryButton(result);
+						return new HistoryButton({ ...result });
 					});
 					searchResults = [ ...searchResults, ...nodes ];
 					searchLayer.insert(new Separator({title: i18n(sector.i18n)}))
@@ -194,6 +196,45 @@ function getMainLayer(sessions : Node[], history : Node[], i18n : (key : string)
 		children: children,
 		fadeInEnabled: false,
 	});
+}
+
+function isFolder(node : chrome.bookmarks.BookmarkTreeNode) {
+	return node.children !== undefined;
+}
+
+function isTitledBookmark(node : chrome.bookmarks.BookmarkTreeNode) {
+	return node.url && node.title && node.title !== "";
+}
+
+function stripHash(url : string) {
+	const index = url.indexOf("#");
+	if (index === -1) {
+		return url;
+	} else {
+		return url.substring(0, index);
+	}
+}
+
+function getHash(url : string) {
+	const index = url.indexOf("#");
+	if (index === -1) {
+		return "";
+	} else {
+		return url.substring(index);
+	}
+}
+
+function urlToTitleMap(bookmarks : chrome.bookmarks.BookmarkTreeNode[]) {
+	const urlToTitle = new Map<string, string>()
+	function addAllChildren(node : chrome.bookmarks.BookmarkTreeNode) {
+		if (isFolder(node)) {
+			node.children.forEach(addAllChildren);
+		} else if (isTitledBookmark(node)) {
+			urlToTitle.set(node.url.toLowerCase(), node.title);
+		}
+	}
+	bookmarks.forEach(addAllChildren);
+	return urlToTitle;
 }
 
 function main(root : Root, sessions : Node[], devices : DeviceFolder[], history : HistoryButton[], bookmarks : chrome.bookmarks.BookmarkTreeNode[], i18n : (key : string) => string, settings : Settings) {
@@ -249,10 +290,11 @@ function main(root : Root, sessions : Node[], devices : DeviceFolder[], history 
 	root.insert(mainButtons);
 }
 
-function sessionToButton(i18n : I18n, settings : Settings, session : chrome.sessions.Session) {
+function sessionToButton(i18n : I18n, settings : Settings, session : chrome.sessions.Session, titleMap : Map<string, string>) {
 	if (session.tab) {
 		return new TabButton({
 			...session.tab,
+			title : titleMap.get(session.tab.url.toLowerCase()) ?? processTitle(session.tab),
 			lastModified : settings.timer ? session.lastModified : undefined,
 		})
 	}
@@ -264,10 +306,10 @@ function sessionToButton(i18n : I18n, settings : Settings, session : chrome.sess
 	})
 }
 
-async function getSessionNodes(i18n : I18n, settings : Settings) : Promise<Node[]> {
+async function getSessionNodes(i18n : I18n, settings : Settings, titleMap: Map<string, string>) : Promise<Node[]> {
 	return (await Chrome.sessions.getRecent({ }))
 		.slice(0, (settings.tabCount | 0) || 25)
-		.map(session => sessionToButton(i18n, settings, session));
+		.map(session => sessionToButton(i18n, settings, session, titleMap));
 }
 
 async function getDeviceNodes(i18n : I18n, settings : Settings) {
@@ -282,11 +324,44 @@ async function getDeviceNodes(i18n : I18n, settings : Settings) {
 	});
 }
 
-async function getHistoryNodes(settings : Settings) {
+
+function head<T>(collection : Iterable<T>) : T {
+	for (const el of collection) {
+		return el;
+	}
+	throw new Error("Collection was empty");
+}
+
+function auxiliaryTitle(titleGroups : Map<string, chrome.history.HistoryItem[]>, item : chrome.history.HistoryItem) : { title : string, aux? : string } {
+	const title = item.title;
+	const titleGroup = titleGroups.get(title);
+	if (titleGroup) {
+		const baseUrlGroups = groupBy([...titleGroup].map(item => stripHash(item.url)), id => id);
+		// TODO: Query different
+		if (baseUrlGroups.size === 1) { // base URL unique - good site
+			if (head(baseUrlGroups.values()).length == 1) {
+				return { title };
+			} else {
+				return { title, aux : getHash(item.url) };
+			}
+		} else { // Base URL different - trash site
+			return { title, aux : removeDomain(item.url) };
+		}
+	} else { // no title
+		return { title: item.url };
+	}
+}
+
+function processTitle(item : { url? : string, title? : string }) {
+	return item.title;
+}
+
+async function getHistoryNodes(settings : Settings, titleMap : Map<string, string>) {
 	const timestamp = Date.now();
 	const blacklist = parseGlobs(settings.filter.split("\n")).parsers;
 	let results : chrome.history.HistoryItem[]
 	for (let i = 1; i < 10; ++i) {
+		// TODO: Into async generator
 		const preFilter = await Chrome.history.search({
 			text:       "", 
 			startTime:  timestamp - 1000 * 3600 * 24 * 30, 
@@ -298,15 +373,20 @@ async function getHistoryNodes(settings : Settings) {
 			break;
 		}
 	}
+	const titleGroups = groupBy(results, ({title}) => title)
 	return results
 		.slice(0, settings.historyCount)
-		.map(result => {
-			const tmp = { ... result, preferSelect : settings.preferSelect }
-			if (!settings.timer) {
-				return new HistoryButton({ ...result, lastVisitTime : undefined });
-			}
-			return new HistoryButton(tmp);
-		});
+		.map(item => {
+			const aux = auxiliaryTitle(titleGroups, item);
+			const title = titleMap.get(item.url.toLowerCase()) ?? processTitle(item);
+			return new HistoryButton({
+				...item,
+				title,
+				lastVisitTime : settings.timer ? item.lastVisitTime : undefined,
+				preferSelect : settings.preferSelect,
+				aux : aux.aux
+			})
+		})
 }
 
 (async () => {
@@ -314,12 +394,14 @@ async function getHistoryNodes(settings : Settings) {
 		.then(JSON.parse)
 		.then(Chrome.settings.getReadOnly)
 	const i18n = await Chrome.getI18n(settings.lang);
+	const bookmarks = await Chrome.bookmarks.getTree();
+	const titleMap = urlToTitleMap(bookmarks);
 	const [...args] = await Promise.all([
 		Root.ready(),
-		getSessionNodes(i18n, settings),
+		getSessionNodes(i18n, settings, titleMap),
 		getDeviceNodes(i18n, settings),
-		getHistoryNodes(settings),
-		Chrome.bookmarks.getTree(),
+		getHistoryNodes(settings, titleMap),
+		bookmarks,
 		i18n,
 		settings
 	])

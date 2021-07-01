@@ -31,6 +31,7 @@ function sanitize(item : {
 
 interface HistoryButtonInfo extends chrome.history.HistoryItem {
 	preferSelect? : boolean
+	aux? : string
 }
 
 export default class HistoryButton extends TimerButton {
@@ -39,6 +40,7 @@ export default class HistoryButton extends TimerButton {
 	#remove: Node
 	#interval: NodeJS.Timeout
 	#highlighted: boolean
+	#aux: HTMLElement
 	constructor(item : HistoryButtonInfo) {
 		super(sanitize(item));
 		this.DOM.classList.add("History");
@@ -47,7 +49,12 @@ export default class HistoryButton extends TimerButton {
 		if (item.lastVisitTime) {
 			this.#lastModified = item.lastVisitTime;
 		}
-		this.#remove      = this.DOM.appendChild(removeButton.cloneNode(true));
+		this.#remove = this.DOM.appendChild(removeButton.cloneNode(true));
+		this.#aux = this.DOM.appendChild(document.createElement("i"));
+		if (item.aux) {
+			this.#aux.style.color = "#aaa";
+			this.#aux.appendChild(document.createTextNode(" " + item.aux));
+		}
 		if (this.#lastModified) {
 			this.updateTimer();
 			this.#interval = setInterval(this.updateTimer.bind(this), 500);
