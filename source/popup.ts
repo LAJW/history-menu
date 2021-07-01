@@ -378,7 +378,12 @@ async function getHistoryNodes(settings : Settings, titleMap : Map<string, strin
 		.slice(0, settings.historyCount)
 		.map(item => {
 			const aux = auxiliaryTitle(titleGroups, item);
-			const title = titleMap.get(item.url.toLowerCase()) ?? processTitle(item);
+			let title = titleMap.get(item.url.toLowerCase())
+			if (!title) {
+				if (!item.title || item.title === "" || titleGroups.get(item.title).length > 0) {
+					title = titleMap.get(stripHash(item.url.toLowerCase())) ?? processTitle(item);
+				}
+			}
 			return new HistoryButton({
 				...item,
 				title,
