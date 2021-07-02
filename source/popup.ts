@@ -22,7 +22,7 @@ import Root from "./components/Root"
 import DeviceFolder from "./DeviceFolder"
 import Node from "./components/Node"
 import { I18n, Settings } from "./Settings"
-import { groupBy, parseGlobs, removeDomain, url } from "./Utils"
+import { groupBy, parseGlobs, removeDomain, removeProtocol, url } from "./Utils"
 import { isTemplateExpression } from "typescript"
 
 let devicesButton : DevicesButton, deviceLayer : Layer;
@@ -248,6 +248,13 @@ function main(root : Root, sessions : Node[], devices : DeviceFolder[], history 
 		})],
 		fadeInEnabled: true,
 	})) as Layer;
+	const anchorClick = (url : string) => async (e : MouseEvent) => {
+		const inBackground = e.button == 1 || e.ctrlKey
+		await Chrome.tabs.openOrSelect(url, inBackground)
+		if (!inBackground) {
+			window.close();
+		}
+	}
 	const mainButtons = new MultiButton({
 		children: [
 			new Input({
@@ -259,23 +266,13 @@ function main(root : Root, sessions : Node[], devices : DeviceFolder[], history 
 				title:   "",
 				tooltip: i18n("popup_history_manager"),
 				icon:    "icons/history-19.png",
-				click:   async e => {
-					await Chrome.tabs.openOrSelect("chrome://history/", false)
-					if (!(e.button == 1 || e.ctrlKey)) {
-						window.close();
-					}
-				},
+				click:   anchorClick(`chrome://history/`)
 			}),
 			new ActionButton({
 				title:   "",
 				tooltip: i18n("popup_options"),
 				icon:    "icons/options.png",
-				click:   async e => {
-					await Chrome.tabs.openOrSelect(`chrome://extensions/?options=${chrome.runtime.id}`, false)
-					if (!(e.button == 1 || e.ctrlKey)) {
-						window.close();
-					}
-				}
+				click:   anchorClick(`chrome://extensions/?options=${chrome.runtime.id}`)
 			})
 		]
 	});
@@ -394,7 +391,7 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 			maxResults: (settings.historyCount | 20) + (20 * i)
 		})
 		results = preFilter.filter((x, index) =>
-			(!blacklist.some(match => match(x.url)))
+			(!blacklist.some(match => match(x.url) || match(removeProtocol(x.url))))
 			&& (index === 0 || (preFilter[index - 1].lastVisitTime !== x.lastVisitTime)));
 		if (preFilter.length === results.length || results.length >= settings.length) {
 			break;
