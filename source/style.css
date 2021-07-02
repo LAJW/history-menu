@@ -35,6 +35,10 @@ body {
 		--img-history: url("./icons/history-19-white.png");
 		--img-options: url("./icons/options-white.png");
 	}
+	::placeholder {
+		color: var(--highlight-2);
+		opacity: 1;
+	}
 }
 
 .icon-history {
