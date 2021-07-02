@@ -144,7 +144,7 @@ a {
 }
 
 .Remove {
-	background: var(--img-remove) var(--highlight) no-repeat center center;
+	background: var(--img-remove) var(--bg-highlight) no-repeat center center;
 	width:      18px;
 	height:     18px;
 	position:   absolute;
