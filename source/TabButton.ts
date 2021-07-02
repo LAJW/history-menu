@@ -1,5 +1,6 @@
 import TimerButton from "./TimerButton"
 import Chrome from "./Chrome"
+import { removeProtocol } from "./Utils";
 
 interface TabButtonInfo extends chrome.tabs.Tab { 
 	lastModified? : number
@@ -12,8 +13,8 @@ export default class TabButton extends TimerButton {
 			icon:   `chrome://favicon/${tab.url}`,
 			title:   tab.title,
 			tooltip: tab.title !== tab.url
-				? `${tab.title}\n${tab.url}`
-				: tab.url,
+				? `${tab.title}\n${removeProtocol(tab.url)}`
+				: removeProtocol(tab.url),
 			timer:   tab.lastModified * 1000
 		});
 		this.#sessionId = tab.sessionId;
