@@ -80,8 +80,8 @@ body.animate .menuItem:hover {
 .MultiButton .Button {
 	display: table-cell;
 	font-size: 0pt;
-	border-top: #ddd solid 1px;
-	border-left: #ddd solid 1px;
+	border-top: var(--bg-highlight) solid 1px;
+	border-left: var(--bg-highlight) solid 1px;
 	background-position:center center;
 	vertical-align:top;
 	min-width: 19px;
@@ -99,13 +99,13 @@ body.animate .menuItem:hover {
 	right: 4px;
 	background: #555;
 	border-radius: 2px;
-	color: white;
+	color: var(--bg);
 	font-weight: bold;
 	font-size: 7pt;
 	padding: 0px 4px;
 	line-height: 13px;
 	top: 4px;
 	letter-spacing: 1px;
-	border: 1px white solid;
+	border: 1px (--bg) solid;
 	display: none;
 }

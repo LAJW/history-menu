@@ -1,9 +1,9 @@
 .Input {
 	position: relative;
 	border-top: 1px #ddd solid;
-	background: url('/icons/search.png') no-repeat 6px 6px;
+	background: var(--img-search) no-repeat 6px 6px;
 	padding-left: 30px;
-	border: 1px #777 solid;
+	border: 1px var(--bg-highlight) solid;
 }
 
 .Input>input {
@@ -19,7 +19,7 @@
 }
 
 .Input>.Cancel {
-	background: url('/icons/x.png') no-repeat center center;
+	background: var(--img-remove) no-repeat center center;
 	width: 29px;
 	height: 29px;
 	position: absolute;

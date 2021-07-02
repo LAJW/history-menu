@@ -1,10 +1,86 @@
+body {
+	/* edge */
+	--bg: white;
+	--bg-highlight: #e8e8e9;
+	--highlight: #e8e8e9;
+	--highlight-2: #b1b1b1;
+	--text-color: black;
+	--img-next: url("./icons/next.png");
+	--img-settings: url("./icons/settings.png");
+	--img-search: url("./icons/search.png");
+	--img-remove: url('./icons/x.png');
+	--img-history: url("./icons/history-19.png");
+	--img-options: url("./icons/options.png");
+}
+
+@media (prefers-color-scheme: dark) {
+	body {
+		/* edge */
+		/*
+		--bg: #4a4a4a;
+		--bg-highlight: #5b5b5b;
+		--highlight: #979797;
+		--highlight-2: #b1b1b1;
+		*/
+		/* chrome */
+		--bg: #202124;
+		--bg-highlight: #37383a;
+		--highlight: #979797;
+		--highlight-2: #b1b1b1;
+		--text-color: #e8eaed;
+		--img-next: url("./icons/next-white.png");
+		--img-settings: url("./icons/settings-white.png");
+		--img-search: url("./icons/search-transparent.png");
+		--img-remove: url('./icons/x-transparent.png');
+		--img-history: url("./icons/history-19-white.png");
+		--img-options: url("./icons/options-white.png");
+	}
+}
+
+.icon-history {
+	background-image : var(--img-history);
+}
+
+.icon-options {
+	background-image : var(--img-options);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--highlight);
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--highlight-2);
+}
+
+body {
+	background-color: var(--bg);
+}
+
+body, input {
+	color: var(--text-color)
+}
+
 a {
 	cursor: default;
 }
 
 .Layer {
 	position:    fixed;
-	background:  white;
+	background:  var(--bg);
 	top:         0px;
 	left:        120%;
 	bottom:      30px;
@@ -25,7 +101,7 @@ a {
 .MultiButton {
 	position:   fixed;
 	bottom:     0px;
-	background: white;
+	background: var(--bg);
 	box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -41,8 +117,8 @@ a {
 }
 
 .Timer {
-	background:    #555;
-	color:         white;
+	background:    var(--bg-highlight);
+	color:         var(--text-color);
 	position:      absolute;
 	right:         3px;
 	top:           3px;
@@ -51,7 +127,7 @@ a {
 	padding:       3px 6px;
 	font-size:     8pt;
 	border-radius: 19px;
-	border:        white 1px solid;
+	border:        var(--text-color) 1px solid;
 	box-shadow:    0px 0px 3px rgba(0, 0, 0, 0.5);
 }
 
@@ -64,7 +140,7 @@ a {
 }
 
 .Remove {
-	background: url('icons/x-white.png') #555 no-repeat center center;
+	background: var(--img-remove) var(--highlight) no-repeat center center;
 	width:      18px;
 	height:     18px;
 	position:   absolute;
@@ -73,7 +149,7 @@ a {
 	display:    block;
 	opacity:    0;
 	border-radius: 10px;
-	border:        white 1px solid;
+	border:        var(--text-color) 1px solid;
 	box-shadow:    0px 0px 3px rgba(0, 0, 0, 0.5);
 }
 
@@ -86,7 +162,7 @@ a {
 }
 
 .Arrow {
-	background: url('icons/next.png') no-repeat center 6px;
+	background: var(--img-next) no-repeat center 6px;
 	width:      16px;
 	height:     16px;
 	position:   absolute;
@@ -119,9 +195,9 @@ a {
 	vertical-align: middle;
 	margin-right:   5px;
 	text-align:     center;
-	background:     white;
+	background:     var(--bg);
 	border:         1px solid #777;
-	color:          black;
+	color:          var(--text-color);
 }
 
 .Slider input[type=range] {

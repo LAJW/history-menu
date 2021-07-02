@@ -1,13 +1,13 @@
 a.Button:link, a.Button:visited {
-	color: black;
+	color: var(--text-color);
 }
 
 a.Button:hover, a.Button.highlighted {
-	background-color: #e8e8e9;
+	background-color: var(--bg-highlight);
 }
 
 body.Windows a.Button:hover, body.Windows a.Button.highlighted {
-	background-color: #e8e8e9;
+	background-color: var(--bg-highlight);
 }
 
 body.Ubuntu a.Button:hover, body.Windows a.Button.highlighted {

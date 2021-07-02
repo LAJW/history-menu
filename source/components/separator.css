@@ -10,7 +10,7 @@
 	z-index: 1;
 	left: 29px;
 	top: 0px;
-	background: white;
+	background: var(--bg);
 	padding-left: 0px;
 }
 
@@ -30,6 +30,6 @@ body.Ubuntu .Separator span {
 	margin: 0px;
 	height: 1px;
 	width: 100%;
-	background: #ddd;
+	background: var(--bg-highlight);
 	position: absolute;
 }

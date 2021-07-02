@@ -263,16 +263,16 @@ function main(root : Root, sessions : Node[], devices : DeviceFolder[], history 
 				change: value => onSearch(deviceLayer, searchLayer, i18n, settings, value ?? "")
 			}),
 			new ActionButton({
-				title:   "",
+				title: "",
 				tooltip: i18n("popup_history_manager"),
-				icon:    "icons/history-19.png",
-				click:   anchorClick(`chrome://history/`)
+				iconClass: "icon-history",
+				click: anchorClick(`chrome://history/`)
 			}),
 			new ActionButton({
-				title:   "",
+				title: "",
 				tooltip: i18n("popup_options"),
-				icon:    "icons/options.png",
-				click:   anchorClick(`chrome://extensions/?options=${chrome.runtime.id}`)
+				iconClass: "icon-options",
+				click: anchorClick(`chrome://extensions/?options=${chrome.runtime.id}`)
 			})
 		]
 	});

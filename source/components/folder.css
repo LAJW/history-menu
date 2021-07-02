@@ -15,11 +15,11 @@ body.animate .Folder {
 	border-radius: 13px 0px 0px 13px;
 }
 .Folder>.title:hover {
-	background-color: #e8e8e9;
+	background-color: var(--bg-highlight);
 	border-radius: 0px;
 }
 body.Windows .Folder>.title:hover {
-	background-color: #e8e8e9; 
+	background-color: var(--bg-highlight); 
 }
 body.Ubuntu .Folder>.title:hover {
 	background-color: #E36C43;
