@@ -54,6 +54,8 @@ export default class Textarea extends Node {
 		this.change = e.change;
 		this.#validate = e.validate;
 		this.#updateErrorBox();
+		const lineCount = (e.value ?? "").split("\n").length
+		this.#textarea.style.height = ((lineCount + 1) * 16) + "px"
 	}
 
 	// String value - text inside the input element
