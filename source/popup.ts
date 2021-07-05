@@ -416,11 +416,12 @@ async function* streamHistoryNodes(
 			endTime:    chunkStart,
 			maxResults: 50
 		})
+		chunkStart = last(chunk).lastVisitTime;
 		for (const item of chunk) {
-			if (seen.has(item.id)) {
+			if (seen.has(item.url)) {
 				continue;
 			}
-			seen.add(item.id);
+			seen.add(item.url);
 			
 			if (!filter(item.url)) {
 				continue;
@@ -455,7 +456,6 @@ async function* streamHistoryNodes(
 		if (chunk.length == 0) {
 			break;
 		}
-		chunkStart = last(chunk).lastVisitTime;
 	}
 }
 
@@ -479,6 +479,9 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 		results = preFilter.filter(({url}) => filter(url));
 		if (preFilter.length === results.length || results.length >= settings.length) {
 			break;
+		}
+		for (const item of results) {
+			seen.add(item.url);
 		}
 	}
 	const titleGroups = groupBy(results, ({title}) => title)
