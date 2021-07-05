@@ -24,6 +24,7 @@ import Node from "./components/Node"
 import { I18n, Settings } from "./Settings"
 import { groupBy, parseGlobs, removeDomain, removeProtocol, url } from "./Utils"
 import { isTemplateExpression } from "typescript"
+import { resolve } from "../webpack.config"
 
 let devicesButton : DevicesButton, deviceLayer : Layer;
 
@@ -236,11 +237,20 @@ function urlToTitleMap(bookmarks : chrome.bookmarks.BookmarkTreeNode[]) {
 	return urlToTitle;
 }
 
-function main(root : Root, sessions : Node[], devices : DeviceFolder[], history : HistoryButton[], bookmarks : chrome.bookmarks.BookmarkTreeNode[], i18n : (key : string) => string, settings : Settings) {
+function main(
+		root : Root,
+		sessions : Node[],
+		devices : DeviceFolder[],
+		history : HistoryButton[],
+		stream : AsyncIterable<HistoryButton>,
+		bookmarks : chrome.bookmarks.BookmarkTreeNode[],
+		i18n : (key : string) => string, settings : Settings) {
+
 	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate);
 	root.width  = settings.width || 0;
 	root.height = settings.height || 0;
-	root.insert(getMainLayer(sessions, history, i18n, settings));
+	const mainLayer = getMainLayer(sessions, history, i18n, settings)
+	root.insert(mainLayer);
 	const searchLayer = root.insert(new Layer({
 		visible:  false,
 		children: [new Separator({
@@ -294,6 +304,14 @@ function main(root : Root, sessions : Node[], devices : DeviceFolder[], history 
 		mainButtons.insert(devicesButton, mainButtons.children[1]);
 	}
 	root.insert(mainButtons);
+	mainLayer.DOM.onscroll = async () => {
+		for await (const entry of stream) {
+			mainLayer.insert(entry)
+			while (mainLayer.DOM.scrollTop + mainLayer.DOM.clientHeight <= (mainLayer.DOM.scrollHeight - 100)) {
+				await new Promise<void>(resolve => setTimeout(() => resolve(), 1000));
+			}
+		}
+	}
 }
 
 function sessionToButton(i18n : I18n, settings : Settings, session : chrome.sessions.Session, titleMap : Map<string, string>) {
@@ -378,10 +396,78 @@ function processTitle(settings : Settings, item : { url? : string, title? : stri
 	}
 }
 
-async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<string, string>) {
+function last<T>(elements : T[]) : T | undefined {
+	return elements[elements.length - 1];
+}
+
+async function* streamHistoryNodes(
+		i18n : I18n,
+		settings : Settings,
+		titleMap : Map<string, string>,
+		titleGroups : Map<string, chrome.history.HistoryItem[]>,
+		seen : Set<string>,
+		chunkStart : number,
+		filter : (value : string) => boolean) {
+	while (true) {
+		// TODO: this can have 50 entries with the same timestamp which would hang the popup
+		const chunk = await Chrome.history.search({
+			text:       "", 
+			startTime:  chunkStart - 1000 * 3600 * 24 * 30, 
+			endTime:    chunkStart,
+			maxResults: 50
+		})
+		for (const item of chunk) {
+			if (seen.has(item.id)) {
+				continue;
+			}
+			seen.add(item.id);
+			
+			if (!filter(item.url)) {
+				continue;
+			}
+
+			// TODO: Post mortem updates to existing buttons
+			// Set aux after ambiguity detected
+			// This way we could have 1 function rather than 2
+			let group = titleGroups.get(item.title);
+			if (!group) {
+				group = [];
+				titleGroups.set(item.title, group);
+			}
+			group.push(item);
+
+			const aux = auxiliaryTitle(titleGroups, item);
+			let title = titleMap.get(item.url.toLowerCase())
+			if (!title) {
+				if (!item.title || item.title === "" || titleGroups.get(item.title).length > 0) {
+					title = titleMap.get(stripHash(item.url.toLowerCase())) ?? processTitle(settings, item);
+				}
+			}
+			yield new HistoryButton(i18n, {
+				...item,
+				title,
+				lastVisitTime : settings.timer ? item.lastVisitTime : undefined,
+				preferSelect : settings.preferSelect,
+				originalTitle : aux.title,
+				aux : aux.aux
+			})
+		}
+		if (chunk.length == 0) {
+			break;
+		}
+		chunkStart = last(chunk).lastVisitTime;
+	}
+}
+
+async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<string, string>) : Promise<{
+		results : HistoryButton[],
+		stream : AsyncIterable<HistoryButton>
+	}> {
 	const timestamp = Date.now();
 	const blacklist = parseGlobs(settings.filter.split("\n")).parsers;
 	let results : chrome.history.HistoryItem[]
+	const seen = new Set<string>()
+	const filter = (url: string) => !blacklist.some(match => match(url) || match(removeProtocol(url)));
 	for (let i = 1; i < 10; ++i) {
 		// TODO: Into async generator
 		const preFilter = await Chrome.history.search({
@@ -390,33 +476,36 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 			endTime:    timestamp,
 			maxResults: (settings.historyCount | 20) + (20 * i)
 		})
-		results = preFilter.filter((x, index) =>
-			(!blacklist.some(match => match(x.url) || match(removeProtocol(x.url))))
-			&& (index === 0 || (preFilter[index - 1].lastVisitTime !== x.lastVisitTime)));
+		results = preFilter.filter(({url}) => filter(url));
 		if (preFilter.length === results.length || results.length >= settings.length) {
 			break;
 		}
 	}
 	const titleGroups = groupBy(results, ({title}) => title)
-	return results
-		.slice(0, settings.historyCount)
-		.map(item => {
-			const aux = auxiliaryTitle(titleGroups, item);
-			let title = titleMap.get(item.url.toLowerCase())
-			if (!title) {
-				if (!item.title || item.title === "" || titleGroups.get(item.title).length > 0) {
-					title = titleMap.get(stripHash(item.url.toLowerCase())) ?? processTitle(settings, item);
+	const stream = streamHistoryNodes(i18n, settings, titleMap, titleGroups, seen, last(results).lastVisitTime, filter)
+	return {
+		results:
+			results
+			.slice(0, settings.historyCount)
+			.map(item => {
+				const aux = auxiliaryTitle(titleGroups, item);
+				let title = titleMap.get(item.url.toLowerCase())
+				if (!title) {
+					if (!item.title || item.title === "" || titleGroups.get(item.title).length > 0) {
+						title = titleMap.get(stripHash(item.url.toLowerCase())) ?? processTitle(settings, item);
+					}
 				}
-			}
-			return new HistoryButton(i18n, {
-				...item,
-				title,
-				lastVisitTime : settings.timer ? item.lastVisitTime : undefined,
-				preferSelect : settings.preferSelect,
-				originalTitle : aux.title,
-				aux : aux.aux
-			})
-		})
+				return new HistoryButton(i18n, {
+					...item,
+					title,
+					lastVisitTime : settings.timer ? item.lastVisitTime : undefined,
+					preferSelect : settings.preferSelect,
+					originalTitle : aux.title,
+					aux : aux.aux
+				})
+			}),
+		stream
+	 }
 }
 
 (async () => {
@@ -426,14 +515,19 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 	const i18n = await Chrome.getI18n(settings.lang);
 	const bookmarks = await Chrome.bookmarks.getTree();
 	const titleMap = urlToTitleMap(bookmarks);
-	const [...args] = await Promise.all([
+	const [root, sessions, devices, {results: history, stream : historyStream}] = await Promise.all([
 		Root.ready(),
 		getSessionNodes(i18n, settings, titleMap),
 		getDeviceNodes(i18n, settings),
 		getHistoryNodes(i18n, settings, titleMap),
+	])
+	main(
+		root,
+		sessions,
+		devices,
+		history,
+		historyStream,
 		bookmarks,
 		i18n,
-		settings
-	])
-	main(...args);
+		settings);
 })();
