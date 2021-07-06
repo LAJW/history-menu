@@ -480,16 +480,16 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 		if (preFilter.length === results.length || results.length >= settings.length) {
 			break;
 		}
+	}
+	results = results.slice(0, settings.historyCount)
 		for (const item of results) {
 			seen.add(item.url);
 		}
-	}
 	const titleGroups = groupBy(results, ({title}) => title)
 	const stream = streamHistoryNodes(i18n, settings, titleMap, titleGroups, seen, last(results).lastVisitTime, filter)
 	return {
 		results:
 			results
-			.slice(0, settings.historyCount)
 			.map(item => {
 				const aux = auxiliaryTitle(titleGroups, item);
 				let title = titleMap.get(item.url.toLowerCase())
