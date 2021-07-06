@@ -9,6 +9,7 @@
 		"tabs",
 		"history",
 		"sessions",
+		"windows",
 		"chrome://favicon/",
 		"storage",
 		"bookmarks"
