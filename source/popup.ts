@@ -477,6 +477,9 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 		results : HistoryButton[],
 		stream : AsyncIterable<HistoryButton>
 	}> {
+	if (settings.historyCount === 0) {
+		return { results : [], stream : (async function* () {})() }
+	}
 	const timestamp = Date.now();
 	const blacklist = parseGlobs(settings.filter.split("\n")).parsers;
 	let results : chrome.history.HistoryItem[]
