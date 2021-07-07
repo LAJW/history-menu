@@ -202,6 +202,11 @@ async function main() {
 			checked: settings.preferSelect,
 			change:  x => settings.preferSelect = x,
 		}),
+		new Checkbox({
+			title:   i18n("hide_domain_from_title"),
+			checked: settings.trimTitles,
+			change:  x => settings.trimTitles = x,
+		}),
 		new Textarea({
 			title: `${i18n("options_blacklist")}`,
 			description: `${i18n("example")}:

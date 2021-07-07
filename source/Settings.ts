@@ -69,3 +69,4 @@ export type I18nKey =
 	| "options_blacklist"
 	| "example"
 	| "remove"
+	| "hide_domain_from_title"
