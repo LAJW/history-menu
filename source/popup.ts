@@ -512,7 +512,6 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 }
 
 (async () => {
-	Chrome.theme.updateIcon();
 	const settings = await Chrome.fetch("defaults.json")
 		.then(JSON.parse)
 		.then(Chrome.settings.getReadOnly)
@@ -525,6 +524,7 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 		getDeviceNodes(i18n, settings),
 		getHistoryNodes(i18n, settings, titleMap),
 	])
+	Chrome.theme.updateTheme();
 	main(
 		root,
 		sessions,

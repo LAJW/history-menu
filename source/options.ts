@@ -89,9 +89,9 @@ async function getSettingsRW(defaultSettings : Settings) {
 }
 
 async function main() {
-	Chrome.theme.updateIcon();
 	const {settings, reset} = await Chrome.fetch("defaults.json").then(JSON.parse).then(getSettingsRW)
 	const [root, i18n] = await Promise.all([Root.ready(), Chrome.getI18n(settings.lang)])
+	Chrome.theme.updateTheme();
 	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate);
 	root.insert([
 		new Header({title: i18n("popup_options")}),

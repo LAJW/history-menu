@@ -15,14 +15,6 @@ body {
 
 @media (prefers-color-scheme: dark) {
 	body {
-		/* edge */
-		/*
-		--bg: #4a4a4a;
-		--bg-highlight: #5b5b5b;
-		--highlight: #979797;
-		--highlight-2: #b1b1b1;
-		*/
-		/* chrome */
 		--bg: #202124;
 		--bg-highlight: #37383a;
 		--highlight: #979797;
@@ -38,6 +30,13 @@ body {
 	::placeholder {
 		color: var(--highlight-2);
 		opacity: 1;
+	}
+	body.Edge {
+		/* edge */
+		--bg: #4a4a4a;
+		--bg-highlight: #5b5b5b;
+		--highlight: #979797;
+		--highlight-2: #b1b1b1;
 	}
 }
 

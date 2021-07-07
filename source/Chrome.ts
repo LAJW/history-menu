@@ -73,6 +73,10 @@ getPlatform() {
 	else return "";
 },
 
+get isEdge() {
+	return navigator.appVersion.indexOf("Edg/") !== -1;
+},
+
 /**
  * @brief \c fetch for extension-local files
  * @note Exception Safety: No-Throw
@@ -349,6 +353,12 @@ theme : {
 			path: `icons/history-19-${icon}.png`
 		})
 	},
+	updateTheme() {
+		if (Chrome.isEdge) {
+			document.body.classList.add("Edge");
+		}
+		Chrome.theme.updateIcon();
+	}
 }
 } // namespace Chrome
 
