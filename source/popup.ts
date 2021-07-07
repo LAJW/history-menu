@@ -387,12 +387,19 @@ function processTitle(settings : Settings, item : { url? : string, title? : stri
 	if (settings.trimTitles) {
 		const domainParts = item.url.split("/")[2].split(".");
 		const titleParts = item.title.split(/[-\/—|]/g);
+		function isRedundant(titlePart : string) {
+			return titlePart
+				.trim()
+				.toLowerCase()
+				.split(/[ .]/g)
+				.every(part => domainParts.some(domainPart => domainPart.includes(part)));
+		}
 		if (titleParts.length == 1) {
 			return item.title;
 		} else {
-			if (titleParts[0].trim().toLowerCase().split(/[ .]/g).every(part => domainParts.includes(part))) {
+			if (isRedundant(titleParts[0])) {
 				return titleParts.slice(1).join("-");
-			} else if (titleParts[titleParts.length - 1].trim().toLowerCase().split(/[ .]/g).every(part => domainParts.includes(part))) {
+			} else if (isRedundant(titleParts[titleParts.length - 1])) {
 				return titleParts.slice(0, titleParts.length - 1).join("-");
 			} else {
 				return item.title;
