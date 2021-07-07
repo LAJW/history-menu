@@ -2,13 +2,16 @@ body {
 	/* edge */
 	--bg: white;
 	--bg-highlight: #e8e8e9;
-	--highlight: #e8e8e9;
-	--highlight-2: #b1b1b1;
+	--highlight: #8d8d8d;
+	--highlight-2: #a7a7a7;
 	--text-color: black;
+	--timer-bg: #555;
+	--timer-text-color: white;
 	--img-next: url("./icons/next.png");
 	--img-settings: url("./icons/settings.png");
 	--img-search: url("./icons/search.png");
-	--img-remove: url('./icons/x.png');
+	--img-remove: url('./icons/x-transparent.png');
+	--img-cancel: url('./icons/x.png');
 	--img-history: url("./icons/history-19.png");
 	--img-options: url("./icons/options.png");
 }
@@ -20,10 +23,12 @@ body {
 		--highlight: #979797;
 		--highlight-2: #b1b1b1;
 		--text-color: #e8eaed;
+		--timer-bg: var(--bg-highlight);
+		--timer-text-color: var(--text-color);
 		--img-next: url("./icons/next-white.png");
+		--img-cancel: url('./icons/x-chrome.png');
 		--img-settings: url("./icons/settings-white.png");
 		--img-search: url("./icons/search-transparent.png");
-		--img-remove: url('./icons/x-transparent.png');
 		--img-history: url("./icons/history-19-white.png");
 		--img-options: url("./icons/options-white.png");
 	}
@@ -35,8 +40,9 @@ body {
 		/* edge */
 		--bg: #4a4a4a;
 		--bg-highlight: #5b5b5b;
-		--highlight: #979797;
-		--highlight-2: #b1b1b1;
+		--highlight: #7d7d7d;
+		--highlight-2: #979797;
+		--img-cancel: url('./icons/x-edge.png');
 	}
 }
 
@@ -120,8 +126,8 @@ a {
 }
 
 .Timer {
-	background:    var(--bg-highlight);
-	color:         var(--text-color);
+	background:    var(--timer-bg);
+	color:         var(--timer-text-color);
 	position:      absolute;
 	right:         3px;
 	top:           3px;
@@ -130,7 +136,7 @@ a {
 	padding:       3px 6px;
 	font-size:     8pt;
 	border-radius: 19px;
-	border:        var(--text-color) 1px solid;
+	border:        var(--timer-text-color) 1px solid;
 	box-shadow:    0px 0px 3px rgba(0, 0, 0, 0.5);
 }
 
@@ -143,7 +149,7 @@ a {
 }
 
 .Remove {
-	background: var(--img-remove) var(--bg-highlight) no-repeat center center;
+	background: var(--img-remove) var(--timer-bg) no-repeat center center;
 	width:      18px;
 	height:     18px;
 	position:   absolute;
@@ -152,7 +158,7 @@ a {
 	display:    block;
 	opacity:    0;
 	border-radius: 10px;
-	border:        var(--text-color) 1px solid;
+	border:        var(--timer-text-color) 1px solid;
 	box-shadow:    0px 0px 3px rgba(0, 0, 0, 0.5);
 }
 
