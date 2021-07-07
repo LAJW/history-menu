@@ -304,13 +304,19 @@ function main(
 		mainButtons.insert(devicesButton, mainButtons.children[1]);
 	}
 	root.insert(mainButtons);
-	mainLayer.DOM.onscroll = async () => {
-		for await (const entry of stream) {
-			mainLayer.insert(entry)
-			while (mainLayer.DOM.scrollTop + mainLayer.DOM.clientHeight <= (mainLayer.DOM.scrollHeight - 100)) {
-				await new Promise<void>(resolve => setTimeout(() => resolve(), 1000));
+	const gen = (async function* nice() { yield* stream })();
+	if ((settings.tabsFirst && settings.historyCount > 0) || settings.tabCount === 0) {
+		async function fill(amount : number) {
+			while (mainLayer.DOM.scrollTop + mainLayer.DOM.clientHeight >= (mainLayer.DOM.scrollHeight - amount)) {
+				const {done, value : entry} = await gen.next();
+				if (done) {
+					break;
+				}
+				mainLayer.insert(entry as HistoryButton);
 			}
 		}
+		fill(100);
+		mainLayer.DOM.addEventListener("scroll", () => fill(500));
 	}
 }
 
