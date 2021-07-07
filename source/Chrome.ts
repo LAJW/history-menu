@@ -334,6 +334,21 @@ tabs: {
 }, // namespace Chrome.tabs
 bookmarks : {
 	getTree : () => new Promise<chrome.bookmarks.BookmarkTreeNode[]>(resolve => chrome.bookmarks.getTree(resolve))
+},
+theme : {
+	get isDarkTheme() {
+		return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+	},
+	async updateIcon() {
+		const settings = await Chrome.settings.getReadOnly({icon: "auto"})
+		const icon =
+			settings.icon === "auto"
+			? (Chrome.theme.isDarkTheme ? "white" : "granite")
+			: settings.icon;
+		chrome.browserAction.setIcon({
+			path: `icons/history-19-${icon}.png`
+		})
+	},
 }
 } // namespace Chrome
 

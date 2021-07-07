@@ -89,6 +89,7 @@ async function getSettingsRW(defaultSettings : Settings) {
 }
 
 async function main() {
+	Chrome.theme.updateIcon();
 	const {settings, reset} = await Chrome.fetch("defaults.json").then(JSON.parse).then(getSettingsRW)
 	const [root, i18n] = await Promise.all([Root.ready(), Chrome.getI18n(settings.lang)])
 	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate);
@@ -98,6 +99,7 @@ async function main() {
 		new Select({
 			title:    i18n("icon_color"),
 			values:   {
+				"auto":    "Auto",
 				"granite": i18n("granite"),
 				"white":   i18n("white"),
 				"red":     i18n("red"),
@@ -107,9 +109,7 @@ async function main() {
 			selected: settings.icon,
 			change() {
 				settings.icon = this.selected;
-				chrome.browserAction.setIcon({
-					path: "icons/history-19-" + this.selected + ".png"
-				})
+				Chrome.theme.updateIcon();
 			}
 		}),
 		new Slider({
