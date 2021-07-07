@@ -4,7 +4,7 @@
 	"content_security_policy": "script-src 'self'; object-src 'self'",
 	"author": "Łukasz A.J. Wrona (http://layv.net/)",
 	"description": "__MSG_description__",
-	"version": "2.3.0",
+	"version": "2.4.0",
 	"permissions": [
 		"tabs",
 		"history",
