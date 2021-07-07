@@ -7,7 +7,9 @@ History extension for Webkit-based browsers.
 
 [Chrome Store](https://chrome.google.com/webstore/detail/wrona-history-menu/fhibbdoaickjpmmhemkompghjjmpjdpj)
 
-[Opera Store](https://addons.opera.com/en-gb/extensions/details/wrona-history-menu/) - Version 1.2
+[Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/recent-tabs-and-history-/kdfnkenepefendhmaheecfpnckmffoko?hl=en-US)
+
+[Opera Store](https://addons.opera.com/en-gb/extensions/details/wrona-history-menu/)
 
 ## Support
 
@@ -40,10 +42,10 @@ The extension will show up in the `build` directory.
 
 ## Contributors
 
-Łukasz A.J. Wrona - Code, Maintenance, English and Polish translations
+Łukasz A.J. Wrona - Code, maintenance, English, Polish and Japanese translations
 
 sorborfor - Russian translation
 
-Anonymous - Original Japanese translation
+yumibagge - Japanese translation
 
-Sijera - Serbian cyrylic translation
+Sijera - Serbian translation
