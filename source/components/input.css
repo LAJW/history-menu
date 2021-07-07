@@ -19,7 +19,7 @@
 }
 
 .Input>.Cancel {
-	background: var(--img-remove) no-repeat center center;
+	background: var(--img-cancel) no-repeat center center;
 	width: 29px;
 	height: 29px;
 	position: absolute;
