@@ -136,5 +136,8 @@
 	},
 	"remove": {
 		"message": "Usuń"
+	},
+	"hide_domain_from_title": {
+		"message": "Ukryj domenę w tytułach, np. \" - Wikipedia\" w wikipedia.com"
 	}
 }

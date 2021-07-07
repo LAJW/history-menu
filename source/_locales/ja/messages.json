@@ -136,5 +136,8 @@
 	},
 	"remove": {
 		"message": "削除"
+	},
+	"hide_domain_from_title": {
+		"message": "ドメインの名前を隠れる。例えば「 - Wikipedia」にwikipedia.com。"
 	}
 }

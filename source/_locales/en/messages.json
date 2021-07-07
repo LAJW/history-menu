@@ -180,5 +180,9 @@
 	"remove": {
 		"message": "Remove",
 		"description": "Tooltip under [delete history item] button"
+	},
+	"hide_domain_from_title": {
+		"message": "Hide domain names in titles, ex. \" - Wikipedia\" suffix from wikipedia.com",
+		"description": "Label of a checkbox responsible for the option controlling removing domain names from tabs. ex. Wikipedia"
 	}
 }
