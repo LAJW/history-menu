@@ -325,6 +325,7 @@ function sessionToButton(i18n : I18n, settings : Settings, session : chrome.sess
 		return new TabButton({
 			...session.tab,
 			title : titleMap.get(session.tab.url.toLowerCase()) ?? processTitle(settings, session.tab),
+			originalTitle : session.tab.title,
 			lastModified : settings.timer ? session.lastModified : undefined,
 		})
 	}

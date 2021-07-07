@@ -4,6 +4,7 @@ import { removeProtocol } from "./Utils";
 
 interface TabButtonInfo extends chrome.tabs.Tab { 
 	lastModified? : number
+	originalTitle?: string
 }
 
 export default class TabButton extends TimerButton {
@@ -12,8 +13,8 @@ export default class TabButton extends TimerButton {
 		super({
 			icon:   `chrome://favicon/${tab.url}`,
 			title:   tab.title,
-			tooltip: tab.title !== tab.url
-				? `${tab.title}\n${removeProtocol(tab.url)}`
+			tooltip: tab.originalTitle !== tab.url
+				? `${tab.originalTitle}\n${removeProtocol(tab.url)}`
 				: removeProtocol(tab.url),
 			timer:   tab.lastModified * 1000
 		});
