@@ -385,7 +385,7 @@ function auxiliaryTitle(titleGroups : Map<string, chrome.history.HistoryItem[]>,
 
 function processTitle(settings : Settings, item : { url? : string, title? : string }) {
 	if (settings.trimTitles) {
-		const domainParts = item.url.split("/")[2].split(".");
+		const domainParts = (item.url.split("/")[2] ?? "").split(".");
 		const titleParts = item.title.split(/[-\/—|]/g);
 		function isRedundant(titlePart : string) {
 			return titlePart
