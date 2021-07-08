@@ -114,8 +114,8 @@ async function main() {
 		}),
 		new Slider({
 			min:    200,
-			max:    400,
-			step:   10,
+			max:    750,
+			step:   25,
 			value:  settings.width,
 			change: x => settings.width = x,
 			title:  i18n("options_width"),
