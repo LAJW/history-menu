@@ -22,7 +22,7 @@ import Root from "./components/Root"
 import DeviceFolder from "./DeviceFolder"
 import Node from "./components/Node"
 import { I18n, Settings } from "./Settings"
-import { groupBy, parseGlobs, removeDomain, removeProtocol, url, isInBackground } from "./Utils"
+import { px, groupBy, parseGlobs, removeDomain, removeProtocol, url, isInBackground } from "./Utils"
 
 let devicesButton : DevicesButton, deviceLayer : Layer;
 
@@ -526,10 +526,16 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 	 }
 }
 
+function reserveSpace(settings : Settings) {
+	document.body.style.minWidth = px(settings.width)
+	document.body.style.minHeight = px(settings.height)
+}
+
 (async () => {
 	const settings = await Chrome.fetch("defaults.json")
 		.then(JSON.parse)
 		.then(Chrome.settings.getReadOnly)
+	reserveSpace(settings);
 	const i18n = await Chrome.getI18n(settings.lang);
 	const bookmarks = await Chrome.bookmarks.getTree();
 	const titleMap = urlToTitleMap(bookmarks);
