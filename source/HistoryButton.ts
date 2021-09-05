@@ -27,7 +27,7 @@ function sanitize(item : {
 	if (!item.title) {
 		return { ...rewired, title : trimURL(removeProtocol(item.url)), tooltip : removeProtocol(item.url) }
 	} else {
-		const tooltip = `${item.originalTitle}\n${removeProtocol(item.url)}`;
+		const tooltip = `${item.originalTitle ?? item.title}\n${removeProtocol(item.url)}`;
 		return { ...rewired, title : item.title, tooltip }
 	}
 }
