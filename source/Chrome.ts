@@ -249,7 +249,7 @@ settings: {
 	}
 }, // namespace Chrome.settings
 
-tabs: {
+tabs : {
 
 	/**
 	 * @brief Equivalent to chrome.tabs.create.
@@ -287,7 +287,8 @@ tabs: {
 	highlight: (info : chrome.tabs.HighlightInfo) => new Promise<chrome.windows.Window>(resolve => chrome.tabs.highlight(info, resolve)),
 
 	async openInCurrentTab(url : string, inBackground : boolean) {
-		const { id : windowId } = await new Promise<chrome.windows.Window>(resolve => chrome.windows.getCurrent(x => resolve(x)))
+		console.log("here")
+		const { id : windowId } = await Chrome.windows.getCurrent();
 		if (!inBackground) {
 			const [ active ] = await new Promise<chrome.tabs.Tab[]>(resolve => chrome.tabs.query({ active : true, windowId }, x => resolve(x)));
 			if (active) {
@@ -312,12 +313,15 @@ tabs: {
 	 * @param inBackground Boolean: Optional. Create background tab.
 	 */
 	// open url or if tab with URL already exists, select it instead
+	// Only consider the current window
 	async openOrSelect(url : string, inBackground : boolean) {
 		const colon = url.indexOf(":");
 		if (colon >= 0) {
 			// external URL (has comma)
 			const pattern = "*" + url.substr(colon);
-			const tabs = await Chrome.tabs.query({url: pattern})
+			const { id : windowId } = await Chrome.windows.getCurrent();
+			const tabs = await Chrome.tabs.query({url: pattern, windowId})
+			console.log(tabs)
 			if (tabs.length) {
 				if (inBackground)
 					return Chrome.tabs.highlight({
@@ -336,6 +340,9 @@ tabs: {
 		}
 	},
 }, // namespace Chrome.tabs
+windows : {
+	getCurrent : () => new Promise<chrome.windows.Window>(resolve => chrome.windows.getCurrent(x => resolve(x)))
+}, // namespace Chrome.windows
 bookmarks : {
 	getTree : () => new Promise<chrome.bookmarks.BookmarkTreeNode[]>(resolve => chrome.bookmarks.getTree(resolve))
 },
