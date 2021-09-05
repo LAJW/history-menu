@@ -85,7 +85,7 @@ get isEdge() {
  * @return: Promise Function returns Promise of string contents of the file
  */
 fetch : (url : string) : Promise<string> => new Promise((resolve, reject) => {
-	let xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
 	xhr.open("GET", url);
 	xhr.onload = function () {
 		this.status >= 200 && this.status < 300
@@ -313,10 +313,10 @@ tabs: {
 	 */
 	// open url or if tab with URL already exists, select it instead
 	async openOrSelect(url : string, inBackground : boolean) {
-		let colon = url.indexOf(":");
+		const colon = url.indexOf(":");
 		if (colon >= 0) {
 			// external URL (has comma)
-			let pattern = "*" + url.substr(colon);
+			const pattern = "*" + url.substr(colon);
 			const tabs = await Chrome.tabs.query({url: pattern})
 			if (tabs.length) {
 				if (inBackground)
