@@ -75,16 +75,16 @@ const tokenFactory = new TokenFactory();
 let selectedResult = 0;
 let searchResults : HistoryButton[] = [];
 
-const keyCode = {
-	arrowUp:   38,
-	arrowDown: 40,
-	tab:       9,
-	enter:     13
-};
+const key = Object.freeze({
+	arrowUp:   "ArrowUp",
+	arrowDown: "ArrowDown",
+	tab:       "Tab",
+	enter:     "Enter"
+});
 
 window.addEventListener("keydown", e => {
-	if ((e.keyCode == keyCode.arrowDown 
-			|| e.keyCode == keyCode.tab && !e.shiftKey)
+	if ((e.key == key.arrowDown 
+			|| e.key == key.tab && !e.shiftKey)
 		&& selectedResult + 1 <
 			searchResults.length) {
 		searchResults[selectedResult].highlighted = false;
@@ -94,8 +94,8 @@ window.addEventListener("keydown", e => {
 			searchResults[selectedResult - 5].DOM.scrollIntoView();
 		}
 		e.preventDefault();
-	} else if ((e.keyCode == keyCode.arrowUp 
-			|| e.keyCode == keyCode.tab && e.shiftKey)
+	} else if ((e.key == key.arrowUp 
+			|| e.key == key.tab && e.shiftKey)
 		&& selectedResult - 1 >= 0) {
 		searchResults[selectedResult].highlighted = false;
 		selectedResult--;
@@ -104,7 +104,7 @@ window.addEventListener("keydown", e => {
 			searchResults[selectedResult - 5].DOM.scrollIntoView();
 		}
 		e.preventDefault();
-	} else if (e.keyCode == keyCode.enter) {
+	} else if (e.key == key.enter) {
 		if (searchResults.length > 0) {
 			// @ts-ignore
 			// TODO: Outstanding, events might have to be rewired
