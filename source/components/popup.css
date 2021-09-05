@@ -1,5 +1,5 @@
 body {
-	font: 9pt Arial;
+	font: 9pt "Helveitca Neue", Arial;
 	padding:0px;
 	margin:0px;
 	padding-bottom:-20px;
@@ -20,7 +20,7 @@ body.Ubuntu {
 }
 
 input {
-	font: Arial 9pt;
+	font: 9pt "Helvetica Neue", Arial;
 }
 
 body.Windows input {
