@@ -1,6 +1,6 @@
 import TimerButton from "./TimerButton"
 import Chrome from "./Chrome"
-import { removeProtocol } from "./Utils";
+import { isInBackground, removeProtocol } from "./Utils";
 
 interface TabButtonInfo extends chrome.tabs.Tab { 
 	lastModified? : number
@@ -24,7 +24,7 @@ export default class TabButton extends TimerButton {
 	override async click(e : MouseEvent) {
 		if (e.button === 0 || e.button === 1) {
 			e.preventDefault();
-			await Chrome.sessions.restore(this.#sessionId, e.button == 1 || e.ctrlKey);
+			await Chrome.sessions.restore(this.#sessionId, isInBackground(e));
 		}
 	}
 }

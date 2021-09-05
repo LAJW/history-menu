@@ -2,7 +2,7 @@ import TimerButton from "./TimerButton"
 import Chrome from "./Chrome"
 import Parent from "./components/Parent";
 import { I18n } from "./Settings";
-import { removeProtocol, $, trimURL } from "./Utils";
+import { removeProtocol, $, trimURL, isInBackground } from "./Utils";
 
 const removeButton = $({
 	nodeName: "A",
@@ -72,7 +72,7 @@ export default class HistoryButton extends TimerButton {
 	override async click(e : MouseEvent) {
 		if (e.button === 0 || e.button === 1) {
 			e.preventDefault();
-			const inBackground = e.button === 1 || e.ctrlKey;
+			const inBackground = isInBackground(e)
 			if (e.target == this.#remove) {
 				if (e.button === 0) {
 					Chrome.history.deleteUrl({ url: this.url });

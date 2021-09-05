@@ -1,7 +1,7 @@
 import Chrome from "./Chrome"
 import Folder from "./components/Folder"
 import TabButton from "./TabButton"
-import { $, relativeTime } from "./Utils"
+import { $, isInBackground, relativeTime } from "./Utils"
 
 const template = $({
 	nodeName:  "DIV",
@@ -46,7 +46,7 @@ export default class WindowFolder extends Folder {
 	}
 	override click(e : MouseEvent) {
 		e.preventDefault();
-		if (e.button == 1 || e.button == 0 && e.ctrlKey) {
+		if (isInBackground(e)) {
 			Chrome.sessions.restore(this.#sessionId, false);
 			window.close();
 		} else if (e.button == 0) {

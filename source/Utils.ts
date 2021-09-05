@@ -236,6 +236,10 @@ export function $(params : Template | string) : HTMLElement | Node {
 	return element;
 }
 
+export function isInBackground(e : MouseEvent | KeyboardEvent) {
+	return (e as MouseEvent).button === 1 || e.metaKey || e.ctrlKey || e.shiftKey;
+}
+
 export default {
 	$,
 	px,

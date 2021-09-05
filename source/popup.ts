@@ -22,7 +22,7 @@ import Root from "./components/Root"
 import DeviceFolder from "./DeviceFolder"
 import Node from "./components/Node"
 import { I18n, Settings } from "./Settings"
-import { groupBy, parseGlobs, removeDomain, removeProtocol, url } from "./Utils"
+import { groupBy, parseGlobs, removeDomain, removeProtocol, url, isInBackground } from "./Utils"
 
 let devicesButton : DevicesButton, deviceLayer : Layer;
 
@@ -110,7 +110,7 @@ window.addEventListener("keydown", e => {
 			// TODO: Outstanding, events might have to be rewired
 			searchResults[selectedResult].click({
 				preventDefault: () => e.preventDefault,
-				button: (e.ctrlKey || e.shiftKey) ? 1 : 0
+				button: isInBackground(e) ? 1 : 0
 			});
 		}
 	}
@@ -257,8 +257,8 @@ function main(
 		fadeInEnabled: true,
 	})) as Layer;
 	const anchorClick = (url : string) => async (e : MouseEvent) => {
-		const inBackground = e.button == 1 || e.ctrlKey
-		await Chrome.tabs.openOrSelect(url, inBackground)
+		const inBackground = isInBackground(e);
+		await Chrome.tabs.openOrSelect(url, inBackground);
 		if (!inBackground) {
 			window.close();
 		}
