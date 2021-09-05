@@ -23,8 +23,6 @@ import DeviceFolder from "./DeviceFolder"
 import Node from "./components/Node"
 import { I18n, Settings } from "./Settings"
 import { groupBy, parseGlobs, removeDomain, removeProtocol, url } from "./Utils"
-import { isTemplateExpression } from "typescript"
-import { resolve } from "../webpack.config"
 
 let devicesButton : DevicesButton, deviceLayer : Layer;
 
