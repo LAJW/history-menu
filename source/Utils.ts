@@ -236,8 +236,16 @@ export function $(params : Template | string) : HTMLElement | Node {
 	return element;
 }
 
+const MouseButton = Object.freeze({
+	Left : 0,
+	Middle : 1,
+})
+
 export function isInBackground(e : MouseEvent | KeyboardEvent) {
-	return (e as MouseEvent).button === 1 || e.metaKey || e.ctrlKey || e.shiftKey;
+	return (e as MouseEvent).button === MouseButton.Middle
+		|| ((e as MouseEvent).button === MouseButton.Left
+				|| (e as KeyboardEvent).key === "Enter")
+			&& e.metaKey || e.ctrlKey || e.shiftKey;
 }
 
 export default {
