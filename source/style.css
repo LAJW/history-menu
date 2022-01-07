@@ -16,34 +16,34 @@ body {
 	--img-options: url("./icons/options.png");
 }
 
-@media (prefers-color-scheme: dark) {
-	body {
-		--bg: #202124;
-		--bg-highlight: #37383a;
-		--highlight: #979797;
-		--highlight-2: #b1b1b1;
-		--text-color: #e8eaed;
-		--timer-bg: var(--bg-highlight);
-		--timer-text-color: var(--text-color);
-		--img-next: url("./icons/next-white.png");
-		--img-cancel: url('./icons/x-chrome.png');
-		--img-settings: url("./icons/settings-white.png");
-		--img-search: url("./icons/search-transparent.png");
-		--img-history: url("./icons/history-19-white.png");
-		--img-options: url("./icons/options-white.png");
-	}
-	::placeholder {
-		color: var(--highlight-2);
-		opacity: 1;
-	}
-	body.Edge {
-		/* edge */
-		--bg: #4a4a4a;
-		--bg-highlight: #5b5b5b;
-		--highlight: #7d7d7d;
-		--highlight-2: #979797;
-		--img-cancel: url('./icons/x-edge.png');
-	}
+body.darkMode {
+	--bg: #202124;
+	--bg-highlight: #37383a;
+	--highlight: #979797;
+	--highlight-2: #b1b1b1;
+	--text-color: #e8eaed;
+	--timer-bg: var(--bg-highlight);
+	--timer-text-color: var(--text-color);
+	--img-next: url("./icons/next-white.png");
+	--img-cancel: url('./icons/x-chrome.png');
+	--img-settings: url("./icons/settings-white.png");
+	--img-search: url("./icons/search-transparent.png");
+	--img-history: url("./icons/history-19-white.png");
+	--img-options: url("./icons/options-white.png");
+}
+
+body.darkmode ::placeholder {
+	color: var(--highlight-2);
+	opacity: 1;
+}
+
+body.darkmode body.Edge {
+	/* edge */
+	--bg: #4a4a4a;
+	--bg-highlight: #5b5b5b;
+	--highlight: #7d7d7d;
+	--highlight-2: #979797;
+	--img-cancel: url('./icons/x-edge.png');
 }
 
 .icon-history {

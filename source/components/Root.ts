@@ -1,5 +1,6 @@
 import Parent from "./Parent"
 import Node from "./Node"
+import { visitFunctionBody } from "typescript";
 
 let root : Root; 
 export default class Root extends Parent {
@@ -14,7 +15,10 @@ export default class Root extends Parent {
 		document.body.addEventListener("mousedown", e => Node.fromDOM(e.target as HTMLElement).mousedown(e))
 		document.body.addEventListener("auxclick", e => Node.fromDOM(e.target as HTMLElement).click(e));
 	}
-	setTheme(platform? : string, animate? : boolean) {
+	setTheme(platform : string, animate : boolean, darkModeEnabled : boolean) {
+		if (darkModeEnabled) {
+			document.body.classList.add("darkMode")
+		}
 		if (platform)
 			this.DOM.classList.add(platform);
 		if (animate)

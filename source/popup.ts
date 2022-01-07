@@ -244,7 +244,11 @@ function main(
 		bookmarks : chrome.bookmarks.BookmarkTreeNode[],
 		i18n : (key : string) => string, settings : Settings) {
 
-	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate);
+	let darkModeEnabled = Chrome.theme.isDarkTheme;
+	if (settings.darkMode !== "") {
+		darkModeEnabled = settings.darkMode === "true"
+	}
+	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate, darkModeEnabled);
 	root.width  = settings.width || 0;
 	root.height = settings.height || 0;
 	const mainLayer = getMainLayer(sessions, history, i18n, settings)
