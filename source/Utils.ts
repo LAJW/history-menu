@@ -1,4 +1,6 @@
+import Chrome from "./Chrome";
 import { Fail, Ok, Result } from "./Result";
+import { Settings } from "./Settings";
 
 export function inlineEscaped(str : string) : Result<string, string> {
 	let result = ""
@@ -255,4 +257,11 @@ export default {
 	isURL,
 	trimURL,
 	relativeTime,
+}
+
+export function darkMode(settings : Settings) {
+	if (settings.darkMode !== "") {
+		return settings.darkMode === "true"
+	}
+	return Chrome.theme.isDarkTheme;
 }

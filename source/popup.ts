@@ -22,7 +22,7 @@ import Root from "./components/Root"
 import DeviceFolder from "./DeviceFolder"
 import Node from "./components/Node"
 import { I18n, Settings } from "./Settings"
-import { px, groupBy, parseGlobs, removeDomain, removeProtocol, url, isInBackground } from "./Utils"
+import { px, groupBy, parseGlobs, removeDomain, removeProtocol, url, isInBackground, darkMode } from "./Utils"
 
 let devicesButton : DevicesButton, deviceLayer : Layer;
 
@@ -244,11 +244,7 @@ function main(
 		bookmarks : chrome.bookmarks.BookmarkTreeNode[],
 		i18n : (key : string) => string, settings : Settings) {
 
-	let darkModeEnabled = Chrome.theme.isDarkTheme;
-	if (settings.darkMode !== "") {
-		darkModeEnabled = settings.darkMode === "true"
-	}
-	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate, darkModeEnabled);
+	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate, darkMode(settings));
 	root.width  = settings.width || 0;
 	root.height = settings.height || 0;
 	const mainLayer = getMainLayer(sessions, history, i18n, settings)

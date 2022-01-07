@@ -6,7 +6,7 @@ import Root from "./components/Root"
 import Select from "./components/Select"
 import { LocalSettings, Settings } from "./Settings"
 import Slider from "./Slider"
-import { $, parseGlobs } from "./Utils"
+import { $, parseGlobs, darkMode } from "./Utils"
 import Textarea from "./components/Textarea"
 
 // template for the Classic Button
@@ -92,11 +92,7 @@ async function main() {
 	const {settings, reset} = await Chrome.fetch("defaults.json").then(JSON.parse).then(getSettingsRW)
 	const [root, i18n] = await Promise.all([Root.ready(), Chrome.getI18n(settings.lang)])
 	Chrome.theme.updateTheme();
-	let darkModeEnabled = Chrome.theme.isDarkTheme;
-	if (settings.darkMode !== "") {
-		darkModeEnabled = settings.darkMode === "true"
-	}
-	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate, darkModeEnabled);
+	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate, darkMode(settings));
 	root.insert([
 		new Header({title: i18n("popup_options")}),
 		new Header({title: i18n("options_display")}),
