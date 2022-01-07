@@ -191,6 +191,20 @@ async function main() {
 				window.location = window.location;
 			}
 		}),
+		new Select({
+			title:    "Dark Mode" /*i18n("options_dark_mode")*/,
+			values:   {
+				"":    "Auto (" + (Chrome.theme.isDarkTheme ? "Dark" : "Light") + ")",
+				"true":  "Enabled",
+				"false": "Disabled",
+			},
+			selected: settings.darkMode,
+			change() {
+				settings.darkMode = this.selected;
+				// reload page
+				window.location = window.location;
+			}
+		}),
 		new Header({title: i18n("options_behavior")}),
 		new Checkbox({
 			title:   i18n("options_expand_folders"),

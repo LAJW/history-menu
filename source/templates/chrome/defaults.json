@@ -11,6 +11,7 @@
 	"preferSelect": true,
 	"tabsFirst": true,
 	"theme": "",
+	"darkMode": "",
 	"filter": "https://translate.google.com/*",
 	"trimTitles": true
 }

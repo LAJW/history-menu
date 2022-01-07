@@ -12,6 +12,7 @@ export interface Settings {
 	preferSelect?: boolean
 	tabsFirst?: boolean
 	theme?: string
+	darkMode?: string
 	filter?: string
 	trimTitles?: boolean
 }
