@@ -119,6 +119,15 @@
 	"options_theme": {
 		"message": "テーマ"
 	},
+	"options_dark_mode": {
+		"message": "ダークモード"
+	},
+	"options_enabled": {
+		"message": "有効"
+	},
+	"options_disabled": {
+		"message": "無効"
+	},
 	"options_animate": {
 		"message": "アニメーション"
 	},

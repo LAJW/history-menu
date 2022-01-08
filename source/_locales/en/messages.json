@@ -163,6 +163,18 @@
 		"message": "Theme",
 		"description": "Label of a select field controlling the theme of the extension"
 	},
+	"options_dark_mode": {
+		"message": "Dark Mode",
+		"description": "Label of a select field controlling the dark/light mode of the extension"
+	},
+	"options_enabled": {
+		"message": "Enabled",
+		"description": "Setting enabled"
+	},
+	"options_disabled": {
+		"message": "Disabled",
+		"description": "Setting disabled"
+	},
 	"options_animate": {
 		"message": "Enable animations",
 		"description": "Label of a select field enabling animations of the extension"

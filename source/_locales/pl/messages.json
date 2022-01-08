@@ -122,6 +122,15 @@
 	"options_theme": {
 		"message": "Styl interfejsu"
 	},
+	"options_dark_mode": {
+		"message": "Tryb nocny"
+	},
+	"options_enabled": {
+		"message": "Włączony"
+	},
+	"options_disabled": {
+		"message": "Wyłączony"
+	},
 	"options_animate": {
 		"message": "Włącz animacje"
 	},

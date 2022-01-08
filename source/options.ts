@@ -192,11 +192,11 @@ async function main() {
 			}
 		}),
 		new Select({
-			title:    "Dark Mode" /*i18n("options_dark_mode")*/,
+			title:    i18n("options_dark_mode"),
 			values:   {
-				"":    "Auto (" + (Chrome.theme.isDarkTheme ? "Dark" : "Light") + ")",
-				"true":  "Enabled",
-				"false": "Disabled",
+				"":    "Auto (" + (Chrome.theme.isDarkTheme ? i18n("options_enabled") : i18n("options_disabled")) + ")",
+				"true":  i18n("options_enabled"),
+				"false": i18n("options_disabled"),
 			},
 			selected: settings.darkMode,
 			change() {

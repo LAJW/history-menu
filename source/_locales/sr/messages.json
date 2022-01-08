@@ -122,6 +122,15 @@
 	"options_theme": {
 		"message": "Тема"
 	},
+   "options_dark_mode": {
+		"message": "Ноћни режим"
+	},
+	"options_enabled": {
+		"message": "Укључено"
+	},
+	"options_disabled": {
+		"message": "Онемогућено"
+	},
 	"options_animate": {
 		"message": "Омогући анимације"
 	},
