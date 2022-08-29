@@ -266,7 +266,7 @@ https://www.google.com/search?*
 		new ClassicButton ({
 			title: i18n("options_about"),
 			click() {
-				window.location.href = "http://layv.net/history-menu";
+				window.open("http://layv.net/history-menu", "_blank");
 			}
 		}),
 	]);
