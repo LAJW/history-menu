@@ -164,10 +164,11 @@ async function main() {
 			values:   {
 				"": "Auto",
 				"en": "English",
+				"it": "Italiano",
 				"ja": "日本語",
 				"pl": "Polski",
-				"sr": "Српски",
 				"ru": "Русский",
+				"sr": "Српски",
 			},
 			selected: settings.lang,
 			change() {
