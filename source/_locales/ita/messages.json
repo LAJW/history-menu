@@ -1,0 +1,152 @@
+{
+	"description": {
+		"message": "Ripristina, filtra o rimuove schede chiuse di recente, finestre e cronologia, incluse quelle di altri dispositivi."
+	},
+	"popup_history_manager": {
+		"message": "Mostra tutta la Cronologia"
+	},
+	"popup_recently_closed_tabs": {
+		"message": "Schede Chiuse di Recente"
+	},
+	"popup_recent_history": {
+		"message": "Viste di Recente"
+	},
+	"popup_search_history": {
+		"message": "Cerca nella Cronologia"
+	},
+	"popup_other_devices": {
+		"message": "Altri Dispositivi"
+	},
+	"popup_options": {
+		"message": "Opzioni"
+	},
+	"popup_back": {
+		"message": "Indietro"
+	},
+	"popup_ok": {
+		"message": "OK"
+	},
+	"popup_window": {
+		"message": "Finestra"
+	},
+	"popup_number_of_tabs": {
+		"message": "Numero di schede"
+	},
+	"results_recently": {
+		"message": "Recenti"
+	},
+	"results_today": {
+		"message": "Recenti di oggi"
+	},
+	"results_yesterday": {
+		"message": "Ieri"
+	},
+	"results_this_week": {
+		"message": "In settimana"
+	},
+	"results_last_week": {
+		"message": "Settimana scorsa"
+	},
+	"results_this_month": {
+		"message": "Ultimo mese"
+	},
+	"results_last_month": {	
+		"message": "Mese scorso"
+	},
+	"results_nothing_found": {
+		"message": "Nessun risultato"
+	},
+	"results_end": {
+		"message": "Ultimi risultati"
+	},
+	"options_display": {
+		"message": "Grafica"
+	},
+	"options_behavior": {
+		"message": "Funzionamento"
+	},
+	"options_other": {
+		"message": "Altro"
+	},
+	"options_height": {
+		"message": "Altezza popup"
+	},
+	"options_width": {
+		"message": "Larghezza popup"
+	},
+	"options_tabs_first": {
+		"message": "Mostra schede prima della cronologia"
+	},
+	"options_sync": {
+		"message": "Sincronizza impostazioni"
+	},
+	"options_reset": {
+		"message": "Resetta impostazioni"
+	},
+	"icon_color": {
+		"message": "Colore icona"
+	},
+	"granite": {
+		"message": "Granito"
+	},
+	"white": {
+		"message": "Bianco"
+	},
+	"red": {
+		"message": "Rosso"
+	},
+	"green": {
+		"message": "Verde"
+	},
+	"blue": {
+		"message": "Blu"
+	}, 
+	"options_timer": {
+		"message": "Mostra tempo di visita"
+	},
+	"options_tab_count": {
+		"message": "Numero massimo di schede chiuse"
+	},
+	"options_history_count": {
+		"message": "Numero massimo di risultati nella cronologia"
+	},
+	"options_expand_folders": {
+		"message": "Espandi finestre chiuse"
+	},
+	"options_prefer_select": {
+		"message": "Preferisci selezionare schede esistenti invece che creare duplicati"
+	},
+	"options_lang": {
+		"message": "Lingua"
+	},
+	"options_theme": {
+		"message": "Tema"
+	},
+	"options_dark_mode": {
+		"message": "Tema Scuro"
+	},
+	"options_enabled": {
+		"message": "Abilitato"
+	},
+	"options_disabled": {
+		"message": "Disabilitato"
+	},
+	"options_animate": {
+		"message": "Abilita animazioni"
+	},
+	"options_about": {
+		"message": "Crediti"
+	},
+	"options_blacklist": {
+		"message": "Lista Nera visti di recente"
+	},
+	"example": {
+		"message": "Esempio"
+	},
+	"remove": {
+		"message": "Rimuovi"
+	},
+	"hide_domain_from_title": {
+		"message": "Nascondi nomi dei domini nei titoli, es. \" - Wikipedia\" suffisso da wikipedia.com"
+	}
+}
