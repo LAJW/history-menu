@@ -22,7 +22,7 @@ function sanitize(item : {
 	const rewired = {
 		url,
 		timer : item.lastVisitTime,
-		icon : "chrome://favicon/" + item.url,
+		icon : `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(item.url)}&size=32`,
 	}
 	if (!item.title) {
 		return { ...rewired, title : trimURL(removeProtocol(item.url)), tooltip : removeProtocol(item.url) }

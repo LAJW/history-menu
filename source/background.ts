@@ -1,3 +1,4 @@
 import Chrome from "./Chrome"
 
-Chrome.theme.updateIcon();
+chrome.runtime.onStartup.addListener(Chrome.theme.updateIcon)
+chrome.runtime.onInstalled.addListener(Chrome.theme.updateIcon)

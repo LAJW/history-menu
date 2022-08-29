@@ -11,7 +11,7 @@ export default class TabButton extends TimerButton {
 	readonly #sessionId : string
 	constructor(tab : TabButtonInfo) {
 		super({
-			icon:   `chrome://favicon/${tab.url}`,
+			icon :   `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(tab.url)}&size=32`,
 			title:   tab.title,
 			tooltip: tab.originalTitle !== tab.url
 				? `${tab.originalTitle}\n${removeProtocol(tab.url)}`

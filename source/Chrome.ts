@@ -356,7 +356,7 @@ theme : {
 			settings.icon === "auto"
 			? (Chrome.theme.isDarkTheme ? "white" : "granite")
 			: settings.icon;
-		chrome.browserAction.setIcon({
+		chrome.action.setIcon({
 			path: `icons/history-19-${icon}.png`
 		})
 	},
