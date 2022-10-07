@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "build": "webpack",
+    "watch": "webpack watch",
     "test": "mocha"
   },
   "repository": {
