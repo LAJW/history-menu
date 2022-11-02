@@ -9,7 +9,7 @@ History extension for Webkit-based browsers.
 
 [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/recent-tabs-and-history-/kdfnkenepefendhmaheecfpnckmffoko?hl=en-US)
 
-[Opera Store](https://addons.opera.com/en-gb/extensions/details/wrona-history-menu/)
+[Opera Store](https://addons.opera.com/en-gb/extensions/details/wrona-history-menu/) - Opera stopped reviewing extensions, please, install the Chrome version instead.
 
 ## Support
 
@@ -49,3 +49,5 @@ sorborfor - Russian translation
 yumibagge - Japanese translation
 
 Sijera - Serbian translation
+
+Siegfriedmk - Italian Translation
