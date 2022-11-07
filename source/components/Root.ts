@@ -1,6 +1,5 @@
 import Parent from "./Parent"
 import Node from "./Node"
-import { visitFunctionBody } from "typescript";
 
 let root : Root; 
 export default class Root extends Parent {
