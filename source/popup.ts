@@ -22,7 +22,17 @@ import Root from "./components/Root"
 import DeviceFolder from "./DeviceFolder"
 import Node from "./components/Node"
 import { I18n, Settings } from "./Settings"
-import { px, groupBy, parseGlobs, removeDomain, removeProtocol, url, isInBackground, darkMode } from "./Utils"
+import {
+	px,
+	groupBy,
+	parseGlobs,
+	removeDomain,
+	removeProtocol,
+	url,
+	isInBackground,
+	darkMode,
+	processTitle
+} from "./Utils"
 
 let devicesButton : DevicesButton, deviceLayer : Layer;
 
@@ -321,7 +331,7 @@ function sessionToButton(i18n : I18n, settings : Settings, session : chrome.sess
 	if (session.tab) {
 		return new TabButton({
 			...session.tab,
-			title : titleMap.get(session.tab.url.toLowerCase()) ?? processTitle(settings, session.tab),
+			title : titleMap.get(session.tab.url.toLowerCase()) ?? processTitle1(settings, session.tab),
 			originalTitle : session.tab.title,
 			lastModified : settings.timer ? session.lastModified : undefined,
 		})
@@ -380,31 +390,8 @@ function auxiliaryTitle(titleGroups : Map<string, chrome.history.HistoryItem[]>,
 	}
 }
 
-function processTitle(settings : Settings, item : { url? : string, title? : string }) {
-	if (settings.trimTitles) {
-		const domainParts = (item.url.split("/")[2] ?? "").split(".");
-		const titleParts = item.title.split(/[-\/—|]/g);
-		function isRedundant(titlePart : string) {
-			return titlePart
-				.trim()
-				.toLowerCase()
-				.split(/[ .]/g)
-				.every(part => domainParts.some(domainPart => domainPart.includes(part)));
-		}
-		if (titleParts.length == 1) {
-			return item.title;
-		} else {
-			if (isRedundant(titleParts[0])) {
-				return titleParts.slice(1).join("-");
-			} else if (isRedundant(titleParts[titleParts.length - 1])) {
-				return titleParts.slice(0, titleParts.length - 1).join("-");
-			} else {
-				return item.title;
-			}
-		}
-	} else {
-		return item.title;
-	}
+function processTitle1(settings : Settings, item : { url? : string, title? : string }) {
+	return processTitle(settings.trimTitles, item.url, item.title);
 }
 
 function last<T>(elements : T[]) : T | undefined {
@@ -452,7 +439,7 @@ async function* streamHistoryNodes(
 			let title = titleMap.get(item.url.toLowerCase())
 			if (!title) {
 				if (!item.title || item.title === "" || titleGroups.get(item.title).length > 0) {
-					title = titleMap.get(stripHash(item.url.toLowerCase())) ?? processTitle(settings, item);
+					title = titleMap.get(stripHash(item.url.toLowerCase())) ?? processTitle1(settings, item);
 				}
 			}
 			yield new HistoryButton(i18n, {
@@ -509,7 +496,7 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 				let title = titleMap.get(item.url.toLowerCase())
 				if (!title) {
 					if (!item.title || item.title === "" || titleGroups.get(item.title).length > 0) {
-						title = titleMap.get(stripHash(item.url.toLowerCase())) ?? processTitle(settings, item);
+						title = titleMap.get(stripHash(item.url.toLowerCase())) ?? processTitle1(settings, item);
 					}
 				}
 				return new HistoryButton(i18n, {
