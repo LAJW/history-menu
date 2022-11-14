@@ -345,14 +345,25 @@ bookmarks : {
 	getTree : () => new Promise<chrome.bookmarks.BookmarkTreeNode[]>(resolve => chrome.bookmarks.getTree(resolve))
 },
 theme : {
-	get isDarkTheme() {
-		return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+	get isDarkTheme(): boolean {
+		return window?.matchMedia('(prefers-color-scheme: dark)')?.matches ?? false
 	},
-	async updateIcon() {
+	// We don't have access to DOM in the background page, so we can't check whether we're on dark mode on startup.
+	async getIsDarkTheme(): Promise<boolean> {
+		try {
+			return Chrome.theme.isDarkTheme
+		} catch {
+			const state = await Chrome.storage.local.get()
+			return state.wasDark || false
+		}
+	},
+	async updateIcon(): Promise<void> {
 		const settings = await Chrome.settings.getReadOnly({icon: "auto"})
+		const isDarkTheme = await Chrome.theme.getIsDarkTheme()
+		await Chrome.storage.local.set({wasDark: isDarkTheme})
 		const icon =
 			settings.icon === "auto"
-			? (Chrome.theme.isDarkTheme ? "white" : "granite")
+			? (isDarkTheme ? "white" : "granite")
 			: settings.icon;
 		chrome.action.setIcon({
 			path: `icons/history-19-${icon}.png`
