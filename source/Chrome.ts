@@ -287,7 +287,6 @@ tabs : {
 	highlight: (info : chrome.tabs.HighlightInfo) => new Promise<chrome.windows.Window>(resolve => chrome.tabs.highlight(info, resolve)),
 
 	async openInCurrentTab(url : string, inBackground : boolean) {
-		console.log("here")
 		const { id : windowId } = await Chrome.windows.getCurrent();
 		if (!inBackground) {
 			const [ active ] = await new Promise<chrome.tabs.Tab[]>(resolve => chrome.tabs.query({ active : true, windowId }, x => resolve(x)));
@@ -321,7 +320,6 @@ tabs : {
 			const pattern = "*" + url.substr(colon);
 			const { id : windowId } = await Chrome.windows.getCurrent();
 			const tabs = await Chrome.tabs.query({url: pattern, windowId})
-			console.log(tabs)
 			if (tabs.length) {
 				if (inBackground)
 					return Chrome.tabs.highlight({
