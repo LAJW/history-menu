@@ -149,7 +149,7 @@ export function url(input : string) {
 export function isURL(text : string) {
 	return text.indexOf("://") > 0 && text.indexOf(" ") < 0;
 }
-// converts to string, If supplied string is an URL, returns trimmed version of it, else returns supplied string
+// converts to string, If supplied string is a URL, returns trimmed version of it, else returns supplied string
 // 1. String trimURL(Mixed text)
 
 export function trimURL(text : string) {
@@ -157,12 +157,12 @@ export function trimURL(text : string) {
 	if (!isURL(text))
 		return text;
 	// trim query strings ?q=...xxx
-	var queryStart = text.indexOf("?");
-	var queryEnd = text.indexOf("=", queryStart);
+	const queryStart = text.indexOf("?");
+	const queryEnd = text.indexOf("=", queryStart);
 	if (queryStart > 0 && queryEnd > 0)
 		text = text.substr(0, queryEnd + 1) + "...";
 	// trim slashes
-	var split = text.split("/");
+	const split = text.split("/");
 	if (split.length > 5) {
 		split.splice(4, split.length - 5, "...");
 		text = split.join("/");
@@ -174,7 +174,7 @@ export function trimURL(text : string) {
 // relativeTime(Number timeInMilliseconds)
 
 export function relativeTime(value : number) {
-	var diff = ( Date.now() - value ) / 1000;
+	const diff = ( Date.now() - value ) / 1000;
 	if (diff < 60) {
 		return "<1m";
 	} else if (diff < 3600) {
