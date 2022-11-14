@@ -181,7 +181,7 @@ storage: {
 		 * @param Array: Optional array of keys to fetch
 		 * @return Promise: Promise of map of storage's local variables
 		 */
-		get: () => new Promise<any>(resolve => chrome.storage.local.get(resolve)),
+		get: () => new Promise<LocalSettings>(resolve => chrome.storage.local.get(resolve)),
 		/**
 		 * @brief Equivalent to chrome.storage.local.set Callback result will
 		 * be forwarded to returned promise
@@ -202,7 +202,7 @@ storage: {
 		 * @param Array: Optional array of keys to fetch
 		 * @return Promise: Promise of map of storage's local variables
 		 */
-		get: () => new Promise<any>(resolve => chrome.storage.sync.get(resolve)),
+		get: () => new Promise<Settings>(resolve => chrome.storage.sync.get(resolve)),
 
 		/**
 		 * @brief Equivalent to chrome.storage.sync.set Callback result will
