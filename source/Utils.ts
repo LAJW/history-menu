@@ -250,14 +250,7 @@ export function isInBackground(e : MouseEvent | KeyboardEvent) {
 			&& e.metaKey || e.ctrlKey || e.shiftKey;
 }
 
-export default {
-	$,
-	px,
-	url,
-	isURL,
-	trimURL,
-	relativeTime,
-}
+export default {$, px, url}
 
 export function darkMode(settings : Settings) {
 	if (settings.darkMode !== "") {
