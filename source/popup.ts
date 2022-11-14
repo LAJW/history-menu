@@ -244,7 +244,6 @@ function main(
 		bookmarks : chrome.bookmarks.BookmarkTreeNode[],
 		i18n : (key : string) => string, settings : Settings) {
 
-	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate, darkMode(settings));
 	root.width  = settings.width || 0;
 	root.height = settings.height || 0;
 	const mainLayer = getMainLayer(sessions, history, i18n, settings)
@@ -535,17 +534,18 @@ function reserveSpace(settings : Settings) {
 	const settings = await Chrome.fetch("defaults.json")
 		.then(JSON.parse)
 		.then(Chrome.settings.getReadOnly)
-	reserveSpace(settings);
+	const root = await Root.ready()
+	Chrome.theme.updateTheme()
+	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate, darkMode(settings));
+	reserveSpace(settings)
 	const i18n = await Chrome.getI18n(settings.lang);
 	const bookmarks = await Chrome.bookmarks.getTree();
 	const titleMap = urlToTitleMap(bookmarks);
-	const [root, sessions, devices, {results: history, stream : historyStream}] = await Promise.all([
-		Root.ready(),
+	const [sessions, devices, {results: history, stream : historyStream}] = await Promise.all([
 		getSessionNodes(i18n, settings, titleMap),
 		getDeviceNodes(i18n, settings),
 		getHistoryNodes(i18n, settings, titleMap),
 	])
-	Chrome.theme.updateTheme();
 	main(
 		root,
 		sessions,
