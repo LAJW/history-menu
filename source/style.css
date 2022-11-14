@@ -79,7 +79,7 @@ body {
 	background-color: var(--bg);
 }
 
-body, input {
+body, input[type="text"] {
 	color: var(--text-color)
 }
 
