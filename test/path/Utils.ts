@@ -84,12 +84,14 @@ describe("processTitle", () => {
 		["https://google.com/pages", "Google — Pages", "Pages"],
 		["https://google.com/pages", "Google | Pages", "Pages"],
 		["https://google.com/pages", "Google / Pages", "Pages"],
+		["https://open.spotify.com/search/hell's%20devils", "Search – Spotify", "Search"],
 
 		// Basics postfix
 		["https://google.com/pages", "Pages - Google", "Pages"],
 		["https://google.com/pages", "Pages — Google", "Pages"],
 		["https://google.com/pages", "Pages | Google", "Pages"],
 		["https://google.com/pages", "Pages / Google", "Pages"],
+		["https://open.spotify.com/search/hell's%20devils", "Spotify – Search", "Search"],
 
 		// URL in the title
 		["https://google.com/", "https://google.com/", "google.com"],
