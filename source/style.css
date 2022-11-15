@@ -123,6 +123,7 @@ a {
 .Input input {
 	width:   inherit;
 	display: block;
+	color: var(--text-color);
 }
 
 .Timer {
