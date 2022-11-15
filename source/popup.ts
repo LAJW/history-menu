@@ -391,7 +391,7 @@ function auxiliaryTitle(titleGroups : Map<string, chrome.history.HistoryItem[]>,
 }
 
 function processTitle1(settings : Settings, item : { url? : string, title? : string }) {
-	return processTitle(settings.trimTitles, item.url, item.title);
+	return settings.trimTitles ? processTitle(item.url, item.title) : item.title;
 }
 
 function last<T>(elements : T[]) : T | undefined {

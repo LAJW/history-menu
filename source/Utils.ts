@@ -259,30 +259,37 @@ export function darkMode(settings : Settings) {
 	return Chrome.theme.isDarkTheme;
 }
 
-export function processTitle(trimTitles: boolean, url: string | undefined, title : string | undefined) {
-	if (trimTitles) {
-		const domainParts = (url.split("/")[2] ?? "").split(".");
-		const titleParts = title.split(/[-\/—|]/g);
-		function isRedundant(titlePart : string) {
-			return titlePart
-				.trim()
-				.toLowerCase()
-				.split(/[ .]/g)
-				.every(part => domainParts.some(domainPart => domainPart.includes(part)));
-		}
-		if (titleParts.length == 1) {
-			return title;
-		} else {
-			if (isRedundant(titleParts[0])) {
-				return titleParts.slice(1).join("-");
-			} else if (isRedundant(titleParts[titleParts.length - 1])) {
-				return titleParts.slice(0, titleParts.length - 1).join("-");
-			} else {
-				return title;
-			}
-		}
+function trimURLSlash(url: string) {
+	if (url.endsWith('/')) {
+		return url.substring(0, url.length - 1);
+	} else {
+		return url;
+	}
+}
+
+export function processTitle(url: string | undefined, title : string | undefined) {
+	if (!url) {
+		return title ?? "No Title";
+	}
+	if (url === title || !title || url.includes(title)) {
+		return trimURLSlash(removeProtocol(url))
+	}
+	const domainParts = (url.split("/")[2] ?? "").split(".");
+	const titleParts = title.split(/ [-\/—|] /g);
+	function isRedundant(titlePart : string) {
+		return titlePart
+			.trim()
+			.toLowerCase()
+			.split(/[ .]/g)
+			.every(part => domainParts.some(domainPart => domainPart.includes(part)));
+	}
+	if (titleParts.length == 1) {
+		return title;
+	} else if (isRedundant(titleParts[0])) {
+		return titleParts.slice(1).join("-");
+	} else if (isRedundant(titleParts[titleParts.length - 1])) {
+		return titleParts.slice(0, titleParts.length - 1).join("-");
 	} else {
 		return title;
 	}
 }
-

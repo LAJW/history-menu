@@ -1,6 +1,6 @@
 import {strictEqual, deepStrictEqual} from "assert";
 import { Ok, Fail } from "../../source/Result";
-import { escapedSplit, glob, parseGlob, parseGlobs } from "../../source/utils";
+import {escapedSplit, glob, parseGlob, parseGlobs, processTitle} from "../../source/utils";
 
 describe("glob", () => {
 	it("exact match", () => {
@@ -68,4 +68,40 @@ describe("glob", () => {
 		strictEqual(glob("https://google.com/"), true);
 		strictEqual(glob("https://translate.google.com/"), false);
 	})
+})
+
+describe("processTitle", () => {
+	const data = [
+		// Empty states
+		[undefined, undefined, "No Title"],
+		["https://google.com/", undefined, "google.com"],
+		["https://google.com/", "", "google.com"],
+
+		// Basics
+		["https://google.com/", "Google", "Google"],
+		// Basics prefix
+		["https://google.com/pages", "Google - Pages", "Pages"],
+		["https://google.com/pages", "Google — Pages", "Pages"],
+		["https://google.com/pages", "Google | Pages", "Pages"],
+		["https://google.com/pages", "Google / Pages", "Pages"],
+
+		// Basics postfix
+		["https://google.com/pages", "Pages - Google", "Pages"],
+		["https://google.com/pages", "Pages — Google", "Pages"],
+		["https://google.com/pages", "Pages | Google", "Pages"],
+		["https://google.com/pages", "Pages / Google", "Pages"],
+
+		// URL in the title
+		["https://google.com/", "https://google.com/", "google.com"],
+		["https://feedly.com/", "https://feedly.com", "feedly.com"],
+
+		// spaces around "-"
+		["https://addons.opera.com/en/", "Opera add-ons", "Opera add-ons"],
+		["https://addons.opera.com/en/extensions/details/ublock/", "uBlock Origin extension - Opera add-ons", "uBlock Origin extension - Opera add-ons"],
+	]
+	for (const [url, title, expected] of data) {
+		it(`(${url}, ${title}) should be "${expected}"`, () => {
+			strictEqual(processTitle(url, title), expected);
+		})
+	}
 })
