@@ -92,6 +92,7 @@ describe("processTitle", () => {
 		["https://google.com/pages", "Pages | Google", "Pages"],
 		["https://google.com/pages", "Pages / Google", "Pages"],
 		["https://open.spotify.com/search/hell's%20devils", "Spotify – Search", "Search"],
+		["https://www.urbandictionary.com/define.php?term=OwO", "Urban Dictionary: OwO", "OwO"],
 
 		// URL in the title
 		["https://google.com/", "https://google.com/", "google.com"],

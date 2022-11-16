@@ -275,7 +275,7 @@ export function processTitle(url: string | undefined, title : string | undefined
 		return trimURLSlash(removeProtocol(url))
 	}
 	const domainParts = (url.split("/")[2] ?? "").split(".");
-	const titleParts = title.split(/ [-\/—–|] /g);
+	const titleParts = title.split(/ [-\/—–|] |: /g);
 	function isRedundant(titlePart : string) {
 		return titlePart
 			.trim()
