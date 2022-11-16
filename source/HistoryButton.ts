@@ -40,9 +40,9 @@ interface HistoryButtonInfo extends chrome.history.HistoryItem {
 
 export default class HistoryButton extends TimerButton {
 	preferSelect: boolean
-	#lastModified: number
-	#remove: HTMLElement
-	#interval: NodeJS.Timeout
+	readonly #lastModified: number
+	readonly #remove: HTMLElement
+	readonly #interval: NodeJS.Timeout
 	#highlighted: boolean
 	#aux: HTMLElement
 	constructor(i18n : I18n, item : HistoryButtonInfo) {
@@ -75,7 +75,7 @@ export default class HistoryButton extends TimerButton {
 			const inBackground = isInBackground(e)
 			if (e.target == this.#remove) {
 				if (e.button === 0) {
-					Chrome.history.deleteUrl({ url: this.url });
+					await Chrome.history.deleteUrl({ url: this.url });
 					(this.parent as Parent).remove(this);
 				}
 			} else if (this.preferSelect) {
