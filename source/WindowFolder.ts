@@ -1,6 +1,6 @@
 import Chrome from "./Chrome"
 import Folder from "./components/Folder"
-import TabButton from "./TabButton"
+import TabButton, {TabButtonInfo} from "./TabButton"
 import { $, isInBackground, relativeTime } from "./Utils"
 
 const template = $({
@@ -9,10 +9,12 @@ const template = $({
 	childNodes: [$("")]
 });
 
-interface WindowFolderInfo extends chrome.windows.Window {
+export interface WindowFolderInfo {
+	sessionId : string
+	tabs: TabButtonInfo[]
 	fadeInEnabled : boolean
-	lastModified : number
-	open? : boolean
+	lastModified? : number
+	open : boolean
 }
 
 function sessionInfo(wnd : WindowFolderInfo) {
@@ -36,9 +38,7 @@ export default class WindowFolder extends Folder {
 		if (wnd.lastModified) {
 			this.timer = relativeTime(wnd.lastModified * 1000);
 		}
-		if (wnd.open !== undefined) {
-			this.open = wnd.open;
-		}
+		this.open = wnd.open;
 		this.#sessionId = wnd.sessionId;
 	}
 	override mousedown(e : MouseEvent) {

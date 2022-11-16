@@ -2,9 +2,12 @@ import TimerButton from "./TimerButton"
 import Chrome from "./Chrome"
 import { isInBackground, removeProtocol } from "./Utils";
 
-interface TabButtonInfo extends chrome.tabs.Tab { 
+export interface TabButtonInfo {
+	title: string
+	originalTitle: string
+	url: string
 	lastModified? : number
-	originalTitle?: string
+	sessionId: string
 }
 
 export default class TabButton extends TimerButton {

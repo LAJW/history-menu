@@ -15,8 +15,8 @@ import Layer from "./components/Layer"
 import MultiButton from "./components/MultiButton"
 import Progressbar from "./components/Progressbar"
 import Separator from "./components/Separator"
-import WindowFolder from "./WindowFolder"
-import TabButton from "./TabButton"
+import WindowFolder, {WindowFolderInfo} from "./WindowFolder"
+import TabButton, {TabButtonInfo} from "./TabButton"
 import HistoryButton from "./HistoryButton"
 import Root from "./components/Root"
 import DeviceFolder from "./DeviceFolder"
@@ -327,21 +327,36 @@ function main(
 	}
 }
 
+function processTab(settings: Settings, tab: chrome.tabs.Tab, lastModified?: number): TabButtonInfo {
+	const {title: originalTitle, url, sessionId} = tab
+	const title = processTitle1(settings, tab)
+	return {
+		title,
+		originalTitle,
+		lastModified: settings.timer ? lastModified : undefined,
+		url,
+		sessionId,
+	}
+}
+
+function processWindow(settings: Settings, window: chrome.windows.Window, lastModified: number): WindowFolderInfo {
+	return {
+		sessionId : window.sessionId,
+		tabs: window.tabs.map(tab => processTab(settings, tab)),
+		fadeInEnabled : false,
+		lastModified : settings.timer ? lastModified : undefined,
+		open : settings.expand,
+	}
+}
+
 function sessionToButton(i18n : I18n, settings : Settings, session : chrome.sessions.Session, titleMap : Map<string, string>) {
 	if (session.tab) {
-		return new TabButton({
-			...session.tab,
-			title : titleMap.get(session.tab.url.toLowerCase()) ?? processTitle1(settings, session.tab),
-			originalTitle : session.tab.title,
-			lastModified : settings.timer ? session.lastModified : undefined,
-		})
+		const tabInfo = processTab(settings, session.tab, session.lastModified)
+		const bookmarkedTitle = titleMap.get(session.tab.url.toLowerCase())
+		return bookmarkedTitle ? new TabButton({...tabInfo, title: bookmarkedTitle}) : new TabButton(tabInfo)
+	} else {
+		return new WindowFolder(i18n, processWindow(settings, session.window, session.lastModified))
 	}
-	return new WindowFolder(i18n, {
-		...session.window,
-		lastModified : settings.timer ? session.lastModified : undefined,
-		open : session.window !== undefined ? settings.expand : undefined,
-		fadeInEnabled : false,
-	})
 }
 
 async function getSessionNodes(i18n : I18n, settings : Settings, titleMap: Map<string, string>) : Promise<Node[]> {
@@ -352,14 +367,11 @@ async function getSessionNodes(i18n : I18n, settings : Settings, titleMap: Map<s
 
 async function getDeviceNodes(i18n : I18n, settings : Settings) {
 	const devices = await Chrome.sessions.getDevices();
-	return devices.map(device => {
-		if (!settings.timer) {
-			device.sessions.forEach(session => {
-				session.lastModified = undefined;
-			});
-		}
-		return new DeviceFolder(i18n, device)
-	});
+	return devices.map(({sessions, deviceName}) =>
+		new DeviceFolder(i18n, {
+			deviceName,
+			sessions: sessions.map(session => processWindow(settings, session.window, session.lastModified))
+		}));
 }
 
 
