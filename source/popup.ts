@@ -28,7 +28,6 @@ import {
 	parseGlobs,
 	removeDomain,
 	removeProtocol,
-	url,
 	isInBackground,
 	darkMode,
 	processTitle
@@ -133,7 +132,7 @@ function onSearch(deviceLayer : Layer, searchLayer : Layer, i18n : (key : string
 	}
 	const token         = new Token(tokenFactory);
 	selectedResult      = 0;
-	searchResults       = new Array;
+	searchResults       = [];
 	searchLayer.visible = value.length > 0;
 	searchLayer.clear();
 	if (value.length > 0) {
@@ -301,10 +300,10 @@ function main(
 		});
 		devicesButton = new DevicesButton({
 			tooltip: i18n("popup_other_devices"),
-			click:   function (e) {
-				const visible       = !deviceLayer.visible;
+			click(_e) {
+				const visible = !deviceLayer.visible;
 				deviceLayer.visible = visible;
-				this.on             = visible;
+				this.on = visible;
 			}
 		});
 		root.insert(deviceLayer);
@@ -376,6 +375,7 @@ async function getDeviceNodes(i18n : I18n, settings : Settings) {
 
 
 function head<T>(collection : Iterable<T>) : T {
+	// noinspection LoopStatementThatDoesntLoopJS
 	for (const el of collection) {
 		return el;
 	}
