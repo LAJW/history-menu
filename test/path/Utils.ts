@@ -78,6 +78,8 @@ describe("processTitle", () => {
 		["https://google.com/", "", "google.com"],
 
 		// Basics
+		["about:blank", "Empty page", "Empty page"],
+		["chrome://extensions/", "Extensions", "Extensions"],
 		["https://google.com/", "Google", "Google"],
 		// Basics prefix
 		["https://google.com/pages", "Google - Pages", "Pages"],
