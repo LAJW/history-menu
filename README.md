@@ -1,44 +1,46 @@
 # Wrona History Menu
 History extension for Webkit-based browsers.
 
-## Links
-
-[Website](http://layv.net/history-menu/) - All links and changelogs
+## Install
 
 [Chrome Store](https://chrome.google.com/webstore/detail/wrona-history-menu/fhibbdoaickjpmmhemkompghjjmpjdpj)
 
 [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/recent-tabs-and-history-/kdfnkenepefendhmaheecfpnckmffoko?hl=en-US)
 
-[Opera Store](https://addons.opera.com/en-gb/extensions/details/wrona-history-menu/) - Opera stopped reviewing extensions, please, install the Chrome version instead.
+~~[Opera Store](https://addons.opera.com/en-gb/extensions/details/wrona-history-menu/)~~ - Opera stopped reviewing extensions, please, install the Chrome version instead.
 
 ## Support
 
-If you have any problems with this extension, please e-mail me at
-[lukasz.andrzej.wrona@gmail.com](lukasz.andrzej.wrona@gmail.com).
+If you have any problems with this extension, please
+[create an issue](https://github.com/LAJW/history-menu/issues/new) or e-mail me
+at [lukasz.andrzej.wrona@outlook.com](mailto:lukasz.andrzej.wrona@outlook.com).
+
+## Development
+
+Run the following (requires Node.JS 16+/npm 8+):
+
+```bash
+npm install
+npm run watch
+```
+
+In Chrome/Opera/Edge (or anything chromium-based), go to `chrome://extensions` and click "Load unpacked extension" after
+enabling developer mode.
+
+The extension will show up in the `build` directory.
+
+## Building & Testing
+
+```bash
+npm build # One-off build
+npm run test # Run the tests
+```
 
 ## License
 
 GNU General Public License Version 3, see
 [LICENSE](https://github.com/LAJW/history-menu/blob/master/LICENSE) for
 details.
-
-## Development
-You can load this extension by pointing Chrome, Opera, Edge to the `source`
-directory.
-
-## Building (compressing)
-First, install the dependencies (requires nodejs 15.2.0+ and NPM).
-
-```bash
-npm install
-```
-
-Build (Chrome version)
-```bash
-npm run build
-```
-
-The extension will show up in the `build` directory.
 
 ## Contributors
 
