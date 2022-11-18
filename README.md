@@ -32,8 +32,10 @@ The extension will show up in the `build` directory.
 ## Building & Testing
 
 ```bash
-npm build # One-off build
-npm run test # Run the tests
+# One-off build
+npm run build
+# Run the tests
+npm test
 ```
 
 ## License
