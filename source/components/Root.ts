@@ -44,7 +44,7 @@ export default class Root extends Parent {
 			}
 			if (document.body) 
 				setTimeout(callback, 0);
-			else window.addEventListener("load", callback);
+			else window.addEventListener("DOMContentLoaded", callback);
 		});
 	}
 }
