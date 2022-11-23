@@ -288,7 +288,7 @@ function main(
 				title: "",
 				tooltip: i18n("popup_options"),
 				iconClass: "icon-options",
-				click: anchorClick(`chrome://extensions/?options=${chrome.runtime.id}`)
+				click: anchorClick(`extension://${chrome.runtime.id}/options.html`)
 			})
 		]
 	});
