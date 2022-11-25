@@ -143,7 +143,7 @@ function onSearch(deviceLayer : Layer, searchLayer : Layer, i18n : (key : string
 				return;
 			}
 			for (const sector of timeSectors()) {
-				const results = await Chrome.history.search({
+				const results = await chrome.history.search({
 					text:      value,
 					startTime: sector.start,
 					endTime:   sector.end,
@@ -420,7 +420,7 @@ async function* streamHistoryNodes(
 		filter : (value : string) => boolean) {
 	while (true) {
 		// TODO: this can have 50 entries with the same timestamp which would hang the popup
-		const chunk = await Chrome.history.search({
+		const chunk = await chrome.history.search({
 			text:       "", 
 			startTime:  chunkStart - 1000 * 3600 * 24 * 30, 
 			endTime:    chunkStart,
@@ -483,7 +483,7 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 	const filter = (url: string) => !blacklist.some(match => match(url) || match(removeProtocol(url)));
 	for (let i = 1; i < 10; ++i) {
 		// TODO: Into async generator
-		const preFilter = await Chrome.history.search({
+		const preFilter = await chrome.history.search({
 			text:       "", 
 			startTime:  timestamp - 1000 * 3600 * 24 * 30, 
 			endTime:    timestamp,

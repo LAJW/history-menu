@@ -96,33 +96,6 @@ fetch : (url : string) : Promise<string> => new Promise((resolve, reject) => {
 	xhr.send();
 }),
 
-history: {
-
-	/**
-	 * @brief Equivalent to chrome.history.search. Callback result will be
-	 * forwarded to returned promise
-	 * @param query Object: Search query object literal. Properties:
-	 * - text String: search string
-	 * - startDate Number: Optional beginning of the date range
-	 * - endDate Number: Optional end of the date range
-	 * - maxResults Number: Optional maximum number of results. Defaults to 100
-	 * @throw Error: Throws if object literal is missing or contains invalid
-	 * values
-	 * @return Promise: Function returns a Promise of search results
-	 */
-	search: (query : chrome.history.HistoryQuery) =>
-		new Promise<chrome.history.HistoryItem[]>(resolve => chrome.history.search(query, resolve)),
-
-	/**
-	 * @brief Equivalent to chrome.history.deleteUrl. Callback result will be
-	 * forwarded to returned promise
-	 * @return Promise: Function returns empty Promise resolved after history
-	 * entry gets deleted
-	 */
-	deleteUrl: (url : chrome.history.Url) =>
-		new Promise<void>(resolve => chrome.history.deleteUrl(url, resolve)),
-}, // namespace Chrome.history
-
 sessions: {
 
 	/**
@@ -239,62 +212,18 @@ settings: {
 		const settings = local.local ? local : sync;
 		return { ...defaultSettings, ...settings }
 	}, 
-
-	/**
-	 * @brief Placeholder Function
-	 */
-	getReadWrite() {
-		throw new Error("Called Placeholder Function");
-		
-	}
 }, // namespace Chrome.settings
 
 tabs : {
-
-	/**
-	 * @brief Equivalent to chrome.tabs.create.
-	 * @param properties Object: Object literal containing properties of newly
-	 * created tab
-	 * @return Promise: Function returns empty promise that will be resolved
-	 * once tab is created
-	 */
-	create: (options : chrome.tabs.CreateProperties) => new Promise<chrome.tabs.Tab>(resolve => chrome.tabs.create(options, resolve)),
-
-	/**
-	 * @brief Equivalent to chrome.tabs.query.
-	 * @param properties Object: Object literal containing properties of tab 
-	 * to be found
-	 * @return Promise: Function returns promise of Array of found tabs
-	 */
-	query: (query : chrome.tabs.QueryInfo) => new Promise<chrome.tabs.Tab[]>(resolve => chrome.tabs.query(query, resolve)),
-
-	/**
-	 * @brief Equivalent to chrome.tabs.create.
-	 * @param properties Object: Object literal containing properties of updated
-	 * tab
-	 * @return Promise: Function returns empty promise that will be resolved
-	 * once tab is updated
-	 */
-	update: (id : number, properties : chrome.tabs.UpdateProperties) => new Promise<chrome.tabs.Tab>(resolve => chrome.tabs.update(id, properties, resolve)),
-
-	/**
-	 * @brief Equivalent to chrome.tabs.create.
-	 * @param properties Object: Object literal containing ids of tabs to 
-	 * highlight
-	 * @return Promise: Function returns empty promise that will be resolved
-	 * once tab is created
-	 */
-	highlight: (info : chrome.tabs.HighlightInfo) => new Promise<chrome.windows.Window>(resolve => chrome.tabs.highlight(info, resolve)),
-
 	async openInCurrentTab(url : string, inBackground : boolean) {
-		const { id : windowId } = await Chrome.windows.getCurrent();
+		const { id : windowId } = await chrome.windows.getCurrent();
 		if (!inBackground) {
 			const [ active ] = await chrome.tabs.query({ active : true, windowId });
 			if (active) {
 				return await chrome.tabs.update(active.id, { url })
 			}
 		}
-		return await Chrome.tabs.create({ windowId, url, active: !inBackground });
+		return await chrome.tabs.create({ windowId, url, active: !inBackground });
 	},
 
 	/**
@@ -310,26 +239,23 @@ tabs : {
 	// open url or if tab with URL already exists, select it instead
 	// Only consider the current window
 	async openOrSelect(url : string, inBackground : boolean) {
-		const window = await Chrome.windows.getCurrent();
+		const window = await chrome.windows.getCurrent();
 		// Can't use URL in the query, it doesn't work on queries such as: "*://localhost:port/" - it throws
 		const tabs =
-			(await Chrome.tabs.query({windowId: window.id}))
+			(await chrome.tabs.query({windowId: window.id}))
 				.filter(tab => tab.url === url)
 				.map(tab => tab.id)
 		if (tabs.length) {
 			if (inBackground) {
-				return Chrome.tabs.highlight({tabs});
+				return chrome.tabs.highlight({tabs});
 			} else {
-				return Chrome.tabs.update(tabs[0], {active: true});
+				return chrome.tabs.update(tabs[0], {active: true});
 			}
 		} else {
 			return Chrome.tabs.openInCurrentTab(url, inBackground);
 		}
 	},
 }, // namespace Chrome.tabs
-windows : {
-	getCurrent : () => new Promise<chrome.windows.Window>(resolve => chrome.windows.getCurrent(x => resolve(x)))
-}, // namespace Chrome.windows
 bookmarks : {
 	getTree : () => new Promise<chrome.bookmarks.BookmarkTreeNode[]>(resolve => chrome.bookmarks.getTree(resolve))
 },

@@ -75,7 +75,7 @@ export default class HistoryButton extends TimerButton {
 			const inBackground = isInBackground(e)
 			if (e.target == this.#remove) {
 				if (e.button === 0) {
-					await Chrome.history.deleteUrl({ url: this.url });
+					await chrome.history.deleteUrl({ url: this.url });
 					(this.parent as Parent).remove(this);
 				}
 			} else if (this.preferSelect) {
