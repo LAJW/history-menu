@@ -289,16 +289,12 @@ tabs : {
 	async openInCurrentTab(url : string, inBackground : boolean) {
 		const { id : windowId } = await Chrome.windows.getCurrent();
 		if (!inBackground) {
-			const [ active ] = await new Promise<chrome.tabs.Tab[]>(resolve => chrome.tabs.query({ active : true, windowId }, x => resolve(x)));
+			const [ active ] = await chrome.tabs.query({ active : true, windowId });
 			if (active) {
-				return await new Promise(resolve => chrome.tabs.update(active.id, {url : url}, x => resolve(x)))
+				return await chrome.tabs.update(active.id, { url })
 			}
 		}
-		return Chrome.tabs.create({
-			windowId,
-			url: url,
-			active: !inBackground
-		});
+		return await Chrome.tabs.create({ windowId, url, active: !inBackground });
 	},
 
 	/**
