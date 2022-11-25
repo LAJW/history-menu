@@ -314,26 +314,19 @@ tabs : {
 	// open url or if tab with URL already exists, select it instead
 	// Only consider the current window
 	async openOrSelect(url : string, inBackground : boolean) {
-		const colon = url.indexOf(":");
-		if (colon >= 0) {
-			// external URL (has comma)
-			const pattern = "*" + url.substr(colon);
-			const { id : windowId } = await Chrome.windows.getCurrent();
-			const tabs = await Chrome.tabs.query({url: pattern, windowId})
-			if (tabs.length) {
-				if (inBackground)
-					return Chrome.tabs.highlight({
-						tabs: tabs.map(tab => tab.index)
-					});		
-				else return Chrome.tabs.update(
-					tabs[0].id, 
-					{ active: true }
-				);
+		const window = await Chrome.windows.getCurrent();
+		// Can't use URL in the query, it doesn't work on queries such as: "*://localhost:port/" - it throws
+		const tabs =
+			(await Chrome.tabs.query({windowId: window.id}))
+				.filter(tab => tab.url === url)
+				.map(tab => tab.id)
+		if (tabs.length) {
+			if (inBackground) {
+				return Chrome.tabs.highlight({tabs});
 			} else {
-				return Chrome.tabs.openInCurrentTab(url, inBackground);
+				return Chrome.tabs.update(tabs[0], {active: true});
 			}
 		} else {
-			// extension-local URL
 			return Chrome.tabs.openInCurrentTab(url, inBackground);
 		}
 	},
