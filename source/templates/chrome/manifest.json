@@ -25,7 +25,7 @@
 		"open_in_tab": true
 	},
 	"action": {
-		"deafult_icon": {
+		"default_icon": {
 			"19": "icons/history-19-granite.png"
 		},
 		"default_title": "History Menu",
