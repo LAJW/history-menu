@@ -3,7 +3,7 @@
 	"manifest_version": 3,
 	"author": "Łukasz A.J. Wrona (http://layv.net/)",
 	"description": "__MSG_description__",
-	"version": "2.5.0",
+	"version": "2.5.1",
 	"permissions": [
 		"tabs",
 		"history",
