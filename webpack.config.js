@@ -57,8 +57,5 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".js"]
   },
-  devtool : "source-map",
-  optimization: {
-      minimize: false
-  },
+  devtool : "source-map"
 }
