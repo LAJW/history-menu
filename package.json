@@ -1,6 +1,6 @@
 {
   "name": "history-menu",
-  "version": "2.4.4",
+  "version": "2.5.0",
   "description": "History Menu Extension for Webkit Browsers",
   "private": true,
   "scripts": {
