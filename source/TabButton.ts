@@ -1,6 +1,7 @@
 import TimerButton from "./TimerButton"
 import Chrome from "./Chrome"
 import { isInBackground, removeProtocol } from "./Utils";
+import {ISessions} from "./models/Sessions";
 
 export interface TabButtonInfo {
 	title: string
@@ -8,6 +9,7 @@ export interface TabButtonInfo {
 	url: string
 	lastModified? : number
 	sessionId: string
+	sessions: ISessions
 }
 
 export default class TabButton extends TimerButton {

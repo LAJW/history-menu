@@ -32,7 +32,7 @@ import {
 	darkMode,
 	processTitle
 } from "./Utils"
-import {Tabs} from "./models/Tabs";
+
 import Model from "./models/Model";
 
 let devicesButton : DevicesButton, deviceLayer : Layer;
@@ -153,9 +153,14 @@ function onSearch(deviceLayer : Layer, searchLayer : Layer, i18n : (key : string
 				if (results.length && token.valid) {
 					const nodes = results.map(result => {
 						if (!settings.timer) {
-							result.lastVisitTime = null;
+							return new HistoryButton(i18n, {
+								...result,
+								lastVisitTime : null,
+								tabs : model.tabs
+							});
+						} else {
+							return new HistoryButton(i18n, { ...result, tabs : model.tabs });
 						}
-						return new HistoryButton(i18n, { ...result, tabs : model.tabs });
 					});
 					searchResults = [ ...searchResults, ...nodes ];
 					searchLayer.insert(new Separator({title: i18n(sector.i18n)}))
@@ -329,7 +334,7 @@ function main(
 	}
 }
 
-function processTab(settings: Settings, tab: chrome.tabs.Tab, lastModified?: number): TabButtonInfo {
+function processTab(model: Model, settings: Settings, tab: chrome.tabs.Tab, lastModified?: number): TabButtonInfo {
 	const {title: originalTitle, url, sessionId} = tab
 	const title = processTitle1(settings, tab)
 	return {
@@ -338,41 +343,42 @@ function processTab(settings: Settings, tab: chrome.tabs.Tab, lastModified?: num
 		lastModified: settings.timer ? lastModified : undefined,
 		url,
 		sessionId,
+		sessions : model.sessions
 	}
 }
 
-function processWindow(settings: Settings, window: chrome.windows.Window, lastModified: number): WindowFolderInfo {
+function processWindow(model: Model, settings: Settings, window: chrome.windows.Window, lastModified: number): WindowFolderInfo {
 	return {
 		sessionId : window.sessionId,
-		tabs: window.tabs.map(tab => processTab(settings, tab)),
+		tabs: window.tabs.map(tab => processTab(model, settings, tab)),
 		fadeInEnabled : false,
 		lastModified : settings.timer ? lastModified : undefined,
 		open : settings.expand,
 	}
 }
 
-function sessionToButton(i18n : I18n, settings : Settings, session : chrome.sessions.Session, titleMap : Map<string, string>) {
+function sessionToButton(model : Model, i18n : I18n, settings : Settings, session : chrome.sessions.Session, titleMap : Map<string, string>) {
 	if (session.tab) {
-		const tabInfo = processTab(settings, session.tab, session.lastModified)
+		const tabInfo = processTab(model, settings, session.tab, session.lastModified)
 		const bookmarkedTitle = titleMap.get(session.tab.url.toLowerCase())
 		return bookmarkedTitle ? new TabButton({...tabInfo, title: bookmarkedTitle}) : new TabButton(tabInfo)
 	} else {
-		return new WindowFolder(i18n, processWindow(settings, session.window, session.lastModified))
+		return new WindowFolder(i18n, processWindow(model, settings, session.window, session.lastModified))
 	}
 }
 
-async function getSessionNodes(i18n : I18n, settings : Settings, titleMap: Map<string, string>) : Promise<Node[]> {
+async function getSessionNodes(model: Model, i18n : I18n, settings : Settings, titleMap: Map<string, string>) : Promise<Node[]> {
 	return (await Chrome.sessions.getRecent({ }))
 		.slice(0, settings.tabCount | 0)
-		.map(session => sessionToButton(i18n, settings, session, titleMap));
+		.map(session => sessionToButton(model, i18n, settings, session, titleMap));
 }
 
-async function getDeviceNodes(i18n : I18n, settings : Settings) {
+async function getDeviceNodes(model: Model, i18n : I18n, settings : Settings) {
 	const devices = await Chrome.sessions.getDevices();
 	return devices.map(({sessions, deviceName}) =>
 		new DeviceFolder(i18n, {
 			deviceName,
-			sessions: sessions.map(session => processWindow(settings, session.window, session.lastModified))
+			sessions: sessions.map(session => processWindow(model, settings, session.window, session.lastModified))
 		}));
 }
 
@@ -548,8 +554,8 @@ function reserveSpace(settings : Settings) {
 	const bookmarks = await Chrome.bookmarks.getTree();
 	const titleMap = urlToTitleMap(bookmarks);
 	const [sessions, devices, {results: history, stream : historyStream}] = await Promise.all([
-		getSessionNodes(i18n, settings, titleMap),
-		getDeviceNodes(i18n, settings),
+		getSessionNodes(model, i18n, settings, titleMap),
+		getDeviceNodes(model, i18n, settings),
 		getHistoryNodes(i18n, settings, titleMap, model),
 	])
 	main(
