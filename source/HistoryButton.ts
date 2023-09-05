@@ -9,6 +9,18 @@ const removeButton = $({
 	className: "Remove"
 });
 
+const isOpera : boolean = /OPERA|OPR\//i.test(navigator.userAgent)
+
+function faviconUrl(url : string) : string {
+	// Workaround for Opera which does not have a "favicon" API yet
+	// Source: https://forums.opera.com/topic/61672/manifest-v3-favicons-api
+	if (isOpera) {
+		return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(url)}&sz=32`;
+	} else {
+		return `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(url)}&size=32`;
+	}
+}
+
 function sanitize(item : {
 	title?: string
 	originalTitle?: string
@@ -22,7 +34,7 @@ function sanitize(item : {
 	const rewired = {
 		url,
 		timer : item.lastVisitTime,
-		icon : `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(item.url)}&size=32`,
+		icon : faviconUrl(item.url),
 	}
 	if (!item.title) {
 		return { ...rewired, title : trimURL(removeProtocol(item.url)), tooltip : removeProtocol(item.url) }
