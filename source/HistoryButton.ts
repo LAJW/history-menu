@@ -3,6 +3,7 @@ import Chrome from "./Chrome"
 import Parent from "./components/Parent";
 import { I18n } from "./Settings";
 import { removeProtocol, $, trimURL, isInBackground } from "./Utils";
+import {ITabs} from "./models/Tabs";
 
 const removeButton = $({
 	nodeName: "A",
@@ -33,6 +34,7 @@ function sanitize(item : {
 }
 
 interface HistoryButtonInfo extends chrome.history.HistoryItem {
+	tabs : ITabs
 	preferSelect? : boolean
 	originalTitle? : string
 	aux? : string
@@ -45,8 +47,10 @@ export default class HistoryButton extends TimerButton {
 	readonly #interval: NodeJS.Timeout
 	#highlighted: boolean
 	#aux: HTMLElement
+	#tabs: ITabs
 	constructor(i18n : I18n, item : HistoryButtonInfo) {
 		super(sanitize(item));
+		this.#tabs = item.tabs;
 		this.DOM.classList.add("History");
 		this.url          = item.url ?? "";
 		this.preferSelect = item.preferSelect ?? false;
@@ -79,12 +83,12 @@ export default class HistoryButton extends TimerButton {
 					(this.parent as Parent).remove(this);
 				}
 			} else if (this.preferSelect) {
-				await Chrome.tabs.openOrSelect(this.url, inBackground);
+				await this.#tabs.openOrSelect(this.url, inBackground);
 				if (!inBackground) {
 					window.close();
 				}
 			} else {
-				await Chrome.tabs.openInCurrentTab(this.url, inBackground);
+				await this.#tabs.openInCurrentTab(this.url, inBackground);
 				if (!inBackground) {
 					window.close()
 				}

@@ -32,6 +32,8 @@ import {
 	darkMode,
 	processTitle
 } from "./Utils"
+import {Tabs} from "./models/Tabs";
+import Model from "./models/Model";
 
 let devicesButton : DevicesButton, deviceLayer : Layer;
 
@@ -125,7 +127,7 @@ window.addEventListener("keydown", e => {
 	}
 });
 
-function onSearch(deviceLayer : Layer, searchLayer : Layer, i18n : (key : string) => string, settings : Settings, value : string) {
+function onSearch(deviceLayer : Layer, searchLayer : Layer, i18n : (key : string) => string, settings : Settings, value : string, model : Model) {
 	if (deviceLayer) {
 		deviceLayer.visible = false;
 		devicesButton.on    = false;
@@ -153,7 +155,7 @@ function onSearch(deviceLayer : Layer, searchLayer : Layer, i18n : (key : string
 						if (!settings.timer) {
 							result.lastVisitTime = null;
 						}
-						return new HistoryButton(i18n, { ...result });
+						return new HistoryButton(i18n, { ...result, tabs : model.tabs });
 					});
 					searchResults = [ ...searchResults, ...nodes ];
 					searchLayer.insert(new Separator({title: i18n(sector.i18n)}))
@@ -251,7 +253,8 @@ function main(
 		history : HistoryButton[],
 		stream : AsyncIterable<HistoryButton>,
 		bookmarks : chrome.bookmarks.BookmarkTreeNode[],
-		i18n : (key : string) => string, settings : Settings) {
+		i18n : (key : string) => string, settings : Settings,
+		model : Model) {
 
 	root.width  = settings.width || 0;
 	root.height = settings.height || 0;
@@ -276,7 +279,7 @@ function main(
 			new Input({
 				placeholder: i18n("popup_search_history"),
 				lockon:      true,
-				change: value => onSearch(deviceLayer, searchLayer, i18n, settings, value ?? "")
+				change: value => onSearch(deviceLayer, searchLayer, i18n, settings, value ?? "", model)
 			}),
 			new ActionButton({
 				title: "",
@@ -417,7 +420,8 @@ async function* streamHistoryNodes(
 		titleGroups : Map<string, chrome.history.HistoryItem[]>,
 		seen : Set<string>,
 		chunkStart : number,
-		filter : (value : string) => boolean) {
+		filter : (value : string) => boolean,
+		model : Model) {
 	while (true) {
 		// TODO: this can have 50 entries with the same timestamp which would hang the popup
 		const chunk = await chrome.history.search({
@@ -460,7 +464,8 @@ async function* streamHistoryNodes(
 				lastVisitTime : settings.timer ? item.lastVisitTime : undefined,
 				preferSelect : settings.preferSelect,
 				originalTitle : aux.title,
-				aux : aux.aux
+				aux : aux.aux,
+				tabs : model.tabs,
 			})
 		}
 		if (chunk.length == 0) {
@@ -469,7 +474,7 @@ async function* streamHistoryNodes(
 	}
 }
 
-async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<string, string>) : Promise<{
+async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<string, string>, model : Model) : Promise<{
 		results : HistoryButton[],
 		stream : AsyncIterable<HistoryButton>
 	}> {
@@ -499,7 +504,7 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 			seen.add(item.url);
 		}
 	const titleGroups = groupBy(results, ({title}) => title)
-	const stream = streamHistoryNodes(i18n, settings, titleMap, titleGroups, seen, last(results).lastVisitTime, filter)
+	const stream = streamHistoryNodes(i18n, settings, titleMap, titleGroups, seen, last(results).lastVisitTime, filter, model)
 	return {
 		results:
 			results
@@ -517,7 +522,8 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 					lastVisitTime : settings.timer ? item.lastVisitTime : undefined,
 					preferSelect : settings.preferSelect,
 					originalTitle : aux.title,
-					aux : aux.aux
+					aux : aux.aux,
+					tabs : model.tabs,
 				})
 			}),
 		stream
@@ -533,6 +539,7 @@ function reserveSpace(settings : Settings) {
 	const settings = await Chrome.fetch("defaults.json")
 		.then(JSON.parse)
 		.then(Chrome.settings.getReadOnly)
+	const model = new Model()
 	const root = await Root.ready()
 	Chrome.theme.updateTheme()
 	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate, darkMode(settings));
@@ -543,7 +550,7 @@ function reserveSpace(settings : Settings) {
 	const [sessions, devices, {results: history, stream : historyStream}] = await Promise.all([
 		getSessionNodes(i18n, settings, titleMap),
 		getDeviceNodes(i18n, settings),
-		getHistoryNodes(i18n, settings, titleMap),
+		getHistoryNodes(i18n, settings, titleMap, model),
 	])
 	main(
 		root,
@@ -553,5 +560,6 @@ function reserveSpace(settings : Settings) {
 		historyStream,
 		bookmarks,
 		i18n,
-		settings);
+		settings,
+		model);
 })();
