@@ -156,10 +156,10 @@ function onSearch(deviceLayer : Layer, searchLayer : Layer, i18n : (key : string
 							return new HistoryButton(i18n, {
 								...result,
 								lastVisitTime : null,
-								tabs : model.tabs
+								model,
 							});
 						} else {
-							return new HistoryButton(i18n, { ...result, tabs : model.tabs });
+							return new HistoryButton(i18n, { ...result, model });
 						}
 					});
 					searchResults = [ ...searchResults, ...nodes ];
@@ -343,7 +343,7 @@ function processTab(model: Model, settings: Settings, tab: chrome.tabs.Tab, last
 		lastModified: settings.timer ? lastModified : undefined,
 		url,
 		sessionId,
-		sessions : model.sessions
+		model,
 	}
 }
 
@@ -472,7 +472,7 @@ async function* streamHistoryNodes(
 				preferSelect : settings.preferSelect,
 				originalTitle : aux.title,
 				aux : aux.aux,
-				tabs : model.tabs,
+				model,
 			})
 		}
 		if (chunk.length == 0) {
@@ -530,7 +530,7 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 					preferSelect : settings.preferSelect,
 					originalTitle : aux.title,
 					aux : aux.aux,
-					tabs : model.tabs,
+					model,
 				})
 			}),
 		stream

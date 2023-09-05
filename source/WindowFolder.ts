@@ -1,4 +1,3 @@
-import Chrome from "./Chrome"
 import Folder from "./components/Folder"
 import TabButton, {TabButtonInfo} from "./TabButton"
 import { $, isInBackground, relativeTime } from "./Utils"

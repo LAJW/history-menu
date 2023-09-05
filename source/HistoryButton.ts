@@ -1,9 +1,9 @@
 import TimerButton from "./TimerButton"
-import Chrome from "./Chrome"
 import Parent from "./components/Parent";
 import { I18n } from "./Settings";
 import { removeProtocol, $, trimURL, isInBackground } from "./Utils";
 import {ITabs} from "./models/Tabs";
+import Model from "./models/Model";
 
 const removeButton = $({
 	nodeName: "A",
@@ -11,6 +11,7 @@ const removeButton = $({
 });
 
 function sanitize(item : {
+	model : Model
 	title?: string
 	originalTitle?: string
 	url?: string
@@ -23,7 +24,7 @@ function sanitize(item : {
 	const rewired = {
 		url,
 		timer : item.lastVisitTime,
-		icon : `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(item.url)}&size=32`,
+		icon : item.model.favicons.forUrl(item.url),
 	}
 	if (!item.title) {
 		return { ...rewired, title : trimURL(removeProtocol(item.url)), tooltip : removeProtocol(item.url) }
@@ -34,7 +35,7 @@ function sanitize(item : {
 }
 
 interface HistoryButtonInfo extends chrome.history.HistoryItem {
-	tabs : ITabs
+	model : Model
 	preferSelect? : boolean
 	originalTitle? : string
 	aux? : string
@@ -50,7 +51,7 @@ export default class HistoryButton extends TimerButton {
 	#tabs: ITabs
 	constructor(i18n : I18n, item : HistoryButtonInfo) {
 		super(sanitize(item));
-		this.#tabs = item.tabs;
+		this.#tabs = item.model.tabs;
 		this.DOM.classList.add("History");
 		this.url          = item.url ?? "";
 		this.preferSelect = item.preferSelect ?? false;
