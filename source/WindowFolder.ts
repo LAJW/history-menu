@@ -2,6 +2,7 @@ import Chrome from "./Chrome"
 import Folder from "./components/Folder"
 import TabButton, {TabButtonInfo} from "./TabButton"
 import { $, isInBackground, relativeTime } from "./Utils"
+import {ISessions} from "./models/Sessions";
 
 const template = $({
 	nodeName:  "DIV",
@@ -15,6 +16,7 @@ export interface WindowFolderInfo {
 	fadeInEnabled : boolean
 	lastModified? : number
 	open : boolean
+	sessions : ISessions
 }
 
 function sessionInfo(wnd : WindowFolderInfo) {
@@ -25,6 +27,7 @@ function sessionInfo(wnd : WindowFolderInfo) {
 export default class WindowFolder extends Folder {
 	readonly #timer : Node
 	readonly #sessionId : string
+	readonly #sessions : ISessions
 	constructor(i18n : (key: string) => string, wnd : WindowFolderInfo) {
 		super({
 			title : `${i18n("popup_window")} (${i18n("popup_number_of_tabs")}: ${wnd.tabs.length})`,
@@ -38,6 +41,7 @@ export default class WindowFolder extends Folder {
 		if (wnd.lastModified) {
 			this.timer = relativeTime(wnd.lastModified * 1000);
 		}
+		this.#sessions = wnd.sessions
 		this.open = wnd.open;
 		this.#sessionId = wnd.sessionId;
 	}

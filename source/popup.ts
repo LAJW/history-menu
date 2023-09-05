@@ -354,6 +354,7 @@ function processWindow(model: Model, settings: Settings, window: chrome.windows.
 		fadeInEnabled : false,
 		lastModified : settings.timer ? lastModified : undefined,
 		open : settings.expand,
+		sessions : model.sessions
 	}
 }
 
