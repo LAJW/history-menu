@@ -511,7 +511,7 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 			seen.add(item.url);
 		}
 	const titleGroups = groupBy(results, ({title}) => title)
-	const stream = streamHistoryNodes(i18n, settings, titleMap, titleGroups, seen, last(results).lastVisitTime, filter, model)
+	const stream = streamHistoryNodes(i18n, settings, titleMap, titleGroups, seen, last(results)?.lastVisitTime, filter, model)
 	return {
 		results:
 			results
