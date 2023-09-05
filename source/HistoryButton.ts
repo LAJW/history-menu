@@ -2,7 +2,6 @@ import TimerButton from "./TimerButton"
 import Parent from "./components/Parent";
 import { I18n } from "./Settings";
 import { removeProtocol, $, trimURL, isInBackground } from "./Utils";
-import {ITabs} from "./models/Tabs";
 import Model from "./models/Model";
 
 const removeButton = $({
@@ -48,10 +47,10 @@ export default class HistoryButton extends TimerButton {
 	readonly #interval: NodeJS.Timeout
 	#highlighted: boolean
 	#aux: HTMLElement
-	#tabs: ITabs
+	#model: Model
 	constructor(i18n : I18n, item : HistoryButtonInfo) {
 		super(sanitize(item));
-		this.#tabs = item.model.tabs;
+		this.#model = item.model;
 		this.DOM.classList.add("History");
 		this.url          = item.url ?? "";
 		this.preferSelect = item.preferSelect ?? false;
@@ -80,16 +79,16 @@ export default class HistoryButton extends TimerButton {
 			const inBackground = isInBackground(e)
 			if (e.target == this.#remove) {
 				if (e.button === 0) {
-					await chrome.history.deleteUrl({ url: this.url });
+					this.#model.history.deleteUrl(this.url);
 					(this.parent as Parent).remove(this);
 				}
 			} else if (this.preferSelect) {
-				await this.#tabs.openOrSelect(this.url, inBackground);
+				await this.#model.tabs.openOrSelect(this.url, inBackground);
 				if (!inBackground) {
 					window.close();
 				}
 			} else {
-				await this.#tabs.openInCurrentTab(this.url, inBackground);
+				await this.#model.tabs.openInCurrentTab(this.url, inBackground);
 				if (!inBackground) {
 					window.close()
 				}
