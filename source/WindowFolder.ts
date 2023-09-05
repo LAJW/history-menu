@@ -51,7 +51,7 @@ export default class WindowFolder extends Folder {
 	override click(e : MouseEvent) {
 		e.preventDefault();
 		if (isInBackground(e)) {
-			Chrome.sessions.restore(this.#sessionId, false);
+			this.#sessions.restore(this.#sessionId, false);
 			window.close();
 		} else if (e.button == 0) {
 			super.click(e)
