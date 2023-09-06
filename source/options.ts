@@ -90,10 +90,10 @@ async function getSettingsRW(defaultSettings : Settings) {
 }
 
 async function main() {
-	const {settings, reset} = await Chrome.fetch("defaults.json").then(JSON.parse).then(getSettingsRW)
-	const [root, i18n] = await Promise.all([Root.ready(), Chrome.getI18n(settings.lang)])
 	const model = new Model()
-	Chrome.theme.updateTheme();
+	const {settings, reset} = await model.browser.fetch("defaults.json").then(JSON.parse).then(getSettingsRW)
+	const [root, i18n] = await Promise.all([Root.ready(), model.browser.getI18n(settings.lang)])
+	model.theme.update();
 	root.setTheme(settings.theme || model.browser.getPlatform(), settings.animate, darkMode(settings));
 	root.insert([
 		new Header({title: i18n("popup_options")}),
@@ -111,7 +111,7 @@ async function main() {
 			selected: settings.icon,
 			change() {
 				settings.icon = this.selected;
-				Chrome.theme.updateIcon();
+				model.theme.updateIcon();
 			}
 		}),
 		new Slider({
@@ -175,8 +175,7 @@ async function main() {
 			selected: settings.lang,
 			change() {
 				settings.lang = this.selected;
-				// reload page
-				window.location = window.location;
+				model.browser.reload();
 			}
 		}),
 		new Select({
@@ -190,22 +189,20 @@ async function main() {
 			selected: settings.theme,
 			change() {
 				settings.theme = this.selected;
-				// reload page
-				window.location = window.location;
+				model.browser.reload();
 			}
 		}),
 		new Select({
 			title:    i18n("options_dark_mode"),
 			values:   {
-				"":    "Auto (" + (Chrome.theme.isDarkTheme ? i18n("options_enabled") : i18n("options_disabled")) + ")",
+				"":    "Auto (" + (model.theme.isDarkTheme ? i18n("options_enabled") : i18n("options_disabled")) + ")",
 				"true":  i18n("options_enabled"),
 				"false": i18n("options_disabled"),
 			},
 			selected: settings.darkMode,
 			change() {
 				settings.darkMode = this.selected;
-				// reload page
-				window.location = window.location;
+				model.browser.reload();
 			}
 		}),
 		new Header({title: i18n("options_behavior")}),
@@ -254,22 +251,20 @@ https://www.google.com/search?*
 			checked: !settings.local,
 			change(value) {
 				settings.local = !value;
-				// reload page
-				window.location = window.location;
+				model.browser.reload();
 			}
 		}),
 		new ClassicButton ({
 			title: i18n("options_reset"),
 			click() {
 				reset();
-				// reload page
-				window.location = window.location;
+				model.browser.reload();
 			}
 		}),
 		new ClassicButton ({
 			title: i18n("options_about"),
 			click() {
-				window.open("http://layv.net/history-menu", "_blank");
+				model.browser.openInNewTab("http://layv.net/history-menu");
 			}
 		}),
 	]);

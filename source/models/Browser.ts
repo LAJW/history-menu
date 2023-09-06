@@ -5,6 +5,8 @@ export interface IBrowser {
     getPlatform() : "Windows" | "Ubuntu" | "";
     fetch(url: string): Promise<string>;
     getI18n(locale? : string) : Promise<I18n>;
+    reload() : void
+    openInNewTab(url: string) : void
 }
 
 export class Browser implements IBrowser {
@@ -22,5 +24,11 @@ export class Browser implements IBrowser {
     }
     getI18n(locale? : string) : Promise<I18n> {
         return Chrome.getI18n(locale);
+    }
+    reload(): void {
+        window.location = window.location;
+    }
+    openInNewTab(url: string): void {
+        window.open("http://layv.net/history-menu", "_blank");
     }
 }
