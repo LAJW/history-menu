@@ -8,7 +8,6 @@
  */
 
 import ActionButton from "./ActionButton"
-import Chrome from "./Chrome"
 import DevicesButton from "./DevicesButton"
 import Input from "./components/Input"
 import Layer from "./components/Layer"
@@ -546,13 +545,13 @@ function reserveSpace(settings : Settings) {
 	const model = new Model()
 	const settings = await model.browser.fetch("defaults.json")
 		.then(JSON.parse)
-		.then(Chrome.settings.getReadOnly)
+		.then(model.settings.getReadOnly)
 	const root = await Root.ready()
-	Chrome.theme.updateTheme()
+	model.theme.update();
 	root.setTheme(settings.theme || model.browser.getPlatform(), settings.animate, darkMode(settings));
 	reserveSpace(settings)
-	const i18n = await Chrome.getI18n(settings.lang);
-	const bookmarks = await Chrome.bookmarks.getTree();
+	const i18n = await model.browser.getI18n(settings.lang);
+	const bookmarks = await model.bookmarks.getTree();
 	const titleMap = urlToTitleMap(bookmarks);
 	const [sessions, devices, {results: history, stream : historyStream}] = await Promise.all([
 		getSessionNodes(model, i18n, settings, titleMap),
