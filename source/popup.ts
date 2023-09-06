@@ -437,7 +437,7 @@ async function* streamHistoryNodes(
 			endTime:    chunkStart,
 			maxResults: 50
 		})
-		chunkStart = last(chunk).lastVisitTime;
+		chunkStart = last(chunk)?.lastVisitTime;
 		for (const item of chunk) {
 			if (seen.has(item.url)) {
 				continue;
