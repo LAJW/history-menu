@@ -8,6 +8,7 @@ import { LocalSettings, Settings } from "./Settings"
 import Slider from "./Slider"
 import { $, parseGlobs, darkMode } from "./Utils"
 import Textarea from "./components/Textarea"
+import Model from "./models/Model";
 
 // template for the Classic Button
 const classicButtonTemplate = $({
@@ -91,8 +92,9 @@ async function getSettingsRW(defaultSettings : Settings) {
 async function main() {
 	const {settings, reset} = await Chrome.fetch("defaults.json").then(JSON.parse).then(getSettingsRW)
 	const [root, i18n] = await Promise.all([Root.ready(), Chrome.getI18n(settings.lang)])
+	const model = new Model()
 	Chrome.theme.updateTheme();
-	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate, darkMode(settings));
+	root.setTheme(settings.theme || model.browser.getPlatform(), settings.animate, darkMode(settings));
 	root.insert([
 		new Header({title: i18n("popup_options")}),
 		new Header({title: i18n("options_display")}),
@@ -180,7 +182,7 @@ async function main() {
 		new Select({
 			title:    i18n("options_theme"),
 			values:   {
-				"":        "Auto (" + Chrome.getPlatform() + ")",
+				"":        "Auto (" + model.browser.getPlatform() + ")",
 				"Windows": "Windows",
 				"Ubuntu":  "Ubuntu",
 				"Other":   "Other"

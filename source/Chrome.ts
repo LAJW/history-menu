@@ -59,20 +59,6 @@ async getI18n(locale? : string) : Promise<I18n> {
 		(curLocale[messageKey] ?? enLocale[messageKey])?.message ?? "";
 },
 
-/**
- * @brief Returns name of the platform
- * @note Exception Safety: No-Throw
- * @return String: Returns \c "Windows" on Windows platforms and \c "Ubuntu" on
- * Linux Platforms. Returns empty string otherwise.
- */
-getPlatform() {
-	if (navigator.appVersion.indexOf("Win") != -1)
-		return "Windows";
-	else if (navigator.appVersion.indexOf("Linux") != -1)
-		return "Ubuntu";
-	else return "";
-},
-
 get isEdge() {
 	return navigator.appVersion.indexOf("Edg/") !== -1;
 },

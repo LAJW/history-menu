@@ -274,7 +274,7 @@ function main(
 	})) as Layer;
 	const anchorClick = (url : string) => async (e : MouseEvent) => {
 		const inBackground = isInBackground(e);
-		await Chrome.tabs.openOrSelect(url, inBackground);
+		await model.tabs.openOrSelect(url, inBackground);
 		if (!inBackground) {
 			window.close();
 		}
@@ -369,13 +369,13 @@ function sessionToButton(model : Model, i18n : I18n, settings : Settings, sessio
 }
 
 async function getSessionNodes(model: Model, i18n : I18n, settings : Settings, titleMap: Map<string, string>) : Promise<Node[]> {
-	return (await Chrome.sessions.getRecent({ }))
+	return (await model.sessions.getRecent({ }))
 		.slice(0, settings.tabCount | 0)
 		.map(session => sessionToButton(model, i18n, settings, session, titleMap));
 }
 
 async function getDeviceNodes(model: Model, i18n : I18n, settings : Settings) {
-	const devices = await Chrome.sessions.getDevices();
+	const devices = await model.sessions.getDevices();
 	return devices.map(({sessions, deviceName}) =>
 		new DeviceFolder(i18n, {
 			deviceName,
@@ -543,13 +543,13 @@ function reserveSpace(settings : Settings) {
 }
 
 (async () => {
-	const settings = await Chrome.fetch("defaults.json")
+	const model = new Model()
+	const settings = await model.browser.fetch("defaults.json")
 		.then(JSON.parse)
 		.then(Chrome.settings.getReadOnly)
-	const model = new Model()
 	const root = await Root.ready()
 	Chrome.theme.updateTheme()
-	root.setTheme(settings.theme || Chrome.getPlatform(), settings.animate, darkMode(settings));
+	root.setTheme(settings.theme || model.browser.getPlatform(), settings.animate, darkMode(settings));
 	reserveSpace(settings)
 	const i18n = await Chrome.getI18n(settings.lang);
 	const bookmarks = await Chrome.bookmarks.getTree();
