@@ -130,7 +130,7 @@ async function main() {
 			max:    600,
 			step:   10,
 			value:  settings.height,
-			change: x => settings.height = x,
+			change: y => settings.height = y,
 			title:  i18n("options_height"),
 		}),
 		new Slider({
