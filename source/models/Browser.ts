@@ -9,6 +9,7 @@ export interface IBrowser {
     openInNewTab(url: string) : void
     extensionRoot : string
     historyPage : string
+    close() : void
 }
 
 export class Browser implements IBrowser {
@@ -35,4 +36,7 @@ export class Browser implements IBrowser {
     }
     extensionRoot = `chrome-extension://${chrome.runtime.id}/options.html`
     historyPage = `chrome://history/`
+    close(): void {
+        window.close();
+    }
 }
