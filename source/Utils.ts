@@ -293,3 +293,59 @@ export function processTitle(url: string | undefined, title : string | undefined
 		return title;
 	}
 }
+
+export function last<T>(elements : T[]) : T | undefined {
+	return elements[elements.length - 1];
+}
+
+export function head<T>(collection : Iterable<T>) : T {
+	// noinspection LoopStatementThatDoesntLoopJS
+	for (const el of collection) {
+		return el;
+	}
+	throw new Error("Collection was empty");
+}
+
+export function stripHash(url : string) {
+	const index = url.indexOf("#");
+	if (index === -1) {
+		return url;
+	} else {
+		return url.substring(0, index);
+	}
+}
+
+export function getHash(url : string) {
+	const index = url.indexOf("#");
+	if (index === -1) {
+		return "";
+	} else {
+		return url.substring(index);
+	}
+}
+
+export function isFolder(node : chrome.bookmarks.BookmarkTreeNode) {
+	return node.children !== undefined;
+}
+
+export function isTitledBookmark(node : chrome.bookmarks.BookmarkTreeNode) {
+	return node.url && node.title && node.title !== "";
+}
+
+export function urlToTitleMap(bookmarks : chrome.bookmarks.BookmarkTreeNode[]) {
+	const urlToTitle = new Map<string, string>()
+	function addAllChildren(node : chrome.bookmarks.BookmarkTreeNode) {
+		if (isFolder(node)) {
+			node.children.forEach(addAllChildren);
+		} else if (isTitledBookmark(node)) {
+			urlToTitle.set(node.url.toLowerCase(), node.title);
+		}
+	}
+	bookmarks.forEach(addAllChildren);
+	return urlToTitle;
+}
+
+export function processTitle1(settings : Settings, item : { url? : string, title? : string }) {
+	return settings.trimTitles ? processTitle(item.url, item.title) : item.title;
+}
+

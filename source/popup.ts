@@ -29,7 +29,7 @@ import {
 	removeProtocol,
 	isInBackground,
 	darkMode,
-	processTitle
+	processTitle, last, head, stripHash, urlToTitleMap, getHash, processTitle1
 } from "./Utils"
 
 import Model from "./models/Model";
@@ -211,45 +211,6 @@ function getMainLayer(sessions : Node[], history : Node[], i18n : (key : string)
 	});
 }
 
-function isFolder(node : chrome.bookmarks.BookmarkTreeNode) {
-	return node.children !== undefined;
-}
-
-function isTitledBookmark(node : chrome.bookmarks.BookmarkTreeNode) {
-	return node.url && node.title && node.title !== "";
-}
-
-function stripHash(url : string) {
-	const index = url.indexOf("#");
-	if (index === -1) {
-		return url;
-	} else {
-		return url.substring(0, index);
-	}
-}
-
-function getHash(url : string) {
-	const index = url.indexOf("#");
-	if (index === -1) {
-		return "";
-	} else {
-		return url.substring(index);
-	}
-}
-
-function urlToTitleMap(bookmarks : chrome.bookmarks.BookmarkTreeNode[]) {
-	const urlToTitle = new Map<string, string>()
-	function addAllChildren(node : chrome.bookmarks.BookmarkTreeNode) {
-		if (isFolder(node)) {
-			node.children.forEach(addAllChildren);
-		} else if (isTitledBookmark(node)) {
-			urlToTitle.set(node.url.toLowerCase(), node.title);
-		}
-	}
-	bookmarks.forEach(addAllChildren);
-	return urlToTitle;
-}
-
 function main(
 		root : Root,
 		sessions : Node[],
@@ -387,15 +348,6 @@ async function getDeviceNodes(model: Model, i18n : I18n, settings : Settings) {
 	});
 }
 
-
-function head<T>(collection : Iterable<T>) : T {
-	// noinspection LoopStatementThatDoesntLoopJS
-	for (const el of collection) {
-		return el;
-	}
-	throw new Error("Collection was empty");
-}
-
 function auxiliaryTitle(titleGroups : Map<string, chrome.history.HistoryItem[]>, item : chrome.history.HistoryItem) : { title : string, aux? : string } {
 	const title = item.title;
 	const titleGroup = titleGroups.get(title);
@@ -414,14 +366,6 @@ function auxiliaryTitle(titleGroups : Map<string, chrome.history.HistoryItem[]>,
 	} else { // no title
 		return { title: item.url };
 	}
-}
-
-function processTitle1(settings : Settings, item : { url? : string, title? : string }) {
-	return settings.trimTitles ? processTitle(item.url, item.title) : item.title;
-}
-
-function last<T>(elements : T[]) : T | undefined {
-	return elements[elements.length - 1];
 }
 
 async function* streamHistoryNodes(
