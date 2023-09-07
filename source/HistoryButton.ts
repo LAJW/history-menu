@@ -85,12 +85,12 @@ export default class HistoryButton extends TimerButton {
 			} else if (this.preferSelect) {
 				await this.#model.tabs.openOrSelect(this.url, inBackground);
 				if (!inBackground) {
-					this.#model.browser.close();
+					this.#model.browser.closeWindow();
 				}
 			} else {
 				await this.#model.tabs.openInCurrentTab(this.url, inBackground);
 				if (!inBackground) {
-					this.#model.browser.close();
+					this.#model.browser.closeWindow();
 				}
 			}
 		}

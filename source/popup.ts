@@ -275,7 +275,7 @@ function main(
 		const inBackground = isInBackground(e);
 		await model.tabs.openOrSelect(url, inBackground);
 		if (!inBackground) {
-			window.close();
+			model.browser.closeWindow();
 		}
 	}
 	const mainButtons = new MultiButton({
@@ -353,7 +353,6 @@ function processWindow(model: Model, settings: Settings, window: chrome.windows.
 		fadeInEnabled : false,
 		lastModified : settings.timer ? lastModified : undefined,
 		open : settings.expand,
-		sessions : model.sessions
 	}
 }
 
@@ -363,7 +362,12 @@ function sessionToButton(model : Model, i18n : I18n, settings : Settings, sessio
 		const bookmarkedTitle = titleMap.get(session.tab.url.toLowerCase())
 		return bookmarkedTitle ? new TabButton({...tabInfo, title: bookmarkedTitle}) : new TabButton(tabInfo)
 	} else {
-		return new WindowFolder(i18n, processWindow(model, settings, session.window, session.lastModified))
+		return new WindowFolder(
+			i18n,
+			model.sessions,
+			model.browser,
+			processWindow(model, settings, session.window, session.lastModified)
+		)
 	}
 }
 
@@ -375,11 +379,12 @@ async function getSessionNodes(model: Model, i18n : I18n, settings : Settings, t
 
 async function getDeviceNodes(model: Model, i18n : I18n, settings : Settings) {
 	const devices = await model.sessions.getDevices();
-	return devices.map(({sessions, deviceName}) =>
-		new DeviceFolder(i18n, {
-			deviceName,
-			sessions: sessions.map(session => processWindow(model, settings, session.window, session.lastModified))
-		}));
+	return devices.map(({sessions, deviceName}) => {
+		const processedSessions =
+			sessions.map(session =>
+				processWindow(model, settings, session.window, session.lastModified))
+		return new DeviceFolder(i18n, model.sessions, model.browser, {deviceName, sessions: processedSessions})
+	});
 }
 
 
