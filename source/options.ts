@@ -1,4 +1,3 @@
-import Chrome from "./Chrome"
 import Checkbox from "./components/Checkbox"
 import Header from "./components/Header"
 import Node from "./components/Node"
@@ -9,6 +8,7 @@ import Slider from "./Slider"
 import { $, parseGlobs, darkMode } from "./Utils"
 import Textarea from "./components/Textarea"
 import Model from "./models/Model";
+import {LocalStorage, SyncStorage} from "./models/Storage";
 
 // template for the Classic Button
 const classicButtonTemplate = $({
@@ -36,22 +36,22 @@ class ClassicButton extends Node{
 
 // request instance of SettingsRW
 // although some settings should have ranges of possible values
-async function getSettingsRW(defaultSettings : Settings) {
+async function getSettingsRW(model : Model, defaultSettings : Settings) {
 	const storages = await Promise.all([
-		Chrome.storage.local.get(),
-		Chrome.storage.sync.get()
+		model.storage.local.get(),
+		model.storage.sync.get(),
 	])
 	const local = storages[0] as LocalSettings
 	const sync = storages[1] as Settings
 	const map : Settings | LocalSettings = Object.assign({}, defaultSettings) || {}
-	let storage : chrome.storage.LocalStorageArea | chrome.storage.SyncStorageArea = null
+	let storage : LocalStorage | SyncStorage = null
 	if (local.local) {
-		storage = chrome.storage.local
+		storage = model.storage.local
 		for (const i in local) {
 			map[i] = local[i]
 		}
 	} else {
-		storage = chrome.storage.sync
+		storage = model.storage.sync
 		for (const i_1 in sync) {
 			map[i_1] = sync[i_1]
 		}
@@ -78,11 +78,11 @@ async function getSettingsRW(defaultSettings : Settings) {
 			return local.local
 		},
 		set(value_4) {
-			chrome.storage.local.set(sync)
+			model.storage.local.set(sync)
 			local.local = value_4
-			chrome.storage.local.set({ local: value_4 })
-			storage = value_4 ? chrome.storage.local
-				: chrome.storage.sync
+			model.storage.local.set({ local: value_4 })
+			storage = value_4 ? model.storage.local
+				: model.storage.sync
 		},
 		enumerable: true
 	})
@@ -91,7 +91,10 @@ async function getSettingsRW(defaultSettings : Settings) {
 
 async function main() {
 	const model = new Model()
-	const {settings, reset} = await model.browser.fetch("defaults.json").then(JSON.parse).then(getSettingsRW)
+	const {settings, reset} =
+		await model.browser.fetch("defaults.json")
+			.then(JSON.parse)
+			.then(defaults => getSettingsRW(model, defaults))
 	const [root, i18n] = await Promise.all([Root.ready(), model.browser.getI18n(settings.lang)])
 	model.theme.update();
 	root.setTheme(settings.theme || model.browser.getPlatform(), settings.animate, darkMode(settings));

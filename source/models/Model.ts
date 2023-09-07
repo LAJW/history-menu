@@ -5,6 +5,7 @@ import {ISessions, Sessions} from "./Sessions";
 import {Favicons, IFavicons} from "./Favicons"
 import {IHistory, History} from "./History";
 import {ISettings, Settings} from "./Settings"
+import {Storage} from "./Storage";
 import {ITheme, Theme} from "./Theme";
 
 export default class Model {
@@ -15,6 +16,7 @@ export default class Model {
     favicons : IFavicons
     history : IHistory
     settings : ISettings
+    storage : Storage
     theme : ITheme
 
     constructor() {
@@ -25,6 +27,7 @@ export default class Model {
         this.favicons = new Favicons();
         this.history = new History();
         this.settings = new Settings();
+        this.storage = new Storage();
         this.theme = new Theme();
     }
 }
