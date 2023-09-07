@@ -1,7 +1,7 @@
 import TimerButton from "./TimerButton"
 import { isInBackground, removeProtocol } from "./Utils";
 import {ISessions} from "./models/Sessions";
-import Model from "./models/Model";
+import {Model} from "./models/Model";
 
 export interface TabButtonInfo {
 	title: string

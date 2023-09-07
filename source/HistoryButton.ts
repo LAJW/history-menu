@@ -2,7 +2,7 @@ import TimerButton from "./TimerButton"
 import Parent from "./components/Parent";
 import { I18n } from "./Settings";
 import { removeProtocol, $, trimURL, isInBackground } from "./Utils";
-import Model from "./models/Model";
+import {Model} from "./models/Model";
 
 const removeButton = $({
 	nodeName: "A",

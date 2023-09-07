@@ -8,7 +8,19 @@ import {ISettings, Settings} from "./Settings"
 import {Storage} from "./Storage";
 import {ITheme, Theme} from "./Theme";
 
-export default class Model {
+export interface IModel {
+    bookmarks : IBookmarks
+    browser : IBrowser
+    tabs : ITabs
+    sessions : ISessions
+    favicons : IFavicons
+    history : IHistory
+    settings : ISettings
+    storage : Storage
+    theme : ITheme
+}
+
+export class Model implements IModel {
     bookmarks : IBookmarks
     browser : IBrowser
     tabs : ITabs

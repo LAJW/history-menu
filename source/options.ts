@@ -7,7 +7,7 @@ import { LocalSettings, Settings } from "./Settings"
 import Slider from "./Slider"
 import { $, parseGlobs, darkMode } from "./Utils"
 import Textarea from "./components/Textarea"
-import Model from "./models/Model";
+import {Model} from "./models/Model";
 import {LocalStorage, SyncStorage} from "./models/Storage";
 
 // template for the Classic Button

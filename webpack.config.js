@@ -15,10 +15,11 @@ module.exports = {
     new MiniCssExtractPlugin(),
   ],
   entry: {
-    popup      : [ "./source/popup.ts" ],
-    options    : [ "./source/options.ts" ],
-    background : [ "./source/background.ts" ],
-    style      : [
+    popup       : [ "./source/popup.ts" ],
+    popupMocked : [ "./source/popupMocked.ts" ],
+    options     : [ "./source/options.ts" ],
+    background  : [ "./source/background.ts" ],
+    style       : [
       "./source/components/popup.css",
       "./source/components/button.css",
       "./source/components/input.css",
