@@ -7,6 +7,8 @@ export interface IBrowser {
     getI18n(locale? : string) : Promise<I18n>;
     reload() : void
     openInNewTab(url: string) : void
+    extensionRoot : string
+    historyPage : string
 }
 
 export class Browser implements IBrowser {
@@ -31,4 +33,6 @@ export class Browser implements IBrowser {
     openInNewTab(url: string): void {
         window.open("http://layv.net/history-menu", "_blank");
     }
+    extensionRoot = `chrome-extension://${chrome.runtime.id}/options.html`
+    historyPage = `chrome://history/`
 }

@@ -144,7 +144,7 @@ function onSearch(deviceLayer : Layer, searchLayer : Layer, i18n : (key : string
 				return;
 			}
 			for (const sector of timeSectors()) {
-				const results = await chrome.history.search({
+				const results = await model.history.search({
 					text:      value,
 					startTime: sector.start,
 					endTime:   sector.end,
@@ -289,13 +289,13 @@ function main(
 				title: "",
 				tooltip: i18n("popup_history_manager"),
 				iconClass: "icon-history",
-				click: anchorClick(`chrome://history/`)
+				click: anchorClick(model.browser.historyPage)
 			}),
 			new ActionButton({
 				title: "",
 				tooltip: i18n("popup_options"),
 				iconClass: "icon-options",
-				click: anchorClick(`chrome-extension://${chrome.runtime.id}/options.html`)
+				click: anchorClick(model.browser.extensionRoot)
 			})
 		]
 	});
@@ -430,8 +430,8 @@ async function* streamHistoryNodes(
 		model : Model) {
 	while (true) {
 		// TODO: this can have 50 entries with the same timestamp which would hang the popup
-		const chunk = await chrome.history.search({
-			text:       "", 
+		const chunk = await model.history.search({
+			text:       "",
 			startTime:  chunkStart - 1000 * 3600 * 24 * 30, 
 			endTime:    chunkStart,
 			maxResults: 50
@@ -494,7 +494,7 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
 	const filter = (url: string) => !blacklist.some(match => match(url) || match(removeProtocol(url)));
 	for (let i = 1; i < 10; ++i) {
 		// TODO: Into async generator
-		const preFilter = await chrome.history.search({
+		const preFilter = await model.history.search({
 			text:       "", 
 			startTime:  timestamp - 1000 * 3600 * 24 * 30, 
 			endTime:    timestamp,
