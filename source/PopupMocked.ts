@@ -38,7 +38,8 @@ let emptyTab: chrome.tabs.Tab  = {
 }
 
 const emptyHistoryItem : chrome.history.HistoryItem = {
-    id: ""
+    id: "",
+    lastVisitTime : Date.now() - 3600 * 2000,
 }
 
 const historyGenerator: Generator<chrome.history.HistoryItem> = (function* () {
@@ -52,7 +53,7 @@ const model : IModel = {
         }
     },
     browser : {
-        getPlatform: () => "Windows",
+        getPlatform: () => "",
         fetch: (url) => Promise.resolve(JSON.stringify(defaultSettings)),
         getI18n: locale => Promise.resolve(key => key),
         reload() {},
@@ -69,7 +70,7 @@ const model : IModel = {
         async restore(sessionId : string, inBackground? : boolean) {},
         async getRecent(filter) { return [
             {
-                lastModified : Date.now(),
+                lastModified : Date.now() / 1000 - 3600,
                 tab: { ...emptyTab, title: "Google", url: "https://google.com/" },
             }
         ]; },
