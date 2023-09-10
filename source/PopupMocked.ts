@@ -2,6 +2,24 @@ import {IModel} from "./models/Model";
 import {Settings as SettingsObject} from "./Settings";
 import {createPopup} from "./PopupImpl";
 
+const querySettings: {[key: string]: string | boolean | number} = {}
+const url = new URL(window.location.href)
+for (const key of url.searchParams.keys()) {
+    querySettings[key] = (() => {
+        const value = url.searchParams.get(key);
+        switch (value) {
+            case "true":
+                return true;
+            case "false":
+                return false;
+        }
+        if (parseInt(value) + "" === value) {
+            return parseInt(value);
+        }
+        return value;
+    })();
+}
+
 const defaultSettings = {
     width: 300,
     height: 600,
@@ -87,7 +105,7 @@ const model : IModel = {
         },
     },
     settings : {
-        async getReadOnly(defaultSettings : SettingsObject) { return defaultSettings },
+        async getReadOnly(defaultSettings : SettingsObject) { return {...defaultSettings, ...querySettings} },
     },
     storage : {
         sync : {
