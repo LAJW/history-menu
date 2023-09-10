@@ -20,6 +20,31 @@ const defaultSettings = {
     trimTitles: true
 };
 
+let emptyTab: chrome.tabs.Tab  = {
+    active: false,
+    autoDiscardable: false,
+    discarded: false,
+    groupId: 0,
+    highlighted: false,
+    incognito: false,
+    index: 0,
+    pinned: false,
+    selected: false,
+    windowId: 0,
+
+    // url: "",
+    // favIconUrl: "",
+    // sessionId: "",
+}
+
+const emptyHistoryItem : chrome.history.HistoryItem = {
+    id: ""
+}
+
+const historyGenerator: Generator<chrome.history.HistoryItem> = (function* () {
+    yield { ...emptyHistoryItem, title: "Google", url: "https://google.com/" };
+})();
+
 const model : IModel = {
     bookmarks : {
         getTree() {
@@ -42,7 +67,12 @@ const model : IModel = {
     },
     sessions : {
         async restore(sessionId : string, inBackground? : boolean) {},
-        async getRecent(filter) { return []; },
+        async getRecent(filter) { return [
+            {
+                lastModified : Date.now(),
+                tab: { ...emptyTab, title: "Google", url: "https://google.com/" },
+            }
+        ]; },
         async getDevices() { return []; }
     },
     favicons : {
@@ -50,7 +80,10 @@ const model : IModel = {
     },
     history : {
         async deleteUrl(url : string) {},
-        async search(query) { return []; },
+        async search(query) {
+            const {done, value} = historyGenerator.next();
+            return done ? [] : [value];
+        },
     },
     settings : {
         async getReadOnly(defaultSettings : SettingsObject) { return defaultSettings },
