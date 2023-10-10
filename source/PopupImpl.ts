@@ -11,7 +11,7 @@ import HistoryButton from "./HistoryButton"
 import Root from "./components/Root"
 import DeviceFolder from "./DeviceFolder"
 import Node from "./components/Node"
-import {I18n, LocalSettings, Settings as SettingsObject, Settings} from "./Settings"
+import {I18n, Settings} from "./Settings"
 import {
     px,
     groupBy,
