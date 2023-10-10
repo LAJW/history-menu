@@ -269,7 +269,7 @@ function main(
         mainButtons.insert(devicesButton, mainButtons.children[1]);
     }
     root.insert(mainButtons);
-    const gen = (async function* nice() { yield* stream })();
+    const gen = (async function* () { yield* stream })();
     if ((settings.tabsFirst && settings.historyCount > 0) || settings.tabCount === 0) {
         async function fill(amount : number) {
             while (mainLayer.DOM.scrollTop + mainLayer.DOM.clientHeight >= (mainLayer.DOM.scrollHeight - amount)) {
@@ -368,15 +368,16 @@ async function* streamHistoryNodes(
     chunkStart : number,
     filter : (value : string) => boolean,
     model : IModel) {
+    const initialChunkStart = chunkStart
     while (true) {
         // TODO: this can have 50 entries with the same timestamp which would hang the popup
         const chunk = await model.history.search({
             text:       "",
             startTime:  chunkStart - 1000 * 3600 * 24 * 30,
             endTime:    chunkStart,
-            maxResults: 50
+            maxResults: 500
         })
-        chunkStart = last(chunk)?.lastVisitTime;
+        chunkStart = last(chunk)?.lastVisitTime ?? (chunkStart - 1000 * 3600 * 24 * 30);
         for (const item of chunk) {
             if (seen.has(item.url)) {
                 continue;
@@ -414,7 +415,7 @@ async function* streamHistoryNodes(
                 model,
             })
         }
-        if (chunk.length == 0) {
+        if (Math.abs(initialChunkStart - chunkStart) > 1000 * 3600 * 24 * 30) {
             break;
         }
     }
