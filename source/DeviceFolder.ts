@@ -12,7 +12,8 @@ interface DeviceInfo {
 export default class DeviceFolder extends Folder {
 	constructor (i18n : I18n, sessions: ISessions, browser: IBrowser, device : DeviceInfo) {
 		super({
-			children: device.sessions.map(window => new WindowFolder(i18n, sessions, browser, window)),
+			children: device.sessions.map(window =>
+				new WindowFolder(i18n, sessions, browser, { ...window, open: true })),
 			title : device.deviceName,
 			tooltip : device.deviceName,
 			fadeInEnabled : false,
