@@ -9,7 +9,7 @@ module.exports = {
       patterns: [
         { from: "source/icons", to: "icons" },
         { from: "source/_locales", to: "_locales" },
-        { from: "source/templates/chrome/*", to: "../build", flatten : true },
+        { from: "source/templates/chrome/*", to: "../build/[name][ext]" },
       ],
     }),
     new MiniCssExtractPlugin(),

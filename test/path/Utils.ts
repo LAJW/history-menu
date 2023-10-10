@@ -1,6 +1,6 @@
 import {strictEqual, deepStrictEqual} from "assert";
 import { Ok, Fail } from "../../source/Result";
-import {escapedSplit, glob, parseGlob, parseGlobs, processTitle} from "../../source/utils";
+import {escapedSplit, glob, parseGlob, parseGlobs, processTitle} from "../../source/Utils";
 
 describe("glob", () => {
 	it("exact match", () => {

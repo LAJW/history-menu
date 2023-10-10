@@ -441,7 +441,7 @@ async function getHistoryNodes(i18n : I18n, settings : Settings, titleMap : Map<
             maxResults: (settings.historyCount | 20) + (20 * i)
         })
         results = preFilter.filter(({url}) => filter(url));
-        if (preFilter.length === results.length || results.length >= settings.length) {
+        if (preFilter.length === results.length || results.length >= settings.historyCount) {
             break;
         }
     }
