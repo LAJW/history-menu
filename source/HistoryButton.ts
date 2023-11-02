@@ -1,6 +1,6 @@
 import TimerButton from "./TimerButton"
 import Parent from "./components/Parent";
-import { I18n } from "./Settings";
+import {I18n, SelectBehavior} from "./Settings";
 import { removeProtocol, $, trimURL, isInBackground } from "./Utils";
 import {Model} from "./models/Model";
 
@@ -35,13 +35,13 @@ function sanitize(item : {
 
 interface HistoryButtonInfo extends chrome.history.HistoryItem {
 	model : Model
-	preferSelect? : boolean
+	preferSelect? : SelectBehavior
 	originalTitle? : string
 	aux? : string
 }
 
 export default class HistoryButton extends TimerButton {
-	preferSelect: boolean
+	preferSelect: SelectBehavior
 	readonly #lastModified: number
 	readonly #remove: HTMLElement
 	readonly #interval: NodeJS.Timeout
@@ -79,8 +79,13 @@ export default class HistoryButton extends TimerButton {
 			const inBackground = isInBackground(e)
 			if (e.target == this.#remove) {
 				if (e.button === 0) {
-					this.#model.history.deleteUrl(this.url);
+					await this.#model.history.deleteUrl(this.url);
 					(this.parent as Parent).remove(this);
+				}
+			} else if (this.preferSelect === "alwaysOpenInNewTab") {
+				await this.#model.tabs.openInNewTab(this.url, inBackground);
+				if (!inBackground) {
+					this.#model.browser.closeWindow();
 				}
 			} else if (this.preferSelect) {
 				await this.#model.tabs.openOrSelect(this.url, inBackground);

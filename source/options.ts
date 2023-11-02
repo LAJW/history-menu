@@ -214,10 +214,24 @@ async function main() {
 			checked: settings.expand,
 			change:  x => settings.expand = x,
 		}),
-		new Checkbox({
-			title:   i18n("options_prefer_select"),
-			checked: settings.preferSelect,
-			change:  x => settings.preferSelect = x,
+		new Select({
+			title:    "Link opening behavior",
+			values:   {
+				"false": "Normal",
+				"true": "Select an existing tab if already open",
+				"alwaysOpenInNewTab": "Always open in new tab",
+			},
+			selected: `${settings.preferSelect}`,
+			change() {
+				settings.preferSelect = (() => {
+					switch (this.selected) {
+						case "true": return true;
+						case "false": return false;
+						case "alwaysOpenInNewTab": return "alwaysOpenInNewTab";
+						default: return true;
+					}
+				})();
+			}
 		}),
 		new Checkbox({
 			title:   i18n("hide_domain_from_title"),

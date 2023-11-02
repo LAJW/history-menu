@@ -1,3 +1,5 @@
+export type SelectBehavior = boolean | "alwaysOpenInNewTab"
+
 export interface Settings {
 	[key: string]: string | number | boolean
 	width?: number
@@ -9,7 +11,7 @@ export interface Settings {
 	timer?: boolean
 	animate?: boolean
 	expand?: boolean
-	preferSelect?: boolean
+	preferSelect?: SelectBehavior
 	tabsFirst?: boolean
 	theme?: string
 	darkMode?: string

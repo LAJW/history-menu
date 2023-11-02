@@ -83,6 +83,7 @@ const model : IModel = {
     tabs : {
         async openInCurrentTab(url, inBackground) {},
         async openOrSelect(url : string, inBackground : boolean) {},
+        async openInNewTab(url : string, inBackground : boolean) {},
     },
     sessions : {
         async restore(sessionId : string, inBackground? : boolean) {},

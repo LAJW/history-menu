@@ -241,6 +241,11 @@ tabs : {
 			return Chrome.tabs.openInCurrentTab(url, inBackground);
 		}
 	},
+
+	async openInNewTab(url : string, inBackground : boolean) {
+		const window = await chrome.windows.getCurrent();
+		return await chrome.tabs.create({ windowId: window.id, url, active: !inBackground });
+	},
 }, // namespace Chrome.tabs
 bookmarks : {
 	getTree : () => new Promise<chrome.bookmarks.BookmarkTreeNode[]>(resolve => chrome.bookmarks.getTree(resolve))

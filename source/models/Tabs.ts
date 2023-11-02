@@ -2,6 +2,7 @@ import Chrome from "../Chrome";
 
 export interface ITabs {
     openInCurrentTab(url : string, inBackground : boolean) : Promise<void>;
+    openInNewTab(url : string, inBackground : boolean) : Promise<void>;
     openOrSelect(url : string, inBackground : boolean) : Promise<void>;
 }
 
@@ -12,5 +13,8 @@ export class Tabs implements ITabs {
 
     async openOrSelect(url : string, inBackground : boolean) : Promise<void> {
         await Chrome.tabs.openOrSelect(url, inBackground);
+    }
+    async openInNewTab(url : string, inBackground : boolean) : Promise<void> {
+        await Chrome.tabs.openInNewTab(url, inBackground);
     }
 }
